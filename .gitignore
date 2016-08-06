@@ -1,0 +1,10 @@
+Debug/
+Release/
+ipch/
+myGLEStest.vcxproj.filters
+myGLEStest.vcxproj
+*.OXY
+CMan0002-M3-Head-D-small.bmp
+CMan0002-M3-Head-D-small.jpg
+CMan0002-M3-Head-D.jpg
+myGLEStest.sdf
