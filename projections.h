@@ -11,8 +11,14 @@
 
 #include "linAlg.h"
 
-void perspectiveMatrix( float l, float r, float n, float f, float b, float t, float *m, float *res );
+void perspectiveMatrix(float in_l, float in_r, float in_n, float in_f, float in_b, float in_t, float *m, float *res );
 
-void viewportMatrix( float x0, float y0, float w, float h, float *m, float *res );
+void windowCoordToCameraSpace(float xw, float yw, float z, float *pointInCamSpace);
+
+void invertedPerspectiveMatrix(float l, float r, float n, float f, float b, float t, float *m, float *res);
+
+void viewportMatrix(float x0, float y0, float w, float h, float n, float f, float * m, float * res);
+
+void normalizedScreenCoordFromWindowCoord(float sx, float sy, float &x, float &y);
 
 #endif

@@ -3,11 +3,13 @@
 
 #ifdef _WIN32
 #include "stdafx.h"
+#include <Windowsx.h>
 #endif
 #include "initGL.h"
 #include "initScene.h"
 #include "myGLEStest.h"
 #include "vertexArrays.h"
+#include "interactivity.h"
 
 #define MAX_LOADSTRING 100
 
@@ -180,11 +182,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
+	RECT theWindowRect;
 	HDC hdc;
 	int i;
 
+	POINT p = {0, 0};
+
 	switch (message)
 	{
+	case WM_SIZE:
+		p.x = GET_X_LPARAM(lParam);
+		p.y = GET_Y_LPARAM(lParam);
+		GetWindowRect( hWnd, &theWindowRect);
+		GetClientRect(hWnd, &theWindowRect);
+		break;
+
+	case WM_LBUTTONDOWN:
+		p.x = GET_X_LPARAM(lParam);
+		p.y = GET_Y_LPARAM(lParam);
+		//ScreenToClient(hWnd, (LPPOINT)(&p));
+		setWinX(p.x);
+		setWinY(p.y);
+		setButtonPressed(true);	 
+		OutputDebugString(TEXT("\n\nDOWN\n"));
+		break;
+	case WM_LBUTTONUP:
+		setButtonPressed(false);
+		OutputDebugString(TEXT("\nUP\n\n"));
+		break;
+
+	case WM_MOUSEMOVE:
+		p.x = GET_X_LPARAM(lParam);
+		p.y = GET_Y_LPARAM(lParam);
+		//ScreenToClient(hWnd, (LPPOINT)(&p));
+		setWinX(p.x);
+		setWinY(p.y);
+		break;
+
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
@@ -207,8 +241,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_CREATE:
 		hdc = GetDC(hWnd);
-		RECT theWindowRect;
-		GetWindowRect( hWnd, &theWindowRect);
+		//GetWindowRect( hWnd, &theWindowRect);
+		GetClientRect(hWnd, &theWindowRect);
 		initGLContext(hdc);
 		initGLES(theWindowRect.left, theWindowRect.top, theWindowRect.right - theWindowRect.left, theWindowRect.bottom - theWindowRect.top);
 		break;

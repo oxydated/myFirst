@@ -99,7 +99,7 @@ void extractDualVersorParameters(DUALQUAARG(q),
 	//	theUvector = np.array((1.0, 0.0, 0.0))
 	//	theMvector = np.array((0.0, 0.0, 0.0))
 	//	theSfactor = 0.0
-	if (abs(theParameters.theSin) < 1.0e-7){
+	if (fabs(theParameters.theSin) < 1.0e-7){
 		theParameters.Ux = 1.0; theParameters.Uy = 0.0; theParameters.Uz = 0.0;
 		theParameters.Mx = .0; theParameters.My = 0.0; theParameters.Mz = 0.0;
 		theParameters.theSfactor = 0.0;

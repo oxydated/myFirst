@@ -59,21 +59,47 @@ void initGLES(int x, int y, int width, int height){
     glDisable(GL_CULL_FACE);
     //glDepthRangef( 0.0, 1.0 );
     glViewport(0, 0, width, height);
+
+	GLsizei	viewportValues[4];
+	GLsizei	viewportMax[2];
+
+	glGetIntegerv(GL_VIEWPORT, viewportValues);
+	glGetIntegerv(GL_MAX_VIEWPORT_DIMS, viewportMax);
     glClearColor(0.25, 0.0, 0.5, 1.0);
-    
     float mat[16];
     identity(mat);
     
     float pers[16];
+	float invPers[16];
 
 	//perspectiveMatrix( -1.0, 1.0, -2.0, -10.0, -1.0, 1.0, mat, pers );
 	perspectiveMatrix( -1.0, 1.0, -1.5, -400.0, -1.0, 1.0, mat, pers );
+
+	float testVec[] = { 1.0, -1.0, 1.5, 1.0 };
+	float testVec_should_b_1_minus1_minus1[4];
+	multiplyVectorByMatrix(testVec, pers, testVec_should_b_1_minus1_minus1);
+	testVec_should_b_1_minus1_minus1[0] = testVec_should_b_1_minus1_minus1[0] / testVec_should_b_1_minus1_minus1[3];
+	testVec_should_b_1_minus1_minus1[1] = testVec_should_b_1_minus1_minus1[1] / testVec_should_b_1_minus1_minus1[3];
+	testVec_should_b_1_minus1_minus1[2] = testVec_should_b_1_minus1_minus1[2] / testVec_should_b_1_minus1_minus1[3];
+	testVec_should_b_1_minus1_minus1[3] = testVec_should_b_1_minus1_minus1[3] / testVec_should_b_1_minus1_minus1[3];
+
+	float Tpers[16];
+	transposeMatrix(pers, Tpers);
+	multiplyVectorByMatrix(testVec, Tpers, testVec_should_b_1_minus1_minus1);
+	testVec_should_b_1_minus1_minus1[0] = testVec_should_b_1_minus1_minus1[0] / testVec_should_b_1_minus1_minus1[3];
+	testVec_should_b_1_minus1_minus1[1] = testVec_should_b_1_minus1_minus1[1] / testVec_should_b_1_minus1_minus1[3];
+	testVec_should_b_1_minus1_minus1[2] = testVec_should_b_1_minus1_minus1[2] / testVec_should_b_1_minus1_minus1[3];
+	testVec_should_b_1_minus1_minus1[3] = testVec_should_b_1_minus1_minus1[3] / testVec_should_b_1_minus1_minus1[3];
+
+	invertedPerspectiveMatrix(-1.0, 1.0, -1.5, -400.0, -1.0, 1.0, mat, invPers);
     printf("perspective Matrix:\n");
     printMatrix(pers);
     
     float view[16];
-    
-    viewportMatrix(x, y, width, height, mat, view); 
+
+	float NEARFAR[] = { 1.0, 0.0 };
+	glGetFloatv(GL_DEPTH_RANGE, NEARFAR);
+    viewportMatrix(x, y, width, height, NEARFAR[0], NEARFAR[1], mat, view);
     printf("\nview Matrix:\n");
     printMatrix(view);
     
@@ -100,9 +126,12 @@ void initGLES(int x, int y, int width, int height){
     //setSampler( 0, program );
 	SPIT_ERROR
 	setTexture(program);
-    SPIT_ERROR
-    setPerspectiveMatrix( pers, program );    
+	SPIT_ERROR
+	setInvertedPerspectiveMatrix(invPers);
+	//setPerspectiveMatrix(Tpers, program);
+	setPerspectiveMatrix(pers, program);
     setViewportMatrix( view, program );
+	//setViewportMatrix(mat, program);
     drawVertexArray();
     
 }

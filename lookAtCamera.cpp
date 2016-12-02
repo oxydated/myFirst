@@ -1,4 +1,5 @@
 #include "lookAtCamera.h"
+#include <Windows.h>
 
 //def getLookAtMatrix(CamPos, TargetPos, Up)
 void getLookAtMatrix(float *CamPos, float *TargetPos, float* Up, float* CamUp, float *viewerVec, float *m, float *r){
@@ -334,3 +335,269 @@ void lookAtCameraMatrix(float *RealTargetPos, float *RealCamPos, float* Up, floa
 	multiplyMatrices(m, lookAtMatrix, r);
 	//return lookAtMatrix, camSpaceLookAtVec, camSpaceUpForCam, camSpaceRotationAxis
 }
+
+void rotateCameraThroughVectors(float * RealTargetPos, float * RealCamPos, float * pv, float * pu, float * NewCamPos, float *normalForDebugReasons)
+{
+	TCHAR outputString[100];
+	float vx = pv[0] - RealTargetPos[0];
+	float vy = pv[1] - RealTargetPos[1];
+	float vz = pv[2] - RealTargetPos[2];
+
+	float nv = sqrt(vx*vx + vy*vy + vz*vz);	
+	vx = vx / nv;
+	vy = vy / nv;
+	vz = vz / nv;
+
+	float ux = pu[0] - RealTargetPos[0];
+	float uy = pu[1] - RealTargetPos[1];
+	float uz = pu[2] - RealTargetPos[2];
+
+	float nu = sqrt(ux*ux + uy*uy + uz*uz);
+	ux = ux / nu;
+	uy = uy / nu;
+	uz = uz / nu;
+
+	float cosAlpha = ux*vx + uy*vy + uz*vz;
+	float sinAlpha = sqrt(pow(uz*vy - uy*vz, 2) + pow(-uz*vx + ux*vz, 2) + pow(uy*vx - ux*vy, 2));
+
+	//swprintf(outputString, TEXT("cosAlpha: %f, sinAlpha: %f,>>>>>>>>>>>		 angle: %f		<<<<<<\n"), cosAlpha, sinAlpha, atan(sinAlpha /cosAlpha));
+	//OutputDebugString(outputString);
+
+
+	float sign = sinAlpha > 0.0 ? 1.0 : -1.0;
+
+	//cosAlpha = np.clip(cosAlpha, -1.0, 1.0)
+
+	float cosTheta = sign * sqrt((1.0 + cosAlpha) / 2.0);
+	float sinTheta = sqrt((1.0 - cosAlpha) / 2.0);
+
+	//qW = cosTheta
+	//qV = theEigenDict[theOneEigenvalue]
+	//qX, qY, qZ = qV*sinTheta 
+
+	float camVecX = RealCamPos[0] - RealTargetPos[0];
+	float camVecY = RealCamPos[1] - RealTargetPos[1];
+	float camVecZ = RealCamPos[2] - RealTargetPos[2];
+
+	float oldCamVec[] = { camVecX , camVecY , camVecZ , 1.0 };
+	float newCamVec[] = { 0.0, 0.0, 0.0, 0.0 };
+
+	float normX = (uz*vy - uy*vz);
+	float normY = (-uz*vx + ux*vz);
+	float normZ = (uy*vx - ux*vy);
+
+	float qs = cosTheta;
+	float qx = (sinTheta / sinAlpha) * (uz*vy - uy*vz);
+	float qy = (sinTheta / sinAlpha) * (-uz*vx + ux*vz);
+	float qz = (sinTheta / sinAlpha) * (uy*vx - ux*vy);
+	normalForDebugReasons[0] = normX / sinAlpha;
+	normalForDebugReasons[1] = normY / sinAlpha;
+	normalForDebugReasons[2] = normZ / sinAlpha;
+
+	if ((fabs(cosAlpha- 1.0) ) > 0.000001) {
+
+		float m[16];
+		identity(m);
+
+		float r[16];
+
+		float rotQuat[] = { qs, qx, qy, qz };
+		//float rotQuat[] = { qs, -qx, -qy, -qz };
+
+		quaternionRotation(rotQuat, m, r);
+		multiplyVectorByMatrix(oldCamVec, r, newCamVec);
+		//multiplyMatrixByVector(r, oldCamVec, newCamVec);
+	} else {
+		newCamVec[0] = oldCamVec[0];
+		newCamVec[1] = oldCamVec[1];
+		newCamVec[2] = oldCamVec[2];
+		newCamVec[3] = oldCamVec[3]; 
+	}
+
+	NewCamPos[0] = newCamVec[0] + RealTargetPos[0];
+	NewCamPos[1] = newCamVec[1] + RealTargetPos[1];
+	NewCamPos[2] = newCamVec[2] + RealTargetPos[2];
+	NewCamPos[3] = 1.0;
+						
+	if (isnan(NewCamPos[0])) {
+		OutputDebugString(TEXT("NAN"));
+	}
+				
+	//swprintf(outputString, TEXT("v: %f, %f, %f\n"), vx, vy, vz);
+	//OutputDebugString(outputString);
+	//swprintf(outputString, TEXT("u: %f, %f, %f\n"), ux, uy, uz);
+	//OutputDebugString(outputString);
+	//swprintf(outputString, TEXT("cosAlpha: %f, sinAlpha: %f\n\n"), cosAlpha, sinAlpha);
+	//OutputDebugString(outputString);
+}
+
+void lookAtCameraMatrix2(float * TargetPos, float * CamPos, float * m, float * normalM, float * r)
+{
+	float px = CamPos[0] - TargetPos[0];
+	float py = CamPos[1] - TargetPos[1];
+	float pz = CamPos[2] - TargetPos[2];
+
+	float ry = sqrt(pow(px, 2) + pow(pz, 2));
+	float ra = sqrt(pow(px, 2) + pow(py, 2) + pow(pz, 2));
+
+	float cosAlpha = -pz / ry;
+	float sinAlpha = px / ry;
+
+	float cosTheta = -ry / ra;
+	float sinTheta = py / ra;
+
+	float normalY[] = { 1.0, 0.0, 0.0 };
+	float normalX[] = {0.0, 1.0, 0.0 };
+
+	float identMat[16];
+	identity(identMat);
+
+	float TranslatedToTarget[16];
+	translate(TargetPos[0], TargetPos[1], TargetPos[2], identMat, TranslatedToTarget);
+	////translate(px, py, pz, m, TranslatedToTarget);
+
+	float rotatedByAlpha[16];
+	quaternionFromCosSinNormal(cosAlpha, sinAlpha, normalY, identMat, rotatedByAlpha);
+
+	float rotatedByTetha[16];
+	quaternionFromCosSinNormal(cosTheta, sinTheta, normalX, identMat, rotatedByTetha);
+
+	float TranslatedToCamera[16];
+	translate(0.0, 0.0, ra, identMat, TranslatedToCamera);
+
+	////////////////////
+
+	//float result1[16];
+	//multiplyMatrices(TranslatedToCamera, rotatedByTetha, result1);
+	//float result2[16];
+	//multiplyMatrices(result1, rotatedByAlpha, result2);
+	//multiplyMatrices(result2, TranslatedToTarget, r);
+
+	///////////////////
+
+	float result1[16];
+	multiplyMatrices(rotatedByAlpha, TranslatedToTarget, result1); 
+	float result2[16];
+	multiplyMatrices(rotatedByTetha, result1, result2);
+	multiplyMatrices(TranslatedToCamera, result2, r);
+
+	float result3[16];
+	multiplyMatrices(rotatedByTetha, rotatedByAlpha, result3);
+	invertMatrix(result3, normalM);
+	
+}
+
+void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * m, float * normalM, float * r)
+{
+	TCHAR outputString[100];
+
+	float upx = 0.0;
+	float upy = 1.0;
+	float upz = 0.0;
+
+	float viewx = 0.0;
+	float viewy = 0.0;
+	float viewz = 1.0;
+
+	//float upx = 1.0;
+	//float upy = 0.0;
+	//float upz = 0.0;
+
+	//float viewx = 0.0;
+	//float viewy = 0.0;
+	//float viewz = 1.0;
+
+	//float crossVecx = -(upz*viewy) + upy*viewz;
+	//float crossVecy = upz*viewx - upx*viewz;
+	//float crossVecz = -(upy*viewx) + upx*viewy;
+	float crossVecx = upz*viewy - upy*viewz;
+	float crossVecy = -(upz*viewx) + upx*viewz;
+	float crossVecz = upy*viewx - upx*viewy;
+
+	float fromCamToTargetx = TargetPos[0] - CamPos[0];
+	float fromCamToTargety = TargetPos[1] - CamPos[1];
+	float fromCamToTargetz = TargetPos[2] - CamPos[2];
+
+
+	float view[] = { viewx, viewy, viewz };
+	float targetFromCam[] = { fromCamToTargetx , fromCamToTargety, fromCamToTargetz };
+
+	float dotTargetFromCamByView = fromCamToTargetx*viewx + fromCamToTargety*viewy + fromCamToTargetz*viewz;
+	float dotTargetFromCamBycrossVec = crossVecx*fromCamToTargetx + crossVecy*fromCamToTargety + crossVecz*fromCamToTargetz;
+
+	float targetProjectedOverView[] = { dotTargetFromCamByView * viewx, dotTargetFromCamByView * viewy , dotTargetFromCamByView * viewz };
+	float targetProjectedOverCrossVec[] = { dotTargetFromCamBycrossVec * crossVecx, dotTargetFromCamBycrossVec * crossVecy , dotTargetFromCamBycrossVec * crossVecz };
+
+	float sanityCheck[] = { fromCamToTargetx , 0.0, fromCamToTargetz };		
+	float targetProjectedToPlaneViewCrossVec[] = {	targetProjectedOverView[0] + targetProjectedOverCrossVec[0] ,
+													targetProjectedOverView[1] + targetProjectedOverCrossVec[1],
+													targetProjectedOverView[2] + targetProjectedOverCrossVec[2] };
+
+	float identMat[16];
+	identity(identMat);
+
+	/////////// rotations from cam to target
+
+	float rotationFromViewToProjectedTarget[16];
+	quaternionFromVectorVToVectorU(view, targetProjectedToPlaneViewCrossVec, identMat, rotationFromViewToProjectedTarget);
+
+	float rotationFromProjectedTargetToActualTarget[16];
+	quaternionFromVectorVToVectorU(targetProjectedToPlaneViewCrossVec, targetFromCam, identMat, rotationFromProjectedTargetToActualTarget);
+
+	float rotationsFromCamToTarget[16];
+	multiplyMatrices(rotationFromProjectedTargetToActualTarget, rotationFromViewToProjectedTarget, rotationsFromCamToTarget);
+
+	/////////// inverted rotations
+
+	float rotationFromActualTargetToProjectedTarget[16];
+	quaternionFromVectorVToVectorU(targetFromCam, targetProjectedToPlaneViewCrossVec, identMat, rotationFromActualTargetToProjectedTarget);
+
+	float rotationFromProjectedTargetToView[16];
+	quaternionFromVectorVToVectorU(targetProjectedToPlaneViewCrossVec, view, identMat, rotationFromProjectedTargetToView);
+
+	float rotationsFromTargetToCam[16];
+	multiplyMatrices(rotationFromProjectedTargetToView, rotationFromActualTargetToProjectedTarget, rotationsFromTargetToCam);
+
+	/////////// translation from Cam to Origin
+
+	float translationFromCamToOrigin[16];
+	translate(-CamPos[0], -CamPos[1], -CamPos[2], identMat, translationFromCamToOrigin);
+
+	/////////// camera transform
+
+	//multiplyMatrices(translationFromCamToOrigin, rotationsFromTargetToCam, r);
+	multiplyMatrices(rotationsFromTargetToCam, translationFromCamToOrigin, r);
+
+	/////////// sanity check
+
+	float transposed_r[16];
+	transposeMatrix(r, transposed_r);
+
+	float transformedCam_shouldBeOntheOrigin[4];
+	//multiplyVectorByMatrix(CamPos, r, transformedCam_shouldBeOntheOrigin);
+	//multiplyVectorByMatrix(CamPos, translationFromCamToOrigin, transformedCam_shouldBeOntheOrigin);
+	multiplyVectorByMatrix(CamPos, transposed_r, transformedCam_shouldBeOntheOrigin);
+
+
+	float upVec[] = { upx, upy, upz, 1.0 };
+	float whereIsUpVectorNow[4];
+	multiplyVectorByMatrix(upVec, transposed_r, whereIsUpVectorNow);
+
+
+	swprintf(outputString, TEXT("upVec: %f, %f: %f -------------------\n"), upVec[0], upVec[1], upVec[2]);
+	OutputDebugString(outputString);
+
+
+	float transformedTarget_shouldBeOnZAxis[4];
+
+	multiplyVectorByMatrix(TargetPos, transposed_r, transformedTarget_shouldBeOnZAxis);
+
+	/////////// inverted rotation
+
+	copyMatrices(rotationsFromTargetToCam, normalM);
+
+
+	//invertMatrix(result3, normalM);
+
+}
+

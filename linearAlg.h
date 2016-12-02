@@ -11,6 +11,7 @@
 
 #include<math.h>
 #include<stdio.h>
+#include "linAlg.h"
 
 #ifdef _WIN32
 #include <glew.h>
@@ -27,6 +28,16 @@ void rotationMatrix( float cx, float cy, float teta, int program );
 
 void setPerspectiveMatrix( float *pers, int program );
 
+GLint getPersLocation();
+
+GLint getProgram();
+
+void setInvertedPerspectiveMatrix(float *invPers);
+
 void setViewportMatrix( float *view, int program );
+
+float* getInvertedPersPectiveMatrix();
+
+float* getInvertedViewMatrix();
 
 #endif

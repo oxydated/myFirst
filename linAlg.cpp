@@ -176,6 +176,14 @@ void identity( float *i ){
 	i[15] = 1.0;
 }
 
+void copyMatrices(float * n, float * m)
+{
+	m[0] = n[0];	m[4] = n[4];	m[8] = n[8];	m[12] = n[12];
+	m[1] = n[1];	m[5] = n[5];	m[9] = n[9];	m[13] = n[13];
+	m[2] = n[2];	m[6] = n[6];	m[10] = n[10];	m[14] = n[14];
+	m[3] = n[3];	m[7] = n[7];	m[11] = n[11];	m[15] = n[15];
+}
+
 void printVector( float *v ){
 	// OLD
     printf("[ %f    %f  %f  %f ]\n", v[0], v[1], v[2], v[3] );

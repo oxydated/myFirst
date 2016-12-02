@@ -32,6 +32,8 @@ void vectorDotProduct( float *v, float *u, float *s );
 
 void identity( float *i );
 
+void copyMatrices(float * n, float * m);
+
 void printVector( float *v );
 
 void printMatrix( float *m );

@@ -189,10 +189,17 @@ EXTERN_C void xmlLoadSkeleton(skeleton &theSkeleton){
 
 	IXMLDOMDocument3* theDocument = loadModelDocument("processed.OXY");
 
-	_bstr_t skeletonElementQuery = _bstr_t("./scene//node[@nodeName='Bip001']");
 	hr = theDocument->get_documentElement(&theRoot);
 
+	_bstr_t skeletonElementQuery = _bstr_t("./scene//node[@nodeName='Bip001']");
+
 	hr = theRoot->selectSingleNode(skeletonElementQuery, &theRootElementNode);
+
+	if (hr != S_OK) {
+		skeletonElementQuery = _bstr_t("./scene//node[@nodeName='Bone001']");
+
+		hr = theRoot->selectSingleNode(skeletonElementQuery, &theRootElementNode);
+	}
 
 
 	getSkeletonData(theDocument, theRootElementNode, theSkeleton);

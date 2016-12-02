@@ -91,5 +91,60 @@ void quaternionRotation(float *quat, float *m, float *r){
 	multiplyMatrices(m, tm, r);
 }
 
+void quaternionFromCosSinNormal(float cosAlpha, float sinAlpha, float *Normal, float * m, float * r)
+{
+	float sign = sinAlpha > 0.0 ? 1.0 : -1.0;
+
+	float cosTheta = sign * sqrt((1.0 + cosAlpha) / 2.0);
+	float sinTheta = sqrt((1.0 - cosAlpha) / 2.0);
+
+	float qs = cosTheta;
+	float qx = sinTheta * Normal[0];
+	float qy = sinTheta * Normal[1];
+	float qz = sinTheta * Normal[2];
+
+	if ((fabs(cosAlpha - 1.0)) > 0.000001) {
+
+		float rotQuat[] = { qs, qx, qy, qz };
+
+		quaternionRotation(rotQuat, m, r);
+	}
+	else {
+		copyMatrices(m, r);
+	}
+}
+
+void quaternionFromVectorVToVectorU(float * v, float * u, float * m, float * r)
+{
+	float vx = v[0];
+	float vy = v[1];
+	float vz = v[2];
+
+	float nv = sqrt(vx*vx + vy*vy + vz*vz);
+	vx = vx / nv;
+	vy = vy / nv;
+	vz = vz / nv;
+
+	float ux = u[0];
+	float uy = u[1];
+	float uz = u[2];
+
+	float nu = sqrt(ux*ux + uy*uy + uz*uz);
+	ux = ux / nu;
+	uy = uy / nu;
+	uz = uz / nu;
+
+	float cosAlpha = ux*vx + uy*vy + uz*vz;
+	float sinAlpha = sqrt(pow(uz*vy - uy*vz, 2) + pow(-uz*vx + ux*vz, 2) + pow(uy*vx - ux*vy, 2)); 
+
+	float normX = (uz*vy - uy*vz) / sinAlpha;
+	float normY = (-uz*vx + ux*vz) / sinAlpha;
+	float normZ = (uy*vx - ux*vy) / sinAlpha;
+
+	float Normal[] = { normX, normY, normZ };
+
+	quaternionFromCosSinNormal(cosAlpha, sinAlpha, Normal, m, r);
+}
+
 
 
