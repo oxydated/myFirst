@@ -24,17 +24,14 @@
 #include "interactivity.h"
 #include "macroUtilities.h"
 
-static GLfloat staticPosition[] = {     1.0f,   1.0f,  0.0f,
-                                        0.0f,   1.0f,  0.0f,         
-                                        1.0f,   0.0f,  0.0f   };
+//static GLfloat staticPosition[] = {     1.0f,   1.0f,  0.0f,
+//                                        0.0f,   1.0f,  0.0f,         
+//                                        1.0f,   0.0f,  0.0f   };
 
+static float Camera[] = { 50.0, 200.0, 0.0 };
+//static float Camera[] = { 50.0, -50.0, -100.0 };
 
-//static float Camera[] = { -200.0, 50.0, 0.0 }; 
-//static float Camera[] = { 100.0, 0.0, 100.0 };
-static float Camera[] = { 50.0, -200.0, 0.0 };
-//static float Camera[] = { -189.241, 71.645, 45.0 };
 static bool updateCamera = false;
-//static float startRotationVector[] = { 0.0, 0.0, 0.0, 0.0 };
 
 static float formerWinX = 0.0;
 static float formerWinY = 0.0;
@@ -159,22 +156,8 @@ void drawVertexArray(){
 
 
 	rotateY( teta, normalMat, normalRot );
-    
-    float invWorld[16];
 
-    invertMatrix( normalRot, invWorld);
-    
-    float tInvWorld[16];
-    transposeMatrix( invWorld, tInvWorld );
-
-	//float Camera[] = { 69.311, -116.811, 26.308 };
-	//float Camera[] = { 44.238, 128.108, 23.965 };
-
-	//float lightVector[] = { Camera[0]+3, Camera[1], Camera[2]+.5 };
-	//float lightVector[] = { Camera[0]+50, Camera[1]-20, Camera[2]+10 };
 	float lightVector[] = { Camera[0], -Camera[1], Camera[2] };
-
-	//float lightVector[] = { 0.0, 0.0, 100.0};
 
 	//////////
 
@@ -209,56 +192,28 @@ void drawVertexArray(){
 	float centerY = sumVY / numVerts; 
 	float centerZ = sumVZ / numVerts;
 
-	//float ROp[] = { 0, 0, -150, 1.0 };
-	float ROp[] = { centerX, centerY, centerZ, 1.0 };
-	//float RCp[] = { blendedVertices[0] - 50., blendedVertices[1] + 150., blendedVertices[2] - 50., 1.0 };
-	//float ROp[] = { blendedVertices[0], blendedVertices[1], blendedVertices[2], 1.0 };
-
+	float ROp[] = { centerX, centerY, centerZ, 1.0 };	
 	
 	float RCp[] = { Camera[0], Camera[1], Camera[2], 1.00000000 };
-	float Up[] = { 1.00000000, 0.000000000, 0.000000000, 0.000000000 };
+	float Up[] = { 0.00000000, 0.000000000, 1.000000000 };
 	float camUp[] = { 1.00000000, 0.000000000, 0.000000000, 0.000000000 };
 	float viewerVec[] = { 0., 0., 1., 0. };
 
-	float m[16];
-	identity(m);
-
-	float TnormalM[16];
+	float r[16];
 	float normalM[16];
-	identity(TnormalM);
+	
+	lookAtCameraMatrix3(ROp, RCp, normalM, r);
 
-	float r[16]; 
-	float Tr[16];
+	lookAtCameraMatrix4(ROp, RCp, Up, normalM, r);	
 
-	//lookAtCameraMatrix(ROp, RCp, Up, camUp, viewerVec, m, normalM, r);  
-
-	//transposeMatrix(TnormalM, normalM);
-
-	lookAtCameraMatrix3(ROp, RCp, m, TnormalM, r);
-
-	copyMatrices(TnormalM, normalM);
-
-	//copyMatrices(r, Tr);
-
-	transposeMatrix(r, Tr);
+	float inv_r[16]; 
+	invertMatrix(r, inv_r);
 
 	float cameraBeforeTransform[] = { 0.00000000, 0.000000000, 0.000000000, 1.000000000 };
 
 	float cameraAfterTransform[] = { 1.00000000, 0.000000000, 0.000000000, 1.000000000 };
-									
-	float invertR[16];
-
-	invertMatrix(r, invertR);  							  
 																		   
-	multiplyVectorByMatrix(RCp, r, cameraAfterTransform);
-	//multiplyMatrixByVector(r, RCp, cameraAfterTransform);
-	
-	//swprintf(outputString, TEXT("RCp: %f, %f: %f -------------------\n"), RCp[0], RCp[1], RCp[2]);
-	//OutputDebugString(outputString);
-	//swprintf(outputString, TEXT("cameraAfterTransform: %f, %f, %f, %f |||||||||||||||||||\n"), cameraAfterTransform[0]/ cameraAfterTransform[3], cameraAfterTransform[1] / cameraAfterTransform[3], cameraAfterTransform[2] / cameraAfterTransform[3], cameraAfterTransform[3] / cameraAfterTransform[3]);
-	//OutputDebugString(outputString);
-
-
+	multiplyVectorByMatrix(RCp, r, cameraAfterTransform); 
 
 	float lightVectorBeforeTransform[] = { 100.0, 50.0, -200.0, 1.0 };
 	float lightVectorAfterTransform[] = { 0.0, 0.0, 100.0, 1.0 };
@@ -266,44 +221,12 @@ void drawVertexArray(){
 	multiplyVectorByMatrix(lightVectorBeforeTransform, r, lightVectorAfterTransform);
 	setLightPosition(theProgram, lightVectorAfterTransform[0], lightVectorAfterTransform[1], lightVectorAfterTransform[2]);
 
-
-	float invTr[16];
-	float inv_r[16];
-
-
-	invertMatrix(Tr, invTr);
-	invertMatrix(r, inv_r);
-
-	float unprojectMatrix[16];
-	float tempMatrix[16];
-
 	float transposePerspective[16];
 	transposeMatrix(getInvertedPersPectiveMatrix(), transposePerspective);
-	float transposeView[16];
-	transposeMatrix(getInvertedViewMatrix(), transposeView);
-
-	//multiplyMatrices(m, tm, res);
-	//vec4 pos = tempView * Proj * World * tempPos;
-
-	//multiplyMatrices(getInvertedPersPectiveMatrix(), getInvertedViewMatrix(), tempMatrix); 
-	//multiplyMatrices(invTr, tempMatrix, unprojectMatrix);
-
-
-
-	multiplyMatrices(transposePerspective, invTr, tempMatrix);
-	//multiplyMatrices(invTr, getInvertedPersPectiveMatrix(), tempMatrix);
-	//multiplyMatrices(transposeView, tempMatrix, unprojectMatrix);
 
 	float winX = float(getWinX());
 	float winY = float(getWinY());
 
-	//float NEARFAR[] = { 1.0, 0.0 };
-	//glGetFloatv(GL_DEPTH_RANGE, NEARFAR);
-	//float winZ = (NEARFAR[1] - NEARFAR[0]) / 2.0;
-	//winZ = 1.025;
-
-	//float screenCoord[] = {float(winX),  float(winY), winZ, 1.0 };
-	////float screenCoord[] = { 400.0,  0.0 , winZ, 1.0 };
 	float normalizedScreenX = 0.0;
 	float normalizedScreenY = 0.0;
 
@@ -313,25 +236,10 @@ void drawVertexArray(){
 
 	float identM[16];
 	identity(identM);
-	float pers[16];
-	float persT[16];
-	perspectiveMatrix(-1.0, 1.0, -1.5, -400.0, -1.0, 1.0, identM, pers);
-	transposeMatrix(pers, persT);
-
-	float gotFromShaders[16];
-	GLint persLocation = getPersLocation();
-	GLint programNum = getProgram();
-
-	glGetUniformfv(programNum, persLocation, gotFromShaders);
-
-
-
-	float sanityCheckForPers[] = { 0.0, 0.0, 0.0, 0.0 };
 
 	float winX_vec[5];
 	float winY_vec[5];
 	float depth_vec[5];
-	int vertexInc_vec[5];
 
 	winX_vec[0] = 1424;	winY_vec[0] = 700;	depth_vec[0] = 400.0;
 	winX_vec[1] = winX;	winY_vec[1] = winY;	depth_vec[1] = 200.0;
@@ -342,66 +250,74 @@ void drawVertexArray(){
 	float depth;
 
 	for (int i = 0; i < 3; i++) {
-		//winX = 0;
-		//winY = 700;
 		winX = winX_vec[i];
 		winY = winY_vec[i];
 
 		depth = depth_vec[i];
 
-		normalizedScreenCoordFromWindowCoord(winX, winY, normalizedScreenX, normalizedScreenY);
-
+		normalizedScreenCoordFromWindowCoord(winX, winY, normalizedScreenX, normalizedScreenY);	  
 
 		//	From windows coord to screen coord
 		windowCoordToCameraSpace(normalizedScreenX, normalizedScreenY, depth, unprojectedPointInCamSpace);
 
-		//	From screen to camera space
-		multiplyMatrixByVector(pers, unprojectedPointInCamSpace, sanityCheckForPers);
-
-
-
-		//multiplyVectorByMatrix(unprojectedPointInCamSpace, persT, sanityCheckForPers);
-		sanityCheckForPers[0] = sanityCheckForPers[0] / sanityCheckForPers[3];
-		sanityCheckForPers[1] = sanityCheckForPers[1] / sanityCheckForPers[3];
-		sanityCheckForPers[2] = sanityCheckForPers[2] / sanityCheckForPers[3];
-		sanityCheckForPers[3] = sanityCheckForPers[3] / sanityCheckForPers[3];
-
-		// From camera space to world space	
-		float sanityCheckForWorldMatrix[4];
-		multiplyMatrixByVector(invTr, unprojectedPointInCamSpace, sanityCheckForWorldMatrix);
-		//multiplyVectorByMatrix(unprojectedPointInCamSpace, invTr, sanityCheckForWorldMatrix);
-		sanityCheckForWorldMatrix[0] = sanityCheckForWorldMatrix[0] / sanityCheckForWorldMatrix[3];
-		sanityCheckForWorldMatrix[1] = sanityCheckForWorldMatrix[1] / sanityCheckForWorldMatrix[3];
-		sanityCheckForWorldMatrix[2] = sanityCheckForWorldMatrix[2] / sanityCheckForWorldMatrix[3];
-		sanityCheckForWorldMatrix[3] = sanityCheckForWorldMatrix[3] / sanityCheckForWorldMatrix[3];
-
-		// Back from world space to camera space (should be the same as 	unprojectedPointInCamSpace)	 
-		float sanityCheckForPerspAgain[4];
-		multiplyMatrixByVector(r, sanityCheckForWorldMatrix, sanityCheckForPerspAgain);
-		//multiplyVectorByMatrix(sanityCheckForWorldMatrix, r, sanityCheckForPerspAgain);
-		sanityCheckForPerspAgain[0] = sanityCheckForPerspAgain[0] / sanityCheckForPerspAgain[3];
-		sanityCheckForPerspAgain[1] = sanityCheckForPerspAgain[1] / sanityCheckForPerspAgain[3];
-		sanityCheckForPerspAgain[2] = sanityCheckForPerspAgain[2] / sanityCheckForPerspAgain[3];
-		sanityCheckForPerspAgain[3] = sanityCheckForPerspAgain[3] / sanityCheckForPerspAgain[3];
-
-
-		float sanityCheckBackToNormalizedWindowsCoord[4];
-		multiplyMatrixByVector(pers, sanityCheckForPerspAgain, sanityCheckBackToNormalizedWindowsCoord);
-		sanityCheckBackToNormalizedWindowsCoord[0] = sanityCheckBackToNormalizedWindowsCoord[0] / sanityCheckBackToNormalizedWindowsCoord[3];
-		sanityCheckBackToNormalizedWindowsCoord[1] = sanityCheckBackToNormalizedWindowsCoord[1] / sanityCheckBackToNormalizedWindowsCoord[3];
-		sanityCheckBackToNormalizedWindowsCoord[2] = sanityCheckBackToNormalizedWindowsCoord[2] / sanityCheckBackToNormalizedWindowsCoord[3];
-		sanityCheckBackToNormalizedWindowsCoord[3] = sanityCheckBackToNormalizedWindowsCoord[3] / sanityCheckBackToNormalizedWindowsCoord[3];
-
-		//multiplyVectorByMatrix(unprojectedPointInCamSpace, inv_r, unprojectedPoint);
-		multiplyMatrixByVector(invTr, unprojectedPointInCamSpace, unprojectedPoint);
+		multiplyMatrixByVector(inv_r, unprojectedPointInCamSpace, unprojectedPoint);
 		unprojectedPoint[0] = unprojectedPoint[0] / unprojectedPoint[3];
 		unprojectedPoint[1] = unprojectedPoint[1] / unprojectedPoint[3];
 		unprojectedPoint[2] = unprojectedPoint[2] / unprojectedPoint[3];
 		unprojectedPoint[3] = unprojectedPoint[3] / unprojectedPoint[3];
 
-		blendedVertices[(302 + i) * 3 + 0] = unprojectedPoint[0];
-		blendedVertices[(302 + i) * 3 + 1] = unprojectedPoint[1];
-		blendedVertices[(302 + i) * 3 + 2] = unprojectedPoint[2];
+		// sanity test for targetPos   
+
+		float targetPosInCamSpace[4];
+		multiplyMatrixByVector(r, ROp, targetPosInCamSpace);
+
+		float sanityCheckForRCp[4];
+		multiplyMatrixByVector(r, RCp, sanityCheckForRCp);
+
+		//////////////////////////////////
+
+		//blendedVertices[(302 + i) * 3 + 0] = unprojectedPoint[0];
+		//blendedVertices[(302 + i) * 3 + 1] = unprojectedPoint[1];
+		//blendedVertices[(302 + i) * 3 + 2] = unprojectedPoint[2];
+
+		if (i == 1) {
+			//swprintf(outputString, TEXT("pointer coordinate: %f, %f, %f\n"), unprojectedPoint[0], unprojectedPoint[1], unprojectedPoint[2]);
+			//OutputDebugString(outputString);
+
+			float intersectionWithSphereInCamSpace[] = { 0.0, 0.0, 0.0, 1.0 };
+			//intersectViewRayToSphere(RCp, ROp, unprojectedPoint, intersectionWithSphereAtTargetPosition);
+			intersectViewRayToSphereCameraSpace(targetPosInCamSpace, unprojectedPointInCamSpace, intersectionWithSphereInCamSpace);
+
+			if (!isnan(intersectionWithSphereInCamSpace[0])) {
+
+				float intersectionWithSphereAtTargetPosition[] = { 0.0, 0.0, 0.0, 1.0 };
+				multiplyMatrixByVector(inv_r, intersectionWithSphereInCamSpace, intersectionWithSphereAtTargetPosition);
+
+				swprintf(outputString, TEXT("pointer coordinate: %f, %f, %f\n"), 
+					intersectionWithSphereAtTargetPosition[0], intersectionWithSphereAtTargetPosition[1], intersectionWithSphereAtTargetPosition[2]);
+				OutputDebugString(outputString);
+
+				OutputDebugString(TEXT("is not NAN\n"));
+				blendedVertices[(302 + i) * 3 + 0] = intersectionWithSphereAtTargetPosition[0];
+				blendedVertices[(302 + i) * 3 + 1] = intersectionWithSphereAtTargetPosition[1];
+				blendedVertices[(302 + i) * 3 + 2] = intersectionWithSphereAtTargetPosition[2];
+
+				float theRadius = sqrt(pow(intersectionWithSphereAtTargetPosition[0] - ROp[0], 2) +
+					pow(intersectionWithSphereAtTargetPosition[1] - ROp[1], 2) +
+					pow(intersectionWithSphereAtTargetPosition[2] - ROp[2], 2));
+
+
+				float theDistance = sqrt(pow(RCp[0] - ROp[0], 2) +
+					pow(RCp[1] - ROp[1], 2) +
+					pow(RCp[2] - ROp[2], 2));
+
+				swprintf(outputString, TEXT("The Radius: %f\n"), theRadius);
+				OutputDebugString(outputString);
+			}
+			else {	  
+				OutputDebugString(TEXT("yes, it is a NAN\n"));
+			}
+		}
 	}
 
 	float camIncamSpace[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -410,15 +326,7 @@ void drawVertexArray(){
 	
 	float targetIncamSpace[] = { 0.0, 0.0, 100.0, 1.0 };
 	float targetInWorldSpace[] = { 0.0, 0.0, 0.0, 1.0 };
-	multiplyVectorByMatrix(camIncamSpace, inv_r, camInWorldSpace);
-
-	//screenCoord[0] = /*1.025**/((1424.0 / 2.0) - screenCoord[0]);
-	//screenCoord[1] = /*1.025**/(screenCoord[1] - (700.0 / 2.0));
-	//screenCoord[2] = winZ;
-
-	//multiplyVectorByMatrix(screenCoord, tempMatrix, unprojectedPoint);
-	//unprojectedPoint[3] = unprojectedPoint[3] / unprojectedPoint[3];
-
+	multiplyVectorByMatrix(camIncamSpace, inv_r, camInWorldSpace);	
 
 	float startRotationVectorInCamSpace[] = { 1424.0 / 2.0, 350, 400.0, 1.0 };
 	float startRotationVector[] = { 0.0, 0.0, 0.0, 0.0 };
@@ -427,30 +335,11 @@ void drawVertexArray(){
 	normalizedScreenCoordFromWindowCoord(formerWinX, formerWinY, normalizedScreenX, normalizedScreenY);
 
 	windowCoordToCameraSpace(normalizedScreenX, normalizedScreenY, depth, startRotationVectorInCamSpace);
-
-	//windowCoordToCameraSpace(((1424.0 / 2.0) - formerWinX), (formerWinY - (700.0 / 2.0)), 1.5, unprojectedPointInCamSpace);
 	multiplyVectorByMatrix(startRotationVectorInCamSpace, inv_r, startRotationVector);
 	startRotationVector[0] = startRotationVector[0] / startRotationVector[3];
 	startRotationVector[1] = startRotationVector[1] / startRotationVector[3];
 	startRotationVector[2] = startRotationVector[2] / startRotationVector[3];
 	startRotationVector[3] = startRotationVector[3] / startRotationVector[3];
-
-	float sanityCheckForMatrixInversion[16];
-	multiplyMatrices(r, inv_r, sanityCheckForMatrixInversion);
-	multiplyMatrices(inv_r, r, sanityCheckForMatrixInversion);
-	multiplyMatrices(invTr, r, sanityCheckForMatrixInversion);
-	multiplyMatrices(r, invTr, sanityCheckForMatrixInversion);
-
-	//screenCoord[0] = /*1.025**/((1424.0 / 2.0) - formerWinX);
-	//screenCoord[1] = /*1.025**/(formerWinY - (700.0 / 2.0));
-	//screenCoord[2] = winZ;
-
-	//multiplyVectorByMatrix(screenCoord, tempMatrix, startRotationVector);
-	//startRotationVector[3] = startRotationVector[3] / startRotationVector[3];
-
-	//if (isnan(unprojectedPoint[0])) {
-	//	OutputDebugString(TEXT("NAN"));
-	//}
 
 	float normalForDebugReasons[] = { 0.0, 0.0, 0.0, 1.0 };
 
@@ -479,10 +368,7 @@ void drawVertexArray(){
 		OutputDebugString(outputString);
 		swprintf(outputString, TEXT("unprojectedPoint: %f, %f, %f\n"), unprojectedPoint[0], unprojectedPoint[1], unprojectedPoint[2]);
 		OutputDebugString(outputString);
-		//startRotationVector[0] = unprojectedPoint[0];
-		//startRotationVector[1] = unprojectedPoint[1];
-		//startRotationVector[2] = unprojectedPoint[2];
-		//startRotationVector[3] = unprojectedPoint[3];
+
 		formerWinX = winX;
 		formerWinY = winY;
 	}
@@ -490,19 +376,6 @@ void drawVertexArray(){
 		updateCamera = false;		
 	}
 	//////////////////////////////////////////////////////////////////////////
-
-
-	//blendedVertices[200 * 3 + 0] = unprojectedPoint[0];
-	//blendedVertices[200 * 3 + 1] = unprojectedPoint[1];
-	//blendedVertices[200 * 3 + 2] = unprojectedPoint[2];	
-
-	//blendedVertices[201 * 3 + 0] = startRotationVector[0];
-	//blendedVertices[201 * 3 + 1] = startRotationVector[1];
-	//blendedVertices[201 * 3 + 2] = startRotationVector[2];
-
-	//blendedVertices[202 * 3 + 0] = blendedVertices[200 * 3 + 0];
-	//blendedVertices[202 * 3 + 1] = blendedVertices[200 * 3 + 0];
-	//blendedVertices[202 * 3 + 2] = blendedVertices[200 * 3 + 0];
 
 	GLint location = glGetUniformLocation(theProgram, "World");
 	printf("location of World: %i\n", location);

@@ -21,4 +21,8 @@ void viewportMatrix(float x0, float y0, float w, float h, float n, float f, floa
 
 void normalizedScreenCoordFromWindowCoord(float sx, float sy, float &x, float &y);
 
+void intersectViewRayToSphere(float * camPos, float * targetPos, float * pointInSpace, float * intersection);
+
+void intersectViewRayToSphereCameraSpace(float * targetPosCamSpace, float * pointInCamSpace, float * intersection);
+
 #endif

@@ -57,7 +57,7 @@ void initGLES(int x, int y, int width, int height){
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    //glDepthRangef( 0.0, 1.0 );
+
     glViewport(0, 0, width, height);
 
 	GLsizei	viewportValues[4];
@@ -72,7 +72,6 @@ void initGLES(int x, int y, int width, int height){
     float pers[16];
 	float invPers[16];
 
-	//perspectiveMatrix( -1.0, 1.0, -2.0, -10.0, -1.0, 1.0, mat, pers );
 	perspectiveMatrix( -1.0, 1.0, -1.5, -400.0, -1.0, 1.0, mat, pers );
 
 	float testVec[] = { 1.0, -1.0, 1.5, 1.0 };
@@ -123,15 +122,12 @@ void initGLES(int x, int y, int width, int height){
     createVertexBuffer();
     GLint program = loadAndCompileShader();
     setProgram( program );
-    //setSampler( 0, program );
 	SPIT_ERROR
 	setTexture(program);
 	SPIT_ERROR
 	setInvertedPerspectiveMatrix(invPers);
-	//setPerspectiveMatrix(Tpers, program);
 	setPerspectiveMatrix(pers, program);
     setViewportMatrix( view, program );
-	//setViewportMatrix(mat, program);
     drawVertexArray();
     
 }

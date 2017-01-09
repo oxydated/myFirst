@@ -96,3 +96,87 @@ void normalizedScreenCoordFromWindowCoord(float sx, float sy, float &x, float &y
 	x = vx;
 	y = (ty * vy) / tx;
 }
+
+void intersectViewRayToSphere( float *camPos, float *targetPos, float *pointInSpace, float *intersection ) {
+
+	float ix = NAN;
+	float iy = NAN;
+	float iz = NAN;
+
+	float px = camPos[0];
+	float py = camPos[1];
+	float pz = camPos[2];
+
+	float cx = targetPos[0];
+	float cy = targetPos[1];
+	float cz = targetPos[2];
+
+	float qx = pointInSpace[0];
+	float qy = pointInSpace[1];
+	float qz = pointInSpace[2];
+
+	float d = sqrt(pow(cx - px, 2) + pow(cy - py, 2) + pow(cz - pz, 2));
+	float radius = (d*t) / sqrt(pow(n, 2) + pow(t, 2));
+
+	float nNorm = sqrt(pow(-px + qx, 2) + pow(-py + qy, 2) + pow(-pz + qz, 2));
+	float nx = (-px + qx) / nNorm;
+	float ny = (-py + qy) / nNorm;
+	float nz = (-pz + qz) / nNorm;
+
+	float delta = 4 * pow(-(cx*nx) + cy*ny + cz*nz + nx*px - ny*py - nz*pz, 2)
+		- 4 * (pow(cx, 2) + pow(cy, 2) + pow(cz, 2) - 2 * cx*px + pow(px, 2)
+			- 2 * cy*py + pow(py, 2) - 2 * cz*pz + pow(pz, 2) - pow(radius, 2));
+
+	if (delta >= 0.0) {
+
+		float aPart = -(cx*nx) + cy*ny + cz*nz + nx*px - ny*py - nz*pz;
+
+		float a = aPart - sqrt(delta) / 2.;
+		float a2 = aPart + sqrt(delta) / 2.;
+
+		ix = a*nx + px;
+		iy = a*ny + py;
+		iz = a*nz + pz;
+	}
+
+	intersection[0] = ix;
+	intersection[1] = iy;
+	intersection[2] = iz; 
+	return;	  
+}
+
+void intersectViewRayToSphereCameraSpace(float *targetPosCamSpace, float *pointInCamSpace, float *intersection) {
+
+	float ix = NAN;
+	float iy = NAN;
+	float iz = NAN;
+
+	float px = pointInCamSpace[0];
+	float py = pointInCamSpace[1];
+	float pz = pointInCamSpace[2];
+
+	float d = targetPosCamSpace[2];
+	float radius = (d*t) / sqrt(pow(n, 2) + pow(t, 2));
+
+	float nNorm = sqrt(pow(px, 2) + pow(py, 2) + pow(pz, 2));
+	float nx = px / nNorm;
+	float ny = py / nNorm;
+	float nz = pz / nNorm;
+
+	float delta = pow(d, 2)*(-1 + pow(nz, 2)) + pow(radius, 2);
+
+	if (delta >= 0.0) {
+
+		float a = d*nz - sqrt(pow(d, 2)*(-1 + pow(nz, 2)) + pow(radius, 2));
+		//float a2 = aPart + sqrt(delta) / 2.;
+
+		ix = a*nx;
+		iy = a*ny;
+		iz = a*nz;
+	}
+
+	intersection[0] = ix;
+	intersection[1] = iy;
+	intersection[2] = iz;
+	return;
+}
