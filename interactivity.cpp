@@ -13,15 +13,15 @@ bool getButtonPressed() {
 }
 
 void setWinX(int x) {
-	if (lButtonPressed) {
+	//if (lButtonPressed) {
 		winX = x;
-	}
+	//}
 }
 
 void setWinY(int y) {
-	if (lButtonPressed) {
+	//if (lButtonPressed) {
 		winY = y;
-	}
+	//}
 }
 
 int getWinX() {

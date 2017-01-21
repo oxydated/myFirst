@@ -28,10 +28,24 @@
 //                                        0.0f,   1.0f,  0.0f,         
 //                                        1.0f,   0.0f,  0.0f   };
 
-static float Camera[] = { 50.0, 200.0, 0.0 };
-//static float Camera[] = { 50.0, -50.0, -100.0 };
+//static float Camera[] = { 50.0, 200.0, 0.0 };
+static float Camera[] = { 50.0, -50.0, -100.0, 1.0 };
+
+static float originalCameraPos[] = { 0.0, 0.0, 0.0, 1.0 };
+static float originalWorldPos[] = { 0.0, 0.0, 0.0, 1.0 };
+static float currentWorldPos[] = { 0.0, 0.0, 0.0, 1.0 };
 
 static bool updateCamera = false;
+
+enum states {
+	NOT_PRESSING = size_t(false) * 2 + size_t(false),	//f			f
+	START_PRESSING = size_t(false) * 2 + size_t(true), //f			t
+	KEEP_PRESSING = size_t(true) * 2 + size_t(true),	//t			t
+	STOP_PRESSING = size_t(true) * 2 + size_t(false)	//t			f
+};
+
+static float winX = 0.0;
+static float winY = 0.0;
 
 static float formerWinX = 0.0;
 static float formerWinY = 0.0;
@@ -59,6 +73,13 @@ static sceneTracks theSceneTracks;
 static skinData theSkin;
 
 static int endTimeForScene = 0;
+
+void debugQuatOutput(float cosAlpha, float sinAlpha, float *Normal) {
+	TCHAR outputString[100];
+	swprintf(outputString, TEXT("cosAlpha: %f, SinAlpha: %f, Normal: (%f, %f, %f)\n"),
+		cosAlpha, sinAlpha, Normal[0], Normal[1], Normal[2]);
+	OutputDebugString(outputString);
+}
 
 void createVertexBuffer() {
 	xmlLoadModel(numFaces, numVerts, faces, vertices, texcoord, normals);
@@ -222,70 +243,71 @@ void drawVertexArray(){
 	setLightPosition(theProgram, lightVectorAfterTransform[0], lightVectorAfterTransform[1], lightVectorAfterTransform[2]);
 
 	float transposePerspective[16];
-	transposeMatrix(getInvertedPersPectiveMatrix(), transposePerspective);
+	transposeMatrix(getInvertedPersPectiveMatrix(), transposePerspective); 
 
-	float winX = float(getWinX());
-	float winY = float(getWinY());
+	// For camera update
 
-	float normalizedScreenX = 0.0;
-	float normalizedScreenY = 0.0;
+	bool IsItBeingPressedRightNow = getButtonPressed();
+	size_t currentState = size_t(updateCamera) * 2 + size_t(IsItBeingPressedRightNow);
 
-	float unprojectedPointInCamSpace[] = { 0.0, 0.0, 0.0, 0.0 };
-	float unprojectedPoint[] = { 0.0, 0.0, 0.0, 0.0 };
+	if (updateCamera) {
+		formerWinX = winX;
+		formerWinY = winY;
+	}
 
+	if (IsItBeingPressedRightNow) {
+		winX = float(getWinX());
+		winY = float(getWinY());
 
-	float identM[16];
-	identity(identM);
+		//newCamPos[0] = unprojectedPoint[0];
+		//newCamPos[1] = unprojectedPoint[1];
+		//newCamPos[2] = unprojectedPoint[2];
+		//newCamPos[3] = unprojectedPoint[3];	
 
-	float winX_vec[5];
-	float winY_vec[5];
-	float depth_vec[5];
+		if (!updateCamera) {
+			formerWinX = winX;
+			formerWinY = winY;
+		}
+	}
 
-	winX_vec[0] = 1424;	winY_vec[0] = 700;	depth_vec[0] = 400.0;
-	winX_vec[1] = winX;	winY_vec[1] = winY;	depth_vec[1] = 200.0;
-	winX_vec[2] = 0;	winY_vec[2] = 0;	depth_vec[2] = 400.0;
-	winX_vec[3] = 1424;	winY_vec[3] = 0;	depth_vec[3] = 400.0;
-	winX_vec[4] = 700;	winY_vec[4] = 700;	depth_vec[4] = 400.0;
+	// For camera update
 
-	float depth;
+	if (IsItBeingPressedRightNow && updateCamera) {
 
-	for (int i = 0; i < 3; i++) {
-		winX = winX_vec[i];
-		winY = winY_vec[i];
+		//////////
 
-		depth = depth_vec[i];
+		float normalizedScreenX = 0.0;
+		float normalizedScreenY = 0.0;
 
-		normalizedScreenCoordFromWindowCoord(winX, winY, normalizedScreenX, normalizedScreenY);	  
+		float unprojectedPointInCamSpace[] = { 0.0, 0.0, 0.0, 0.0 };
 
-		//	From windows coord to screen coord
-		windowCoordToCameraSpace(normalizedScreenX, normalizedScreenY, depth, unprojectedPointInCamSpace);
+		float winX_vec[5];
+		float winY_vec[5];
+		float depth_vec[5];
 
-		multiplyMatrixByVector(inv_r, unprojectedPointInCamSpace, unprojectedPoint);
-		unprojectedPoint[0] = unprojectedPoint[0] / unprojectedPoint[3];
-		unprojectedPoint[1] = unprojectedPoint[1] / unprojectedPoint[3];
-		unprojectedPoint[2] = unprojectedPoint[2] / unprojectedPoint[3];
-		unprojectedPoint[3] = unprojectedPoint[3] / unprojectedPoint[3];
+		winX_vec[0] = formerWinX;	winY_vec[0] = formerWinY;	depth_vec[0] = 1.5;
+		winX_vec[1] = winX;			winY_vec[1] = winY;			depth_vec[1] = 1.5;
 
-		// sanity test for targetPos   
+		float winInCamSpace[4];
+		float formerWinInCamSpace[4];
+
+		float* pointsInCamSpace[] = { formerWinInCamSpace , winInCamSpace };
+
+		float depth;
 
 		float targetPosInCamSpace[4];
 		multiplyMatrixByVector(r, ROp, targetPosInCamSpace);
 
-		float sanityCheckForRCp[4];
-		multiplyMatrixByVector(r, RCp, sanityCheckForRCp);
+		for (int i = 0; i < 2; i++) {
 
-		//////////////////////////////////
+			depth = depth_vec[i];
 
-		//blendedVertices[(302 + i) * 3 + 0] = unprojectedPoint[0];
-		//blendedVertices[(302 + i) * 3 + 1] = unprojectedPoint[1];
-		//blendedVertices[(302 + i) * 3 + 2] = unprojectedPoint[2];
+			normalizedScreenCoordFromWindowCoord(winX_vec[i], winY_vec[i], normalizedScreenX, normalizedScreenY);
 
-		if (i == 1) {
-			//swprintf(outputString, TEXT("pointer coordinate: %f, %f, %f\n"), unprojectedPoint[0], unprojectedPoint[1], unprojectedPoint[2]);
-			//OutputDebugString(outputString);
+			//	From windows coord to screen coord
+			windowCoordToCameraSpace(normalizedScreenX, normalizedScreenY, depth, unprojectedPointInCamSpace);
 
 			float intersectionWithSphereInCamSpace[] = { 0.0, 0.0, 0.0, 1.0 };
-			//intersectViewRayToSphere(RCp, ROp, unprojectedPoint, intersectionWithSphereAtTargetPosition);
 			intersectViewRayToSphereCameraSpace(targetPosInCamSpace, unprojectedPointInCamSpace, intersectionWithSphereInCamSpace);
 
 			if (!isnan(intersectionWithSphereInCamSpace[0])) {
@@ -293,7 +315,16 @@ void drawVertexArray(){
 				float intersectionWithSphereAtTargetPosition[] = { 0.0, 0.0, 0.0, 1.0 };
 				multiplyMatrixByVector(inv_r, intersectionWithSphereInCamSpace, intersectionWithSphereAtTargetPosition);
 
-				swprintf(outputString, TEXT("pointer coordinate: %f, %f, %f\n"), 
+				pointsInCamSpace[i][0] = intersectionWithSphereInCamSpace[0];
+				pointsInCamSpace[i][1] = intersectionWithSphereInCamSpace[1];
+				pointsInCamSpace[i][2] = intersectionWithSphereInCamSpace[2];
+
+				//pointsInCamSpace[i][0] = unprojectedPointInCamSpace[0];
+				//pointsInCamSpace[i][1] = unprojectedPointInCamSpace[1];
+				//pointsInCamSpace[i][2] = unprojectedPointInCamSpace[2];
+				pointsInCamSpace[i][3] = 1.0;
+
+				swprintf(outputString, TEXT("pointer coordinate: %f, %f, %f\n"),
 					intersectionWithSphereAtTargetPosition[0], intersectionWithSphereAtTargetPosition[1], intersectionWithSphereAtTargetPosition[2]);
 				OutputDebugString(outputString);
 
@@ -301,6 +332,8 @@ void drawVertexArray(){
 				blendedVertices[(302 + i) * 3 + 0] = intersectionWithSphereAtTargetPosition[0];
 				blendedVertices[(302 + i) * 3 + 1] = intersectionWithSphereAtTargetPosition[1];
 				blendedVertices[(302 + i) * 3 + 2] = intersectionWithSphereAtTargetPosition[2];
+
+				/////////////////
 
 				float theRadius = sqrt(pow(intersectionWithSphereAtTargetPosition[0] - ROp[0], 2) +
 					pow(intersectionWithSphereAtTargetPosition[1] - ROp[1], 2) +
@@ -313,68 +346,99 @@ void drawVertexArray(){
 
 				swprintf(outputString, TEXT("The Radius: %f\n"), theRadius);
 				OutputDebugString(outputString);
+
+
 			}
-			else {	  
+			else {
 				OutputDebugString(TEXT("yes, it is a NAN\n"));
 			}
-		}
-	}
 
-	float camIncamSpace[] = { 0.0, 0.0, 0.0, 1.0 };
-	float camInWorldSpace[] = { 0.0, 0.0, 0.0, 1.0 };
-	multiplyVectorByMatrix(camIncamSpace, inv_r, camInWorldSpace);		
+		}
+
+		
+		float camPosMinusTargetPos[4];
+		camPosMinusTargetPos[0] = -targetPosInCamSpace[0];
+		camPosMinusTargetPos[1] = -targetPosInCamSpace[1];
+		camPosMinusTargetPos[2] = -targetPosInCamSpace[2];
+		camPosMinusTargetPos[3] = 1.0;
+
+		float vectorV[4];
+		vectorV[0] = formerWinInCamSpace[0] - targetPosInCamSpace[0];
+		vectorV[1] = formerWinInCamSpace[1] - targetPosInCamSpace[1];
+		vectorV[2] = formerWinInCamSpace[2] - targetPosInCamSpace[2];
+		vectorV[3] = 1.0;
+
+		float vectorU[4];
+		vectorU[0] = winInCamSpace[0] - targetPosInCamSpace[0];
+		vectorU[1] = winInCamSpace[1] - targetPosInCamSpace[1];
+		vectorU[2] = winInCamSpace[2] - targetPosInCamSpace[2];
+		vectorU[3] = 1.0;
+
+		float ident[16];
+		identity(ident);
+
+		float rotateMat[16];
+		quaternionFromVectorVToVectorU(vectorU, vectorV, ident, rotateMat, debugQuatOutput);
+
+		float updateCamPos[4];
+		multiplyMatrixByVector(rotateMat, camPosMinusTargetPos, updateCamPos);
+
+		float CameraInCamSpace[4];
+		CameraInCamSpace[0] = updateCamPos[0] + targetPosInCamSpace[0];
+		CameraInCamSpace[1] = updateCamPos[1] + targetPosInCamSpace[1];
+		CameraInCamSpace[2] = updateCamPos[2] + targetPosInCamSpace[2];
+		CameraInCamSpace[3] = 1.0;
+
+		multiplyMatrixByVector(inv_r, CameraInCamSpace, Camera);
+
+		if (0) { int nothing = 0; }
+			
+		
+		//float camPosMinusTargetPos[4];
+		//camPosMinusTargetPos[0] = RCp[0] - ROp[0];
+		//camPosMinusTargetPos[1] = RCp[1] - ROp[1];
+		//camPosMinusTargetPos[2] = RCp[2] - ROp[2];
+		//camPosMinusTargetPos[3] = 1.0;
+
+		//float formerWinTransformed[4];
+		//multiplyMatrixByVector(inv_r, formerWinInCamSpace, formerWinTransformed);
+
+		//float vectorV[4];
+		//vectorV[0] = formerWinTransformed[0] - ROp[0];
+		//vectorV[1] = formerWinTransformed[1] - ROp[1];
+		//vectorV[2] = formerWinTransformed[2] - ROp[2];
+		//vectorV[3] = 1.0;
+
+		//float WinTransformed[4];
+		//multiplyMatrixByVector(inv_r, winInCamSpace, WinTransformed);
+
+		//float vectorU[4];
+		//vectorU[0] = WinTransformed[0] - ROp[0];
+		//vectorU[1] = WinTransformed[1] - ROp[1];
+		//vectorU[2] = WinTransformed[2] - ROp[2];
+		//vectorU[3] = 1.0;
+
+		//float ident[16];
+		//identity(ident);
+
+		//float rotateMat[16];
+		//quaternionFromVectorVToVectorU(vectorU, vectorV, ident, rotateMat);
+
+		//float updateCamPos[4];
+		//multiplyMatrixByVector(rotateMat, camPosMinusTargetPos, updateCamPos);
+
+		////float CameraInCamSpace[4];
+		//Camera[0] = updateCamPos[0] + ROp[0];
+		//Camera[1] = updateCamPos[1] + ROp[1];
+		//Camera[2] = updateCamPos[2] + ROp[2];
+		//Camera[3] = 1.0;
+	}
+	updateCamera = IsItBeingPressedRightNow;
+
+
+	///////////////////// end of camera update
+
 	
-	float targetIncamSpace[] = { 0.0, 0.0, 100.0, 1.0 };
-	float targetInWorldSpace[] = { 0.0, 0.0, 0.0, 1.0 };
-	multiplyVectorByMatrix(camIncamSpace, inv_r, camInWorldSpace);	
-
-	float startRotationVectorInCamSpace[] = { 1424.0 / 2.0, 350, 400.0, 1.0 };
-	float startRotationVector[] = { 0.0, 0.0, 0.0, 0.0 };
-	formerWinX = 1424;
-	formerWinY = 0;
-	normalizedScreenCoordFromWindowCoord(formerWinX, formerWinY, normalizedScreenX, normalizedScreenY);
-
-	windowCoordToCameraSpace(normalizedScreenX, normalizedScreenY, depth, startRotationVectorInCamSpace);
-	multiplyVectorByMatrix(startRotationVectorInCamSpace, inv_r, startRotationVector);
-	startRotationVector[0] = startRotationVector[0] / startRotationVector[3];
-	startRotationVector[1] = startRotationVector[1] / startRotationVector[3];
-	startRotationVector[2] = startRotationVector[2] / startRotationVector[3];
-	startRotationVector[3] = startRotationVector[3] / startRotationVector[3];
-
-	float normalForDebugReasons[] = { 0.0, 0.0, 0.0, 1.0 };
-
-	//////////////////////////////////////////////////////////////////////////
-	if (getButtonPressed()) {
-
-		swprintf(outputString, TEXT("getButtonPressed(): %i, updateCamera: %i\n"), getButtonPressed(), updateCamera);
-		OutputDebugString(outputString);
-
-		if (!updateCamera) {
-			updateCamera = true;
-		}
-		else {	  			
-			//rotateCameraThroughVectors(ROp, RCp, unprojectedPoint, startRotationVector, Camera, normalForDebugReasons);
-
-			if (isnan(Camera[0])) {
-				OutputDebugString(TEXT("NAN"));
-			}
-		}
-
-		swprintf(outputString, TEXT("formerWinX, Y: %f, %f\n"), formerWinX, formerWinY);
-		OutputDebugString(outputString);
-		swprintf(outputString, TEXT("WinX, Y: %f, %f\n"), winX, winY);
-		OutputDebugString(outputString); 
-		swprintf(outputString, TEXT("startRotationVector: %f, %f, %f\n"), startRotationVector[0], startRotationVector[1], startRotationVector[2]);
-		OutputDebugString(outputString);
-		swprintf(outputString, TEXT("unprojectedPoint: %f, %f, %f\n"), unprojectedPoint[0], unprojectedPoint[1], unprojectedPoint[2]);
-		OutputDebugString(outputString);
-
-		formerWinX = winX;
-		formerWinY = winY;
-	}
-	else {
-		updateCamera = false;		
-	}
 	//////////////////////////////////////////////////////////////////////////
 
 	GLint location = glGetUniformLocation(theProgram, "World");

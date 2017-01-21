@@ -23,6 +23,8 @@ Points and vectors in Homogenous Coordinates must be multiplied to Matrix from R
 #include <stdio.h>
 #include "linAlg.h"
 
+typedef void(*debugQuat)(float, float, float*);
+
 void rotateX( float theta, float* m, float* r );
 
 void rotateY( float theta, float* m, float* r );
@@ -37,6 +39,6 @@ void quaternionRotation(float *quat, float *m, float *r);
 
 void quaternionFromCosSinNormal(float cosAlpha, float sinAlpha, float *Normal, float *m, float *r);
 
-void quaternionFromVectorVToVectorU(float *v, float *u, float *m, float *r);
+void quaternionFromVectorVToVectorU(float *v, float *u, float *m, float *r, debugQuat = NULL);
 
 #endif

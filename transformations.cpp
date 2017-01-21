@@ -114,7 +114,7 @@ void quaternionFromCosSinNormal(float cosAlpha, float sinAlpha, float *Normal, f
 	}
 }
 
-void quaternionFromVectorVToVectorU(float * v, float * u, float * m, float * r)
+void quaternionFromVectorVToVectorU(float * v, float * u, float * m, float * r, debugQuat debugQuatFunc)
 {
 	float vx = v[0];
 	float vy = v[1];
@@ -135,7 +135,7 @@ void quaternionFromVectorVToVectorU(float * v, float * u, float * m, float * r)
 	uz = uz / nu;
 
 	float cosAlpha = ux*vx + uy*vy + uz*vz;
-	float sinAlpha = sqrt(pow(uz*vy - uy*vz, 2) + pow(-uz*vx + ux*vz, 2) + pow(uy*vx - ux*vy, 2)); 
+	float sinAlpha = sqrt(pow(uz*vy - uy*vz, 2) + pow(-uz*vx + ux*vz, 2) + pow(uy*vx - ux*vy, 2));
 
 	float normX = (uz*vy - uy*vz) / sinAlpha;
 	float normY = (-uz*vx + ux*vz) / sinAlpha;
@@ -143,7 +143,16 @@ void quaternionFromVectorVToVectorU(float * v, float * u, float * m, float * r)
 
 	float Normal[] = { normX, normY, normZ };
 
-	quaternionFromCosSinNormal(cosAlpha, sinAlpha, Normal, m, r);
+	if (debugQuatFunc != NULL) {
+		debugQuatFunc(cosAlpha, sinAlpha, Normal);
+	}
+
+	if (!isnan(cosAlpha) && !isnan(sinAlpha) && !isnan(normX) && !isnan(normY) && !isnan(normZ)) {
+		quaternionFromCosSinNormal(cosAlpha, sinAlpha, Normal, m, r);
+	}
+	else {
+		copyMatrices(m, r);
+	}
 }
 
 
