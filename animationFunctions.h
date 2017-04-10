@@ -96,7 +96,7 @@ void alocateGlobalArraysForTracks(sceneTracks &theTracks);
 
 typedef std::stack< boneNode*> boneStack;
 
-void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float currentTime);
+void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float currentTime, bool shouldIPrintIt = false);
 
 //(2)a new array will be produced by transforming each bone in hierarchy from skin pose to current global transformation(this is the array to be sourced to the shader)
 //		for every entry in skinData.skinPoseBone[]

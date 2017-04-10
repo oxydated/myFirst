@@ -47,6 +47,9 @@ void pure_Real_quaternion(float qs, float qx, float qy, float qz, DUALQUAARG(o))
 //point_quaternion = lambda(px, py, pz) : ((1, 0, 0, 0), (0, px, py, pz))
 void point_quaternion(float px, float py, float pz, DUALQUAARG(o));
 
+//vector_quaternion = lambda(vx, vy, vz) : ((0, 0, 0, 0), (0, vx, vy, vz))
+void vector_quaternion(float vx, float vy, float vz, DUALQUAARG(o));
+
 //translation_quaternion = lambda(dx, dy, dz) : ((1, 0, 0, 0), (0, -dx / 2, -dy / 2, -dz / 2))
 void translation_quaternion(float dx, float dy, float dz, DUALQUAARG(o));
 

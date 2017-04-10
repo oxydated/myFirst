@@ -102,6 +102,8 @@ HRESULT getMeshNodeForSkin(IXMLDOMDocument3* theDocument, IXMLDOMNode *skinEleme
 }
 
 HRESULT getSkinVerticesData(IXMLDOMDocument3* theDocument, IXMLDOMNode* skinElementNode, float* &boneOffset, float* &boneNum, float* &boneIndexes, float* &boneWeight, int &vertAttribNum, int& boneUniformNum){
+	TCHAR outputString[100];
+	
 	HRESULT hr = S_OK;
 	IXMLDOMNode* meshElementNode = NULL;
 	hr = getMeshNodeForSkin(theDocument, skinElementNode, meshElementNode);
@@ -210,6 +212,9 @@ HRESULT getSkinVerticesData(IXMLDOMDocument3* theDocument, IXMLDOMNode* skinElem
 	boneNum = new float[numVertexElements];
 	vertAttribNum = numVertexElements;
 
+	swprintf(outputString, TEXT("{\n"));
+	OutputDebugString(outputString);
+
 	for (long i = 0; i < numVertexElements; i++){
 		IXMLDOMNode* theVertexNode = NULL;
 		hr = theVerticesNodesList->get_item(i, &theVertexNode);
@@ -222,10 +227,32 @@ HRESULT getSkinVerticesData(IXMLDOMDocument3* theDocument, IXMLDOMNode* skinElem
 		boneOffset[vertexID] = float(auxBoneOffset[theVert]);
 		boneNum[vertexID] = float(auxNumBone[theVert]);
 
-		if (theVertexNode != NULL){
+		if (theVertexNode != NULL) {
 			theVertexNode->Release();
 		}
+		//int boneNumforVertexID = int(boneNum[vertexID]);
+		//int textOffset = swprintf(outputString, TEXT("{%i, {"), vertexID);
+		//for (int j = 0; j < int(boneNum[vertexID]); ++j) {
+		//	int boneIndexForVertexID = int(boneIndexes[int(boneOffset[vertexID]) + j]);
+		//	float boneWeightForVertexID = boneWeight[int(boneOffset[vertexID]) + j];
+
+		//	textOffset += swprintf(outputString + textOffset, TEXT("{%i, %f}"), boneIndexForVertexID, boneWeightForVertexID);
+		//	if (j < (int(boneNum[vertexID]) - 1)) {
+		//		textOffset += swprintf(outputString + textOffset, TEXT(","));
+		//	}
+		//}
+		//textOffset += swprintf(outputString + textOffset, TEXT("}}"));
+		//if (i < (numVertexElements - 1)) {
+		//	textOffset += swprintf(outputString + textOffset, TEXT(",\n"));
+		//}
+		//else {
+		//	textOffset += swprintf(outputString + textOffset, TEXT("\n"));
+		//}
+		//OutputDebugString(outputString);
 	}
+
+	swprintf(outputString, TEXT("}\n"));
+	OutputDebugString(outputString);
 
 	return hr;
 }
@@ -250,6 +277,8 @@ HRESULT getSkinData(IXMLDOMDocument3* theDocument, LPCSTR skinElementNodeName, s
 }
 
 HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNodeName, int &numFaces, int &numVerts, unsigned short* &faces, float* &vertices, float* &texcoord, float* &normals){
+	TCHAR outputString[100];
+
 	HRESULT hr = S_OK;
 	IXMLDOMElement* theRoot = NULL;
 	IXMLDOMNode* theSkinElementNode = NULL;
@@ -302,7 +331,10 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 
 	/////////// apply mesh matrix on vertices
 
-	for (int i = 0; i < numVerts; i++){
+	//swprintf(outputString, TEXT("{\n (* {vertexID, {skinpose x, y, z}} *)\n"));
+	//OutputDebugString(outputString);
+
+	for (int i = 0; i < numVerts; i++) {
 		float myOldVert[4] = { vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2], 1.0 };
 		float myNewVert[4] = { 0.0, 0.0, 0.0, 0.0 };
 
@@ -310,7 +342,25 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 		vertices[i * 3 + 0] = myNewVert[0];
 		vertices[i * 3 + 1] = myNewVert[1];
 		vertices[i * 3 + 2] = myNewVert[2];
+
+
+		//int textOffset = swprintf(outputString, TEXT("{%i, {%f, %f, %f}}"), 
+		//	i,
+		//	vertices[i * 3 + 0],
+		//	vertices[i * 3 + 1],
+		//	vertices[i * 3 + 2]
+		//);
+		//if (i < (numVerts - 1)) {
+		//	textOffset += swprintf(outputString + textOffset, TEXT(",\n"));
+		//}
+		//else {
+		//	textOffset += swprintf(outputString + textOffset, TEXT("\n"));
+		//}
+		//OutputDebugString(outputString);
 	}
+
+	//swprintf(outputString, TEXT("}\n"));
+	//OutputDebugString(outputString);
 	/////
 
 	return hr;

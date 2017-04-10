@@ -127,6 +127,17 @@ void point_quaternion(float px, float py, float pz, DUALQUAARG(o)){
 	doz = pz;
 }
 
+void vector_quaternion(float vx, float vy, float vz, DUALQUAARG(o)) {
+	os = 0;
+	ox = 0;
+	oy = 0;
+	oz = 0;
+	dos = 0;
+	dox = vx;
+	doy = vy;
+	doz = vz;
+}
+
 //translation_quaternion = lambda(dx, dy, dz) : ((1, 0, 0, 0), (0, -dx / 2, -dy / 2, -dz / 2))
 void translation_quaternion(float dx, float dy, float dz, DUALQUAARG(o)){
 	os = 1;

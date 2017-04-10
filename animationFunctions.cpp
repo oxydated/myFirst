@@ -1,4 +1,5 @@
 #include "animationFunctions.h"
+#include <Windows.h>
 
 //(0)loop interpolates bones local transformations
 //		get total time for animation cycle from the Tracks
@@ -87,13 +88,27 @@ void alocateGlobalArraysForTracks(sceneTracks &theTracks){
 //		{ getSkeletonForTime() in oxyAnimateMesh.py }
 //		** will descend by the tree in struct skeleton
 
-void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float currentTime){
+void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float currentTime, bool shouldIPrintIt){
 	boneStack theBoneStack;
 	float localTransform[8];
 	int boneIndex = theSkeleton.theRoot->boneNodeIndex;
 	float* boneGlobalTransform = &theTracks.globalTransforms[boneIndex * 8];
 	getQuatFromTrackForTime(theTracks.theTracks[boneIndex], currentTime, DUALQUAARRAY(boneGlobalTransform));
 	theBoneStack.push(theSkeleton.theRoot);
+	////////////////////////////// printing it
+	TCHAR outputString[400];
+	if (shouldIPrintIt) {
+		swprintf(outputString, TEXT("{%f, {\n"), currentTime);
+		OutputDebugString(outputString);
+
+		swprintf(outputString, TEXT("{%i, {%f, %f, %f, %f, %f, %f, %f, %f}, {%f, %f, %f, %f, %f, %f, %f, %f}}"),
+			boneIndex,
+			DUALQUAARRAY(boneGlobalTransform),
+			DUALQUAARRAY(boneGlobalTransform)
+			);
+		OutputDebugString(outputString);
+	}
+	//////////////////////////////
 	while (!theBoneStack.empty()){
 		boneNode* currentNode = theBoneStack.top();
 		theBoneStack.pop();
@@ -112,8 +127,26 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 			dual_quaternion_product(DUALQUAARRAY(parentGlobalTransform),
 				DUALQUAARRAY(localTransform),
 				DUALQUAARRAY(boneGlobalTransform));
+			////////////////////////////// printing it
+			if (shouldIPrintIt) {
+				swprintf(outputString, TEXT(",\n{%i, {%f, %f, %f, %f, %f, %f, %f, %f}, {%f, %f, %f, %f, %f, %f, %f, %f}}"),
+					currentChild.boneNodeIndex,
+					DUALQUAARRAY(localTransform),
+					DUALQUAARRAY(boneGlobalTransform)
+				);
+				OutputDebugString(outputString);
+			}
+
+			//////////////////////////////
 
 			theBoneStack.push(&currentNode->children[i]);
 		}
 	}
+
+	////////////////////////////// printing it
+	if (shouldIPrintIt) {
+		swprintf(outputString, TEXT("\n}}, \n"));
+		OutputDebugString(outputString);
+	}
+	//////////////////////////////
 }

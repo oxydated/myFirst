@@ -54,9 +54,9 @@ void alocateSkinArraysForTracks(sceneTracks theTracks, skinData &theSkin);
 //			{transfFromInitialToCurrentPose() in oxyAnimateMesh.py}
 //		produce array fromInitialPoseToCurrentTransf[]
 
-void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks);
+void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks, bool shouldIPrintIt = false);
 
 //void blendDualQuatFromMesh(skinData theSkin, float *vertices, float* &blendedVertices, int numVertices);
-void blendDualQuatFromMesh(skinData theSkin, float *vertices, float* normals, float* &blendedVertices, float* &blendedNormals, int numVertices);
+void blendDualQuatFromMesh(skinData theSkin, float *vertices, float* normals, float* &blendedVertices, float* &blendedNormals, int numVertices, bool shouldIPrintIt = false);
 
 #endif

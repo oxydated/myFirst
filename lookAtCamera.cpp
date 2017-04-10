@@ -1,6 +1,40 @@
 #include "lookAtCamera.h"
 #include <Windows.h>
 
+static camera_positions currentPosition = camera_positions::BY_THE_SIDE;
+static camera_positions formerPosition = camera_positions::BY_THE_SIDE;
+
+static float currentUpVector[] = { NAN, NAN, NAN };
+static float originalUpVector[] = { NAN, NAN, NAN };
+static float signUp = 1.0;
+
+typedef void(*debugVec)(float *);
+//static TCHAR vecName[100];
+
+void debugQuatOutput(float cosAlpha, float sinAlpha, float *Normal);
+
+void debugVector(float *vec) /*{
+	TCHAR outputString[100];
+	swprintf(outputString, TEXT("%s = {%f, %f, %f, %f}\n"),
+		vecName, vec[0], vec[1], vec[2], vec[3]);
+	OutputDebugString(outputString);
+}*/;
+
+void debugMatrix(float *m) /*{
+	TCHAR outputString[400];
+	swprintf(outputString, TEXT("%s = {{%f, %f, %f, %f}, {%f, %f, %f, %f}, {%f, %f, %f, %f}, {%f, %f, %f, %f}}\n"),
+		vecName,
+		m[0], m[4], m[8], m[12],
+		m[1], m[5], m[9], m[13],
+		m[2], m[6], m[10], m[14],
+		m[3], m[7], m[11], m[15]);
+	OutputDebugString(outputString);
+}*/;
+
+debugVec debugVectorName(TCHAR* vecArgName);
+
+debugVec debugMatrixName(TCHAR* matArgName);
+
 void rotateCameraThroughVectors(float * RealTargetPos, float * RealCamPos, float * pv, float * pu, float * NewCamPos, float *normalForDebugReasons)
 {
 	TCHAR outputString[100];
@@ -8,7 +42,7 @@ void rotateCameraThroughVectors(float * RealTargetPos, float * RealCamPos, float
 	float vy = pv[1] - RealTargetPos[1];
 	float vz = pv[2] - RealTargetPos[2];
 
-	float nv = sqrt(vx*vx + vy*vy + vz*vz);	
+	float nv = sqrt(vx*vx + vy*vy + vz*vz);
 	vx = vx / nv;
 	vy = vy / nv;
 	vz = vz / nv;
@@ -59,7 +93,7 @@ void rotateCameraThroughVectors(float * RealTargetPos, float * RealCamPos, float
 	normalForDebugReasons[1] = normY / sinAlpha;
 	normalForDebugReasons[2] = normZ / sinAlpha;
 
-	if ((fabs(cosAlpha- 1.0) ) > 0.000001) {
+	if ((fabs(cosAlpha - 1.0)) > 0.000001) {
 
 		float m[16];
 		identity(m);
@@ -72,23 +106,24 @@ void rotateCameraThroughVectors(float * RealTargetPos, float * RealCamPos, float
 		quaternionRotation(rotQuat, m, r);
 		multiplyVectorByMatrix(oldCamVec, r, newCamVec);
 		//multiplyMatrixByVector(r, oldCamVec, newCamVec);
-	} else {
+	}
+	else {
 		newCamVec[0] = oldCamVec[0];
 		newCamVec[1] = oldCamVec[1];
 		newCamVec[2] = oldCamVec[2];
-		newCamVec[3] = oldCamVec[3]; 
+		newCamVec[3] = oldCamVec[3];
 	}
 
 	NewCamPos[0] = newCamVec[0] + RealTargetPos[0];
 	NewCamPos[1] = newCamVec[1] + RealTargetPos[1];
 	NewCamPos[2] = newCamVec[2] + RealTargetPos[2];
 	NewCamPos[3] = 1.0;
-						
+
 	if (isnan(NewCamPos[0])) {
 		OutputDebugString(TEXT("NAN"));
 	}
 }
- 
+
 void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * normalM, float * r)
 {
 	TCHAR outputString[100];
@@ -119,8 +154,8 @@ void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * normalM, flo
 	float targetProjectedOverView[] = { dotTargetFromCamByView * viewx, dotTargetFromCamByView * viewy , dotTargetFromCamByView * viewz };
 	float targetProjectedOverCrossVec[] = { dotTargetFromCamBycrossVec * crossVecx, dotTargetFromCamBycrossVec * crossVecy , dotTargetFromCamBycrossVec * crossVecz };
 
-	float sanityCheck[] = { fromCamToTargetx , 0.0, fromCamToTargetz };		
-	float targetProjectedToPlaneViewCrossVec[] = {	targetProjectedOverView[0] + targetProjectedOverCrossVec[0] ,
+	float sanityCheck[] = { fromCamToTargetx , 0.0, fromCamToTargetz };
+	float targetProjectedToPlaneViewCrossVec[] = { targetProjectedOverView[0] + targetProjectedOverCrossVec[0] ,
 													targetProjectedOverView[1] + targetProjectedOverCrossVec[1],
 													targetProjectedOverView[2] + targetProjectedOverCrossVec[2] };
 
@@ -172,19 +207,19 @@ void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * normalM, flo
 	multiplyMatrixByVector(r, upVec, whereIsUpVectorNow);
 
 
-	swprintf(outputString, TEXT("upVec: %f, %f: %f -------------------\n"), upVec[0], upVec[1], upVec[2]);
-	OutputDebugString(outputString);
+	//swprintf(outputString, TEXT("upVec: %f, %f: %f -------------------\n"), upVec[0], upVec[1], upVec[2]);
+	//OutputDebugString(outputString);
 
 
-	float transformedTarget_shouldBeOnZAxis[4];	
+	float transformedTarget_shouldBeOnZAxis[4];
 	multiplyMatrixByVector(r, TargetPos, transformedTarget_shouldBeOnZAxis);
 
 	/////////// inverted rotation
 
-	copyMatrices(rotationsFromTargetToCam, normalM);   
-}	
+	copyMatrices(rotationsFromTargetToCam, normalM);
+}
 
-void lookAtCameraMatrix4(float * TargetPos, float * CamPos, float * Up, float * normalM, float * r) { 
+void lookAtCameraMatrix4(float * TargetPos, float * CamPos, float * Up, float * normalM, float * r) {
 
 	float identMat[16];
 	identity(identMat);
@@ -226,15 +261,21 @@ void lookAtCameraMatrix4(float * TargetPos, float * CamPos, float * Up, float * 
 	f[2] = f[2] / normF;
 	f[3] = 1.0;
 
+	//debugVectorName(TEXT("Up"))(Up);
+	//debugVectorName(TEXT("o"))(o);
+	//debugVectorName(TEXT("f"))(f);
+
 	// Rotate from o[] to f[]
 
 	float fromVectorOtoF[16];
+	//quaternionFromVectorVToVectorU(o, f, identMat, fromVectorOtoF, debugQuatOutput);
 	quaternionFromVectorVToVectorU(o, f, identMat, fromVectorOtoF);
 
 	// Rotate from u to y
 	float y[] = { 0.0, 1.0, 0.0, 1.0 };
 
 	float fromVectorUtoAxisY[16];
+	//quaternionFromVectorVToVectorU(u, y, identMat, fromVectorUtoAxisY, debugQuatOutput);
 	quaternionFromVectorVToVectorU(u, y, identMat, fromVectorUtoAxisY);
 
 	// Rotate the vector f[] by fromVectorUtoAxisY
@@ -257,6 +298,93 @@ void lookAtCameraMatrix4(float * TargetPos, float * CamPos, float * Up, float * 
 	float result1[16];
 	multiplyMatrices(fromVectorUtoAxisY, result0, result1);
 
-	float result2[16];
 	multiplyMatrices(fromVectorNFtoAxisZ, result1, r);
+
+	// Compose the normal transformation
+	float transpose_r[16];
+	//float inverse_transpose_r[16];
+
+	transposeMatrix(r, transpose_r);
+	invertMatrix(transpose_r, normalM);
+	
+
+	//invertMatrix(result2, normalM);
+}
+
+void setUpVector(float in_x, float in_y, float in_z)
+{
+	currentUpVector[0] = originalUpVector[0] = in_x;
+	currentUpVector[1] = originalUpVector[1] = in_y;
+	currentUpVector[2] = originalUpVector[2] = in_z;
+}
+
+void updateUpVector(float * targetPos, float * camPos, float * upVector)
+{
+	float up[] = { originalUpVector[0], originalUpVector[1], originalUpVector[2] };
+	float v[3];
+	v[0] = camPos[0] - targetPos[0];
+	v[1] = camPos[1] - targetPos[1];
+	v[2] = camPos[2] - targetPos[2];
+
+	float normv = sqrt(pow(v[0], 2) + pow(v[1], 2) + pow(v[2], 2));
+	float vDotUp = (up[0] * v[0] + up[1] * v[1] + up[2] * v[2]) / normv;
+
+	float toCenter[3];
+	toCenter[0] = v[0] - pow(up[0], 2)*v[0] - up[0] * up[1] * v[1] - up[0] * up[2] * v[2];
+	toCenter[1] = -(up[0] * up[1] * v[0]) + v[1] - pow(up[1], 2)*v[1] - up[1] * up[2] * v[2];
+	toCenter[2] = -(up[0] * up[2] * v[0]) - up[1] * up[2] * v[1] + v[2] - pow(up[2], 2)*v[2];
+
+	float toCenterNorm = sqrt(pow(toCenter[0], 2) + pow(toCenter[1], 2) + pow(toCenter[2], 2));
+	toCenter[0] = toCenter[0] / toCenterNorm;
+	toCenter[1] = toCenter[1] / toCenterNorm;
+	toCenter[2] = toCenter[2] / toCenterNorm;
+
+	formerPosition = currentPosition;
+
+	TCHAR cameraPosRelative[200];
+	TCHAR outputString[200];
+
+	currentPosition = camera_positions::BY_THE_SIDE;
+	wcscpy(cameraPosRelative, TEXT("BY THE SIDE"));
+	if (vDotUp > 0.707107) {
+		currentPosition = camera_positions::ON_TOP;
+		wcscpy(cameraPosRelative, TEXT("ON TOP"));
+	}
+	if (vDotUp < -0.707107)
+	{
+		currentPosition = camera_positions::ON_BOTTOM;
+		wcscpy(cameraPosRelative, TEXT("ON BOTTOM"));
+	}
+
+	swprintf(outputString, TEXT("vDotUp = %f ... %s\n"),
+		vDotUp, cameraPosRelative);
+	OutputDebugString(outputString);
+
+	size_t positionChange = size_t(currentPosition) * 10 + size_t(formerPosition);
+
+	float sign, from_top, on_top;
+
+	switch (positionChange) {
+	case camera_current_and_former_pos::FROM_BOTTOM_TO_SIDE:
+	case camera_current_and_former_pos::FROM_TOP_TO_SIDE:
+		sign = (currentUpVector[0] * toCenter[0] + currentUpVector[1] * toCenter[1] + currentUpVector[2] * toCenter[2]) > 0.0 ? 1.0 : -1.0;
+		from_top = positionChange == camera_current_and_former_pos::FROM_TOP_TO_SIDE ? -1.0 : 1.0;
+		currentUpVector[0] = sign * from_top * up[0];
+		currentUpVector[1] = sign * from_top * up[1];
+		currentUpVector[2] = sign * from_top * up[2];
+		break;
+	case camera_current_and_former_pos::FROM_SIDE_TO_BOTTOM:
+	case camera_current_and_former_pos::FROM_SIDE_TO_TOP:
+		sign = (currentUpVector[0] * up[0] + currentUpVector[1] * up[1] + currentUpVector[2] * up[2]) > 0.0 ? 1.0 : -1.0;
+		on_top = positionChange == camera_current_and_former_pos::FROM_SIDE_TO_TOP ? -1.0 : 1.0;
+		currentUpVector[0] = sign * on_top * toCenter[0];
+		currentUpVector[1] = sign * on_top * toCenter[1];
+		currentUpVector[2] = sign * on_top * toCenter[2];
+		break;
+	default:
+		break;
+	}
+	upVector[0] = currentUpVector[0];
+	upVector[1] = currentUpVector[1];
+	upVector[2] = currentUpVector[2];
 }
