@@ -201,13 +201,13 @@ void drawVertexArray() {
 	}
 
 	float mat[16];
-	identity(mat);
+	oxyde::linAlg::identity(mat);
 
 	float rot[16];
-	identity(rot);
+	oxyde::linAlg::identity(rot);
 
 	float trans[16];
-	identity(trans);
+	oxyde::linAlg::identity(trans);
 
 	translate(0.0, 0.0, 300.0, mat, trans);
 
@@ -216,10 +216,10 @@ void drawVertexArray() {
 	translate(0.0, 0.0, -100.0, rot, trans);
 
 	float normalMat[16];
-	identity(normalMat);
+	oxyde::linAlg::identity(normalMat);
 
 	float normalRot[16];
-	identity(normalRot);
+	oxyde::linAlg::identity(normalRot);
 
 
 	rotateY(teta, normalMat, normalRot);
@@ -310,13 +310,13 @@ void drawVertexArray() {
 	lookAtCameraMatrix4(ROp, RCp, Up, normalM, r);
 
 	float inv_r[16];
-	invertMatrix(r, inv_r);
+	oxyde::linAlg::invertMatrix(r, inv_r);
 
 	float cameraBeforeTransform[] = { 0.00000000, 0.000000000, 0.000000000, 1.000000000 };
 
 	float cameraAfterTransform[] = { 1.00000000, 0.000000000, 0.000000000, 1.000000000 };
 
-	multiplyVectorByMatrix(RCp, r, cameraAfterTransform);
+	oxyde::linAlg::multiplyVectorByMatrix(RCp, r, cameraAfterTransform);
 
 	//float lightVectorBeforeTransform[] = { 100.0, 50.0, -200.0, 1.0 };
 	//float lightVectorBeforeTransform[] = { RCp[0], RCp[1], RCp[2], 1.0 };
@@ -324,13 +324,13 @@ void drawVertexArray() {
 	float lightVectorAfterTransform[] = { 0.0, 0.0, 100.0, 1.0 };
 
 	//multiplyVectorByMatrix(lightVectorBeforeTransform, inv_r, lightVectorAfterTransform);
-	multiplyVectorByMatrix(lightVectorBeforeTransform, inv_r, lightVectorAfterTransform);
+	oxyde::linAlg::multiplyVectorByMatrix(lightVectorBeforeTransform, inv_r, lightVectorAfterTransform);
 	setLightPosition(theProgram, lightVectorAfterTransform[0], lightVectorAfterTransform[1], lightVectorAfterTransform[2]);
 	//setLightPosition(theProgram, lightVectorBeforeTransform[0], lightVectorBeforeTransform[1], lightVectorBeforeTransform[2]);
 	//setLightPosition(theProgram, 0.0, 0.0, 0.0);
 
 	float transposePerspective[16];
-	transposeMatrix(getInvertedPersPectiveMatrix(), transposePerspective);
+	oxyde::linAlg::transposeMatrix(getInvertedPersPectiveMatrix(), transposePerspective);
 
 	// For camera update
 
@@ -355,8 +355,8 @@ void drawVertexArray() {
 	// For camera update
 
 	if (currentState == states::START_PRESSING) {
-		copyMatrices(r, originalR);
-		copyMatrices(inv_r, originalInv_r);
+		oxyde::linAlg::copyMatrices(r, originalR);
+		oxyde::linAlg::copyMatrices(inv_r, originalInv_r);
 	}
 
 	if ((currentState == states::START_PRESSING) || (currentState == states::KEEP_PRESSING)) {
@@ -374,7 +374,7 @@ void drawVertexArray() {
 		float depth;
 
 		float targetPosInCamSpace[4];
-		multiplyMatrixByVector(originalR, ROp, targetPosInCamSpace);
+		oxyde::linAlg::multiplyMatrixByVector(originalR, ROp, targetPosInCamSpace);
 
 		depth = 1.5;
 
@@ -389,7 +389,7 @@ void drawVertexArray() {
 		float intersectionWithSphereAtTargetPosition[] = { 0.0, 0.0, 0.0, 1.0 };
 
 		if (!isnan(intersectionWithSphereInCamSpace[0])) {
-			multiplyMatrixByVector(originalInv_r, intersectionWithSphereInCamSpace, intersectionWithSphereAtTargetPosition);
+			oxyde::linAlg::multiplyMatrixByVector(originalInv_r, intersectionWithSphereInCamSpace, intersectionWithSphereAtTargetPosition);
 
 			winInCamSpace[0] = intersectionWithSphereInCamSpace[0];
 			winInCamSpace[1] = intersectionWithSphereInCamSpace[1];
@@ -422,7 +422,7 @@ void drawVertexArray() {
 		}
 
 		float WinTransformed[4];
-		multiplyMatrixByVector(originalInv_r, winInCamSpace, WinTransformed);
+		oxyde::linAlg::multiplyMatrixByVector(originalInv_r, winInCamSpace, WinTransformed);
 		blendedVertices[(302 + 1) * 3 + 0] = WinTransformed[0];
 		blendedVertices[(302 + 1) * 3 + 1] = WinTransformed[1];
 		blendedVertices[(302 + 1) * 3 + 2] = WinTransformed[2];
@@ -466,7 +466,7 @@ void drawVertexArray() {
 			//debugVectorName(TEXT("vectorU"))(vectorU);
 
 			float ident[16];
-			identity(ident);
+			oxyde::linAlg::identity(ident);
 
 			float rotateMat[16];
 			//quaternionFromVectorVToVectorU(vectorV, vectorU, ident, rotateMat, debugQuatOutput);
@@ -479,7 +479,7 @@ void drawVertexArray() {
 			originalCamPosMinusTargetPos[3] = 1.0;
 
 			float updateCamPos[4];
-			multiplyMatrixByVector(rotateMat, originalCamPosMinusTargetPos, updateCamPos);
+			oxyde::linAlg::multiplyMatrixByVector(rotateMat, originalCamPosMinusTargetPos, updateCamPos);
 
 			//debugVectorName(TEXT("winInCamSpace"))(winInCamSpace);
 

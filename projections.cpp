@@ -42,7 +42,7 @@ void perspectiveMatrix( float in_l, float in_r, float in_n, float in_f, float in
     
     //multiplyMatrices( tm, m, res );   
 	
-    multiplyMatrices( m, tm, res );   
+    oxyde::linAlg::multiplyMatrices( m, tm, res );   
 }
 
 void windowCoordToCameraSpace( float xw, float yw, float z, float *pointInCamSpace) {
@@ -64,7 +64,7 @@ void invertedPerspectiveMatrix(float l, float r, float n, float f, float b, floa
 	tm[14] = -1.;
 	tm[15] = (-0.125*(f - 1.*n)*(l - 1.*r)*(0. - (4 * f*pow(n, 2)) / ((f - n)*(l - r)*(b - t)) - (4 * pow(n, 3)) / ((f - n)*(l - r)*(b - t)))*(b - 1.*t)) / (f*pow(n, 3));
 
-	multiplyMatrices(m, tm, res);
+	oxyde::linAlg::multiplyMatrices(m, tm, res);
 }
 
 void viewportMatrix( float x0, float y0, float w, float h, float ne, float fa,  float *m, float *res ){
@@ -83,7 +83,7 @@ void viewportMatrix( float x0, float y0, float w, float h, float ne, float fa,  
     
     //multiplyMatrices( tm, m, res );   
 	
-    multiplyMatrices( m, tm, res );   
+	oxyde::linAlg::multiplyMatrices( m, tm, res );
 }
 
 void normalizedScreenCoordFromWindowCoord(float sx, float sy, float &x, float &y) {

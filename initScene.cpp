@@ -67,7 +67,7 @@ void initGLES(int x, int y, int width, int height){
 	glGetIntegerv(GL_MAX_VIEWPORT_DIMS, viewportMax);
     glClearColor(0.25, 0.0, 0.5, 1.0);
     float mat[16];
-    identity(mat);
+	oxyde::linAlg::identity(mat);
     
     float pers[16];
 	float invPers[16];
@@ -76,15 +76,15 @@ void initGLES(int x, int y, int width, int height){
 
 	float testVec[] = { 1.0, -1.0, 1.5, 1.0 };
 	float testVec_should_b_1_minus1_minus1[4];
-	multiplyVectorByMatrix(testVec, pers, testVec_should_b_1_minus1_minus1);
+	oxyde::linAlg::multiplyVectorByMatrix(testVec, pers, testVec_should_b_1_minus1_minus1);
 	testVec_should_b_1_minus1_minus1[0] = testVec_should_b_1_minus1_minus1[0] / testVec_should_b_1_minus1_minus1[3];
 	testVec_should_b_1_minus1_minus1[1] = testVec_should_b_1_minus1_minus1[1] / testVec_should_b_1_minus1_minus1[3];
 	testVec_should_b_1_minus1_minus1[2] = testVec_should_b_1_minus1_minus1[2] / testVec_should_b_1_minus1_minus1[3];
 	testVec_should_b_1_minus1_minus1[3] = testVec_should_b_1_minus1_minus1[3] / testVec_should_b_1_minus1_minus1[3];
 
 	float Tpers[16];
-	transposeMatrix(pers, Tpers);
-	multiplyVectorByMatrix(testVec, Tpers, testVec_should_b_1_minus1_minus1);
+	oxyde::linAlg::transposeMatrix(pers, Tpers);
+	oxyde::linAlg::multiplyVectorByMatrix(testVec, Tpers, testVec_should_b_1_minus1_minus1);
 	testVec_should_b_1_minus1_minus1[0] = testVec_should_b_1_minus1_minus1[0] / testVec_should_b_1_minus1_minus1[3];
 	testVec_should_b_1_minus1_minus1[1] = testVec_should_b_1_minus1_minus1[1] / testVec_should_b_1_minus1_minus1[3];
 	testVec_should_b_1_minus1_minus1[2] = testVec_should_b_1_minus1_minus1[2] / testVec_should_b_1_minus1_minus1[3];
@@ -92,7 +92,7 @@ void initGLES(int x, int y, int width, int height){
 
 	invertedPerspectiveMatrix(-1.0, 1.0, -1.5, -400.0, -1.0, 1.0, mat, invPers);
     printf("perspective Matrix:\n");
-    printMatrix(pers);
+	oxyde::linAlg::printMatrix(pers);
     
     float view[16];
 
@@ -100,24 +100,24 @@ void initGLES(int x, int y, int width, int height){
 	glGetFloatv(GL_DEPTH_RANGE, NEARFAR);
     viewportMatrix(x, y, width, height, NEARFAR[0], NEARFAR[1], mat, view);
     printf("\nview Matrix:\n");
-    printMatrix(view);
+	oxyde::linAlg::printMatrix(view);
     
     float poin[4] = { 0.5, 0.5, 10.0, 1.0 };
     float retPoinvm[4];
     float retPoinmv[4];
     
-    multiplyVectorByMatrix( poin, pers, retPoinvm);
-    multiplyMatrixByVector( poin, pers, retPoinmv);
+	oxyde::linAlg::multiplyVectorByMatrix( poin, pers, retPoinvm);
+	oxyde::linAlg::multiplyMatrixByVector( poin, pers, retPoinmv);
     printf("Point by pers\n");
-    printVector( poin );
+	oxyde::linAlg::printVector( poin );
     printf("retPoinvm by pers\n");
-    printVector( retPoinvm );
-    homogenize( retPoinvm );
-    printVector( retPoinvm );
+	oxyde::linAlg::printVector( retPoinvm );
+	oxyde::linAlg::homogenize( retPoinvm );
+	oxyde::linAlg::printVector( retPoinvm );
     printf("retPoinmv by pers\n");
-    printVector( retPoinmv );
-    homogenize( retPoinmv );
-    printVector( retPoinmv );
+	oxyde::linAlg::printVector( retPoinmv );
+	oxyde::linAlg::homogenize( retPoinmv );
+	oxyde::linAlg::printVector( retPoinmv );
     
     createVertexBuffer();
     GLint program = loadAndCompileShader();

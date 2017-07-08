@@ -22,7 +22,7 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 		float* boneGlobalTransform = &theTracks.globalTransforms[theSkin.skinPoseSkeleton[i].boneIndex * 8];
 		float* transformedFromSkin = &theSkin.fromSkinPoseToCurrentTransf[theSkin.skinPoseSkeleton[i].boneIndex * 8];
 
-		transformFromSourceToDestinationAxis(DUALQUAARRAY(theSkin.skinPoseSkeleton[i].skinPose), DUALQUAARRAY(boneGlobalTransform), DUALQUAARRAY(transformedFromSkin));
+		oxyde::DQ::transformFromSourceToDestinationAxis(DUALQUAARRAY(theSkin.skinPoseSkeleton[i].skinPose), DUALQUAARRAY(boneGlobalTransform), DUALQUAARRAY(transformedFromSkin));
 
 
 		float theComplement[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -32,7 +32,7 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 		if (transformedFromSkin[0] < 0.0 ) {
 		//if (transformedFromSkin[4] > 0.0001) {
 			complementIt = true;
-			dual_quaternion_complement(DUALQUAARRAY(transformedFromSkin), DUALQUAARRAY(theComplement));
+			oxyde::DQ::dual_quaternion_complement(DUALQUAARRAY(transformedFromSkin), DUALQUAARRAY(theComplement));
 
 			transformedFromSkin[0] = theComplement[0];
 			transformedFromSkin[1] = theComplement[1];
@@ -140,13 +140,13 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 			//            
 			//                                                     dual_quaternion_product_by_scalar(theVersor,vertexWeight)
 			float o[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-			dual_quaternion_product_by_scalar(DUALQUAARRAY(theVersor), weight, DUALQUAARRAY(o));
+			oxyde::DQ::dual_quaternion_product_by_scalar(DUALQUAARRAY(theVersor), weight, DUALQUAARRAY(o));
 
 			//            theBlendedQuat = dual_quaternion_sum(    theBlendedQuat, 
 			//                                                     dual_quaternion_product_by_scalar(theVersor,vertexWeight)
 			//                                                )
 			float theSum[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-			dual_quaternion_sum(DUALQUAARRAY(theBlendedQuat),
+			oxyde::DQ::dual_quaternion_sum(DUALQUAARRAY(theBlendedQuat),
 				DUALQUAARRAY(o),
 				DUALQUAARRAY(theSum));
 
@@ -160,22 +160,22 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 			theTotalWeight = theTotalWeight + weight;
 		}
 		//        theNorm = dual_quaternion_norm(theBlendedQuat)
-		float theNorm = dual_quaternion_norm(DUALQUAARRAY(theBlendedQuat));
+		float theNorm = oxyde::DQ::dual_quaternion_norm(DUALQUAARRAY(theBlendedQuat));
 		//        print "theNorm:", theNorm
 
 		//       
 		float normalizedBlend[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-		dual_quaternion_product_by_scalar(DUALQUAARRAY(theBlendedQuat), 1.0 / theNorm, DUALQUAARRAY(normalizedBlend));
+		oxyde::DQ::dual_quaternion_product_by_scalar(DUALQUAARRAY(theBlendedQuat), 1.0 / theNorm, DUALQUAARRAY(normalizedBlend));
 
 		//		Transforming the vertices
 
 		float vertQuat[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		float px = vertices[3 * i]; float py = vertices[3 * i + 1]; float pz = vertices[3 * i + 2];
-		point_quaternion(px, py, pz, DUALQUAARRAY(vertQuat));
+		oxyde::DQ::point_quaternion(px, py, pz, DUALQUAARRAY(vertQuat));
 
 		float vertBlendQuat[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		//        DLBVerticesDic[aVertex] = dual_quat_transform_point( dual_quaternion_product_by_scalar(theBlendedQuat,1.0/theNorm) , theVerticesDic[aVertex] )[1][1:]
-		dual_quat_transform_point(DUALQUAARRAY(normalizedBlend),
+		oxyde::DQ::dual_quat_transform_point(DUALQUAARRAY(normalizedBlend),
 			//dual_quat_transform_point(DUALQUAARRAY(theBlendedQuat),
 			DUALQUAARRAY(vertQuat),
 			DUALQUAARRAY(vertBlendQuat));
@@ -204,15 +204,15 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 		//		Transforming the vertices normals
 
 		float rotationOnlyQuat[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-		extractRotationQuatFromDualQuat(DUALQUAARRAY(normalizedBlend), DUALQUAARRAY(rotationOnlyQuat));
+		oxyde::DQ::extractRotationQuatFromDualQuat(DUALQUAARRAY(normalizedBlend), DUALQUAARRAY(rotationOnlyQuat));
 
 		float normalQuat[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		float nx = normals[3 * i]; float ny = normals[3 * i + 1]; float nz = normals[3 * i + 2];
-		vector_quaternion(nx, ny, nz, DUALQUAARRAY(normalQuat));
+		oxyde::DQ::vector_quaternion(nx, ny, nz, DUALQUAARRAY(normalQuat));
 
 		float normalBlendQuat[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-		dual_quat_transform_point(DUALQUAARRAY(normalizedBlend),
+		oxyde::DQ::dual_quat_transform_point(DUALQUAARRAY(normalizedBlend),
 			DUALQUAARRAY(normalQuat),
 			DUALQUAARRAY(normalBlendQuat));
 

@@ -96,7 +96,7 @@ void rotateCameraThroughVectors(float * RealTargetPos, float * RealCamPos, float
 	if ((fabs(cosAlpha - 1.0)) > 0.000001) {
 
 		float m[16];
-		identity(m);
+		oxyde::linAlg::identity(m);
 
 		float r[16];
 
@@ -104,7 +104,7 @@ void rotateCameraThroughVectors(float * RealTargetPos, float * RealCamPos, float
 		//float rotQuat[] = { qs, -qx, -qy, -qz };
 
 		quaternionRotation(rotQuat, m, r);
-		multiplyVectorByMatrix(oldCamVec, r, newCamVec);
+		oxyde::linAlg::multiplyVectorByMatrix(oldCamVec, r, newCamVec);
 		//multiplyMatrixByVector(r, oldCamVec, newCamVec);
 	}
 	else {
@@ -160,7 +160,7 @@ void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * normalM, flo
 													targetProjectedOverView[2] + targetProjectedOverCrossVec[2] };
 
 	float identMat[16];
-	identity(identMat);
+	oxyde::linAlg::identity(identMat);
 
 	/////////// rotations from cam to target
 
@@ -171,7 +171,7 @@ void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * normalM, flo
 	quaternionFromVectorVToVectorU(targetProjectedToPlaneViewCrossVec, targetFromCam, identMat, rotationFromProjectedTargetToActualTarget);
 
 	float rotationsFromCamToTarget[16];
-	multiplyMatrices(rotationFromProjectedTargetToActualTarget, rotationFromViewToProjectedTarget, rotationsFromCamToTarget);
+	oxyde::linAlg::multiplyMatrices(rotationFromProjectedTargetToActualTarget, rotationFromViewToProjectedTarget, rotationsFromCamToTarget);
 
 	/////////// inverted rotations
 
@@ -182,7 +182,7 @@ void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * normalM, flo
 	quaternionFromVectorVToVectorU(targetProjectedToPlaneViewCrossVec, view, identMat, rotationFromProjectedTargetToView);
 
 	float rotationsFromTargetToCam[16];
-	multiplyMatrices(rotationFromProjectedTargetToView, rotationFromActualTargetToProjectedTarget, rotationsFromTargetToCam);
+	oxyde::linAlg::multiplyMatrices(rotationFromProjectedTargetToView, rotationFromActualTargetToProjectedTarget, rotationsFromTargetToCam);
 
 	/////////// translation from Cam to Origin
 
@@ -191,20 +191,20 @@ void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * normalM, flo
 
 	/////////// camera transform
 
-	multiplyMatrices(rotationsFromTargetToCam, translationFromCamToOrigin, r);
+	oxyde::linAlg::multiplyMatrices(rotationsFromTargetToCam, translationFromCamToOrigin, r);
 
 	/////////// sanity check
 
 	float transposed_r[16];
-	transposeMatrix(r, transposed_r);
+	oxyde::linAlg::transposeMatrix(r, transposed_r);
 
 	float transformedCam_shouldBeOntheOrigin[4];
-	multiplyMatrixByVector(r, CamPos, transformedCam_shouldBeOntheOrigin);
+	oxyde::linAlg::multiplyMatrixByVector(r, CamPos, transformedCam_shouldBeOntheOrigin);
 
 
 	float upVec[] = { upx, upy, upz, 1.0 };
 	float whereIsUpVectorNow[4];
-	multiplyMatrixByVector(r, upVec, whereIsUpVectorNow);
+	oxyde::linAlg::multiplyMatrixByVector(r, upVec, whereIsUpVectorNow);
 
 
 	//swprintf(outputString, TEXT("upVec: %f, %f: %f -------------------\n"), upVec[0], upVec[1], upVec[2]);
@@ -212,17 +212,17 @@ void lookAtCameraMatrix3(float * TargetPos, float * CamPos, float * normalM, flo
 
 
 	float transformedTarget_shouldBeOnZAxis[4];
-	multiplyMatrixByVector(r, TargetPos, transformedTarget_shouldBeOnZAxis);
+	oxyde::linAlg::multiplyMatrixByVector(r, TargetPos, transformedTarget_shouldBeOnZAxis);
 
 	/////////// inverted rotation
 
-	copyMatrices(rotationsFromTargetToCam, normalM);
+	oxyde::linAlg::copyMatrices(rotationsFromTargetToCam, normalM);
 }
 
 void lookAtCameraMatrix4(float * TargetPos, float * CamPos, float * Up, float * normalM, float * r) {
 
 	float identMat[16];
-	identity(identMat);
+	oxyde::linAlg::identity(identMat);
 
 	//	Translate from CamPos to Origin
 
@@ -231,7 +231,7 @@ void lookAtCameraMatrix4(float * TargetPos, float * CamPos, float * Up, float * 
 
 	// Translate Target by translateCamPosToOrigin
 	float o[4];
-	multiplyMatrixByVector(translateCamPosToOrigin, TargetPos, o);
+	oxyde::linAlg::multiplyMatrixByVector(translateCamPosToOrigin, TargetPos, o);
 	float normO = sqrt(pow(o[0], 2) + pow(o[1], 2) + pow(o[2], 2));
 	o[0] = o[0] / normO;
 	o[1] = o[1] / normO;
@@ -281,7 +281,7 @@ void lookAtCameraMatrix4(float * TargetPos, float * CamPos, float * Up, float * 
 	// Rotate the vector f[] by fromVectorUtoAxisY
 
 	float nF[4];
-	multiplyMatrixByVector(fromVectorUtoAxisY, f, nF);
+	oxyde::linAlg::multiplyMatrixByVector(fromVectorUtoAxisY, f, nF);
 
 	// Rotate from nF to z 
 
@@ -293,19 +293,19 @@ void lookAtCameraMatrix4(float * TargetPos, float * CamPos, float * Up, float * 
 	// Compose the transformation
 
 	float result0[16];
-	multiplyMatrices(fromVectorOtoF, translateCamPosToOrigin, result0);
+	oxyde::linAlg::multiplyMatrices(fromVectorOtoF, translateCamPosToOrigin, result0);
 
 	float result1[16];
-	multiplyMatrices(fromVectorUtoAxisY, result0, result1);
+	oxyde::linAlg::multiplyMatrices(fromVectorUtoAxisY, result0, result1);
 
-	multiplyMatrices(fromVectorNFtoAxisZ, result1, r);
+	oxyde::linAlg::multiplyMatrices(fromVectorNFtoAxisZ, result1, r);
 
 	// Compose the normal transformation
 	float transpose_r[16];
 	//float inverse_transpose_r[16];
 
-	transposeMatrix(r, transpose_r);
-	invertMatrix(transpose_r, normalM);
+	oxyde::linAlg::transposeMatrix(r, transpose_r);
+	oxyde::linAlg::invertMatrix(transpose_r, normalM);
 	
 
 	//invertMatrix(result2, normalM);

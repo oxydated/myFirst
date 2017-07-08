@@ -338,7 +338,7 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 		float myOldVert[4] = { vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2], 1.0 };
 		float myNewVert[4] = { 0.0, 0.0, 0.0, 0.0 };
 
-		multiplyMatrixByVector(objectMatrix, myOldVert, myNewVert);
+		oxyde::linAlg::multiplyMatrixByVector(objectMatrix, myOldVert, myNewVert);
 		vertices[i * 3 + 0] = myNewVert[0];
 		vertices[i * 3 + 1] = myNewVert[1];
 		vertices[i * 3 + 2] = myNewVert[2];

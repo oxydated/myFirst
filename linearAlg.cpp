@@ -48,8 +48,8 @@ void setPerspectiveMatrix( float *pers, int program ){
     glUniformMatrix4fv( persLocation, 1, GL_FALSE, pers );
 	persLoc = persLocation;
 	programNum = program;
-	copyMatrices(pers, persStatic);
-	invertMatrix(persStatic, invPersStatic);
+	oxyde::linAlg::copyMatrices(pers, persStatic);
+	oxyde::linAlg::invertMatrix(persStatic, invPersStatic);
 }
 
 GLint getPersLocation() {
@@ -62,7 +62,7 @@ GLint getProgram() {
 
 void setInvertedPerspectiveMatrix(float * invPers)
 {
-	copyMatrices(invPers, invPersStatic);
+	oxyde::linAlg::copyMatrices(invPers, invPersStatic);
 }
 
 void setViewportMatrix( float *view, int program ){
@@ -71,8 +71,8 @@ void setViewportMatrix( float *view, int program ){
     if( viewLocation >= 0 ){
 		glUniformMatrix4fv( viewLocation, 1, GL_FALSE, view );
 	}
-	copyMatrices(view, viewStatic);
-	invertMatrix(viewStatic, invViewStatic);
+	oxyde::linAlg::copyMatrices(view, viewStatic);
+	oxyde::linAlg::invertMatrix(viewStatic, invViewStatic);
 }
 
 float* getInvertedPersPectiveMatrix() {

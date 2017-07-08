@@ -40,7 +40,7 @@ void getIntervalFromTrackForTime(track theTrack, float currentTime, keyFrame* &t
 
 void getQuatFromTrackForKeyFrameAndStep(keyFrame* theKeyFrame, float step, DUALQUAARG(q)){
 	if (theKeyFrame == NULL){
-		dual_quaternion_unity(DUALQUACOMP(q));
+		oxyde::DQ::dual_quaternion_unity(DUALQUACOMP(q));
 		return;
 	}
 	//(theAngle_motion, theUvector, theSlide_motion, theMvector) = trackIntervalsDic[(lastTime, nextTime)][1][0]
@@ -55,7 +55,7 @@ void getQuatFromTrackForKeyFrameAndStep(keyFrame* theKeyFrame, float step, DUALQ
 
 	DUALQUAVAR(r);
 	//dual_Versor(float theta, float ux, float uy, float uz, float s, float mx, float my, float mz, DUALQUAARG(r));
-	dual_Versor(theKeyFrame->keyFrameData->theAngle * step, 
+	oxyde::DQ::dual_Versor(theKeyFrame->keyFrameData->theAngle * step,
 		theKeyFrame->keyFrameData->theUvector[0], theKeyFrame->keyFrameData->theUvector[1], theKeyFrame->keyFrameData->theUvector[2],
 		theKeyFrame->keyFrameData->theSfactor * step,
 		theKeyFrame->keyFrameData->theMvector[0], theKeyFrame->keyFrameData->theMvector[1], theKeyFrame->keyFrameData->theMvector[2],
@@ -63,7 +63,7 @@ void getQuatFromTrackForKeyFrameAndStep(keyFrame* theKeyFrame, float step, DUALQ
 
 	float* curr = theKeyFrame->keyFrameData->startTransform;
 	
-	dual_quaternion_product(DUALQUACOMP(r),
+	oxyde::DQ::dual_quaternion_product(DUALQUACOMP(r),
 		DUALQUAARRAY(curr),
 		DUALQUACOMP(q));
 	//										trackIntervalsDic[(lastTime, nextTime)][0]
@@ -124,7 +124,7 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 			//	childInterpolation
 			//	)
 
-			dual_quaternion_product(DUALQUAARRAY(parentGlobalTransform),
+			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(parentGlobalTransform),
 				DUALQUAARRAY(localTransform),
 				DUALQUAARRAY(boneGlobalTransform));
 			////////////////////////////// printing it

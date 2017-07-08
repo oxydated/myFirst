@@ -21,7 +21,7 @@ void rotateX( float theta, float* m, float* r ){
     tm[2]= 	0.0;		tm[6]= -sin(theta);	tm[10]= cos(theta);     tm[14]= 	0.0;		
     tm[3]= 	0.0;		tm[7]= 	0.0;		tm[11]= 	0.0;		tm[15]= 	1.0;
 
-    multiplyMatrices( m, tm, r );
+	oxyde::linAlg::multiplyMatrices( m, tm, r );
     //multiplyMatrices( tm, m, r );
 }
 
@@ -31,7 +31,7 @@ void rotateY( float theta, float* m, float* r ){
     tm[2]= 	sin(theta);	tm[6]= 	0.0;		tm[10]= 	cos(theta);	tm[14]= 	0.0;		
     tm[3]= 	0.0;		tm[7]= 	0.0;		tm[11]= 	0.0;		tm[15]= 	1.0;
     
-    multiplyMatrices( m, tm, r );
+	oxyde::linAlg::multiplyMatrices( m, tm, r );
     //multiplyMatrices( tm, m, r );
 }
 
@@ -41,7 +41,7 @@ void rotateZ( float theta, float* m, float* r ){
     tm[2]= 	0.0;		tm[6]= 	0.0;		tm[10]= 	1.0;		tm[14]= 	0.0;		
     tm[3]= 	0.0;		tm[7]= 	0.0;		tm[11]= 	0.0;		tm[15]= 	1.0;
     
-    multiplyMatrices( m, tm, r );
+	oxyde::linAlg::multiplyMatrices( m, tm, r );
     //multiplyMatrices( tm, m, r );
 }
 
@@ -51,7 +51,7 @@ void translate( float tx, float ty, float tz, float* m, float* r ){
     tm[2]= 	0.0;		tm[6]= 	0.0;		tm[10]= 	1.0;		tm[14]= 	tz;		
     tm[3]= 	0.0;		tm[7]= 	0.0;		tm[11]= 	0.0;		tm[15]= 	1.0;
     
-    multiplyMatrices( m, tm, r );
+	oxyde::linAlg::multiplyMatrices( m, tm, r );
     //multiplyMatrices( tm, m, r );
 }
 
@@ -61,7 +61,7 @@ void scale( float sx, float sy, float sz, float *m, float* r ){
     tm[2]= 	0.0;		tm[6]= 	0.0;		tm[10]= 	sz;         tm[14]= 	0.0;		
     tm[3]= 	0.0;		tm[7]= 	0.0;		tm[11]= 	0.0;		tm[15]= 	1.0;
     
-    multiplyMatrices( m, tm, r );
+	oxyde::linAlg::multiplyMatrices( m, tm, r );
     //multiplyMatrices( tm, m, r );
 }
 
@@ -88,7 +88,7 @@ void quaternionRotation(float *quat, float *m, float *r){
 	//tm[2] = 0.0;		tm[6] = 0.0;		tm[10] = 1.0;		tm[14] = tz;
 	//tm[3] = 0.0;		tm[7] = 0.0;		tm[11] = 0.0;		tm[15] = 1.0;
 
-	multiplyMatrices(m, tm, r);
+	oxyde::linAlg::multiplyMatrices(m, tm, r);
 }
 
 void quaternionFromCosSinNormal(float cosAlpha, float sinAlpha, float *Normal, float * m, float * r)
@@ -110,7 +110,7 @@ void quaternionFromCosSinNormal(float cosAlpha, float sinAlpha, float *Normal, f
 		quaternionRotation(rotQuat, m, r);
 	}
 	else {
-		copyMatrices(m, r);
+		oxyde::linAlg::copyMatrices(m, r);
 	}
 }
 
@@ -151,7 +151,7 @@ void quaternionFromVectorVToVectorU(float * v, float * u, float * m, float * r, 
 		quaternionFromCosSinNormal(cosAlpha, sinAlpha, Normal, m, r);
 	}
 	else {
-		copyMatrices(m, r);
+		oxyde::linAlg::copyMatrices(m, r);
 	}
 }
 
