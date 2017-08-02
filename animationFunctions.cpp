@@ -1,5 +1,9 @@
 #include "animationFunctions.h"
+#include <string>
+#include <sstream>
 #include <Windows.h>
+#include "linAlg.h"
+#include "debugLog.h"
 
 //(0)loop interpolates bones local transformations
 //		get total time for animation cycle from the Tracks
@@ -69,6 +73,20 @@ void getQuatFromTrackForKeyFrameAndStep(keyFrame* theKeyFrame, float step, DUALQ
 	//										trackIntervalsDic[(lastTime, nextTime)][0]
 	//										)
 	//return currentQuat
+	std::wstring outStr;
+	std::wostringstream outStream(outStr);
+
+	oxyde::log::printText(__FUNCTION__);
+	oxyde::log::printLine();
+	oxyde::log::printDualQuat(L"curr", curr);
+	oxyde::log::printText("");
+	oxyde::log::printDualQuat(L"rTrans", DUALQUACOMP(r));
+	oxyde::log::printText("");
+	oxyde::log::printDualQuat(L"qEnd", DUALQUACOMP(q));
+	oxyde::log::printLine();
+
+	std::wstring resultString(outStream.str());
+	OutputDebugString(resultString.c_str());
 }
 
 void getQuatFromTrackForTime(track theTrack, float currentTime, DUALQUAARG(q)){
@@ -97,7 +115,7 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 	theBoneStack.push(theSkeleton.theRoot);
 	////////////////////////////// printing it
 	TCHAR outputString[400];
-	if (shouldIPrintIt) {
+	if (true) {
 		swprintf(outputString, TEXT("{%f, {\n"), currentTime);
 		OutputDebugString(outputString);
 
@@ -109,6 +127,9 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 		OutputDebugString(outputString);
 	}
 	//////////////////////////////
+
+	oxyde::log::printText(__FUNCTION__);
+
 	while (!theBoneStack.empty()){
 		boneNode* currentNode = theBoneStack.top();
 		theBoneStack.pop();
@@ -128,20 +149,49 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 				DUALQUAARRAY(localTransform),
 				DUALQUAARRAY(boneGlobalTransform));
 			////////////////////////////// printing it
-			if (shouldIPrintIt) {
-				swprintf(outputString, TEXT(",\n{%i, {%f, %f, %f, %f, %f, %f, %f, %f}, {%f, %f, %f, %f, %f, %f, %f, %f}}"),
-					currentChild.boneNodeIndex,
-					DUALQUAARRAY(localTransform),
-					DUALQUAARRAY(boneGlobalTransform)
-				);
-				OutputDebugString(outputString);
-			}
+			//if (true) {
+			//	swprintf(outputString, TEXT(",\n{%i, {%f, %f, %f, %f, %f, %f, %f, %f}, {%f, %f, %f, %f, %f, %f, %f, %f}}"),
+			//		currentChild.boneNodeIndex,
+			//		DUALQUAARRAY(localTransform),
+			//		DUALQUAARRAY(boneGlobalTransform)
+			//	);
+			//	OutputDebugString(outputString);
+			//}
+			oxyde::log::printLine();
+			oxyde::log::printNamedParameter(L"currentChild.boneNodeIndex", std::to_wstring(currentChild.boneNodeIndex));
+			oxyde::log::printDualQuat(L"parentGlobalTransform", parentGlobalTransform);
+			oxyde::log::printDualQuat(L"localTransform", localTransform);
+			oxyde::log::printDualQuat(L"boneGlobalTransform", boneGlobalTransform);
+
+			/////////////////// checking bones
+
+			float zeroInLocalSpace[8] = { 1., 0. , 0. , 0. , 0. , 0. , 0. , 0. };
+
+			float zeroInGlobalParentTransform[8];
+			oxyde::DQ::dual_quat_transform_point(DUALQUAARRAY(parentGlobalTransform),
+				DUALQUAARRAY(zeroInLocalSpace),
+				DUALQUAARRAY(zeroInGlobalParentTransform));
+
+			float zeroInChildParentTransform[8];
+			oxyde::DQ::dual_quat_transform_point(DUALQUAARRAY(boneGlobalTransform),
+				DUALQUAARRAY(zeroInLocalSpace),
+				DUALQUAARRAY(zeroInChildParentTransform));
+
+			float fromChildToParent[3] = { zeroInChildParentTransform[5] - zeroInGlobalParentTransform[5],
+				zeroInChildParentTransform[6] - zeroInGlobalParentTransform[6],
+				zeroInChildParentTransform[7] - zeroInGlobalParentTransform[7] };
+
+			float distanceFromChildToParent = 0.0;
+			oxyde::linAlg::norm(fromChildToParent, &distanceFromChildToParent);
+			oxyde::log::printText(std::wstring(L"distance = ") += std::to_wstring(distanceFromChildToParent));
 
 			//////////////////////////////
 
 			theBoneStack.push(&currentNode->children[i]);
 		}
 	}
+
+	oxyde::log::printLine();
 
 	////////////////////////////// printing it
 	if (shouldIPrintIt) {

@@ -1,4 +1,7 @@
 #include "skinFunctions.h"
+#include "debugLog.h"
+#include <string>
+#include <sstream>
 #include <Windows.h>
 
 void alocateSkinArraysForTracks(sceneTracks theTracks, skinData &theSkin) {
@@ -16,6 +19,7 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 		swprintf(outputString, TEXT("(* {boneIndex , Boolean, {transformedFromSkin quat}, {boneGlobalTransform quat}, {skinPoseSkeleton quat}} *)\n"));
 		OutputDebugString(outputString);
 	}
+	oxyde::log::printText(__FUNCTION__);
 
 	for (int i = 0; i < theSkin.numBones; i++) {
 
@@ -23,13 +27,19 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 		float* transformedFromSkin = &theSkin.fromSkinPoseToCurrentTransf[theSkin.skinPoseSkeleton[i].boneIndex * 8];
 
 		oxyde::DQ::transformFromSourceToDestinationAxis(DUALQUAARRAY(theSkin.skinPoseSkeleton[i].skinPose), DUALQUAARRAY(boneGlobalTransform), DUALQUAARRAY(transformedFromSkin));
-
+		
+		oxyde::log::printLine();
+		oxyde::log::printNamedParameter(L"boneIndex in the skin", std::to_wstring(i));
+		oxyde::log::printDualQuat(L"skinPose", theSkin.skinPoseSkeleton[i].skinPose);
+		oxyde::log::printDualQuat(L"boneGlobalTransform", boneGlobalTransform);
+		oxyde::log::printDualQuat(L"transformedFromSkin", transformedFromSkin);
 
 		float theComplement[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		bool complementIt = false;
 		//if(false){
 		//if (transformedFromSkin[0] < 0.0 || transformedFromSkin[4] > 2.0) {
-		if (transformedFromSkin[0] < 0.0 ) {
+		if (transformedFromSkin[0] > 0.0 ) {
+		//if (transformedFromSkin[0] < 0.0 ) {
 		//if (transformedFromSkin[4] > 0.0001) {
 			complementIt = true;
 			oxyde::DQ::dual_quaternion_complement(DUALQUAARRAY(transformedFromSkin), DUALQUAARRAY(theComplement));
@@ -43,60 +53,17 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 			transformedFromSkin[6] = theComplement[6];
 			transformedFromSkin[7] = theComplement[7];
 		}
-		if (shouldIPrintIt) {
-
-			if (complementIt) {
-				swprintf(boolString, TEXT("True\0"));
-			}
-			else {
-				swprintf(boolString, TEXT("False\0"));
-			}
-
-			int textOffset = swprintf(outputString, TEXT("{%i, %s, {%f, %f, %f, %f, %f, %f, %f, %f}, {%f, %f, %f, %f, %f, %f, %f, %f}, {%f, %f, %f, %f, %f, %f, %f, %f}}"),
-				theSkin.skinPoseSkeleton[i].boneIndex,
-				boolString,
-				transformedFromSkin[0],
-				transformedFromSkin[1],
-				transformedFromSkin[2],
-				transformedFromSkin[3],
-				transformedFromSkin[4],
-				transformedFromSkin[5],
-				transformedFromSkin[6],
-				transformedFromSkin[7],
-
-				boneGlobalTransform[0],
-				boneGlobalTransform[1],
-				boneGlobalTransform[2],
-				boneGlobalTransform[3],
-				boneGlobalTransform[4],
-				boneGlobalTransform[5],
-				boneGlobalTransform[6],
-				boneGlobalTransform[7],
-
-				theSkin.skinPoseSkeleton[i].skinPose[0],
-				theSkin.skinPoseSkeleton[i].skinPose[1],
-				theSkin.skinPoseSkeleton[i].skinPose[2],
-				theSkin.skinPoseSkeleton[i].skinPose[3],
-				theSkin.skinPoseSkeleton[i].skinPose[4],
-				theSkin.skinPoseSkeleton[i].skinPose[5],
-				theSkin.skinPoseSkeleton[i].skinPose[6],
-				theSkin.skinPoseSkeleton[i].skinPose[7]
-			);
-			if (i < (theSkin.numBones - 1)) {
-				swprintf(outputString + textOffset, TEXT(",\n"));
-			}
-			else {
-				swprintf(outputString + textOffset, TEXT("\n"));
-			}
-			OutputDebugString(outputString);
-		}
 	}
+
+	oxyde::log::printLine();
 }
 
 //def blendDualQuatFromMesh( theSkinWeights, theVerticesDic, theChoosenBone = theTreeRoot-1 ): 
 void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, float *& blendedVertices, float *& blendedNormals, int numVertices, bool shouldIPrintIt) {
 	//blendedVertices = new float[3 * numVertices];
 	//    for aVertex in theSkinWeights:
+
+	//oxyde::log::printText(__FUNCTION__);
 	for (int i = 0; i < numVertices; i++) {
 		//        (theWeight, aVertexPos) = theSkinWeights[aVertex]
 		//        
@@ -113,16 +80,26 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 		float theTotalWeight = 0.0;
 
 		//        for (vertexBone, vertexWeight) in theWeight:
+
+		std::wstring vertexOutput(L"vertex: ");
+		vertexOutput += std::to_wstring(i) += L"\n";
+
 		for (int j = 0; j < int(theSkin.boneNumVertAttrib[i]); j++) {
 			//            ##############################################################
 			//            
 			//            (theCos, theSin), theUvector, theSfactor, theMvector = extractDualVersorParameters( fromInitialPoseToCurrentTransf[boneDic[vertexBone][0]] )
 			//            isInverted = (theCos < 0.0)
 			int boneIndex = int(theSkin.boneIndexesForSkinVertices[j + int(theSkin.boneOffsetVertAttrib[i])]);
+
+			(vertexOutput += L"		boneIndex: " )+= std::to_wstring(boneIndex);
+
 			//float weight = theSkin.boneWeightForSkinVertices[8 * (j + int(theSkin.boneOffsetVertAttrib[i]))];
 			float weight = theSkin.boneWeightForSkinVertices[j + int(theSkin.boneOffsetVertAttrib[i])];
 
+			(vertexOutput += L"  weight: ") += std::to_wstring(weight) += L"\n";
+
 			float *theVersor = &theSkin.fromSkinPoseToCurrentTransf[8 * boneIndex];
+
 			float theComplement[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 			//            theVersor = None
 			//            if isInverted:
@@ -159,9 +136,11 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 			//            theTotalWeight = theTotalWeight + vertexWeight
 			theTotalWeight = theTotalWeight + weight;
 		}
+
+		//oxyde::log::printText(vertexOutput);
+
 		//        theNorm = dual_quaternion_norm(theBlendedQuat)
 		float theNorm = oxyde::DQ::dual_quaternion_norm(DUALQUAARRAY(theBlendedQuat));
-		//        print "theNorm:", theNorm
 
 		//       
 		float normalizedBlend[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -180,26 +159,34 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 			DUALQUAARRAY(vertQuat),
 			DUALQUAARRAY(vertBlendQuat));
 
+		//oxyde::log::printDualQuat(L"	normalizedBlend", normalizedBlend);
+
+
 		blendedVertices[3 * i] = vertBlendQuat[5];
 		blendedVertices[3 * i + 1] = vertBlendQuat[6];
 		blendedVertices[3 * i + 2] = vertBlendQuat[7];
 
-
-		TCHAR outputString[400];
-		if (shouldIPrintIt) {
-			int textOffset = swprintf(outputString, TEXT("{%i, {%f, %f, %f}}"),
-				i,
-				blendedVertices[3 * i],
-				blendedVertices[3 * i + 1],
-				blendedVertices[3 * i + 2]);
-			if (i < (numVertices - 1)) {
-				swprintf(outputString + textOffset, TEXT(",\n"));
-			}
-			else {
-				swprintf(outputString + textOffset, TEXT("\n"));
-			}
-			OutputDebugString(outputString);
+		if (blendedVertices[3 * i] > 100.0 || blendedVertices[3 * i + 1] > 100.0 || blendedVertices[3 * i + 2] > 100.0 ||
+			blendedVertices[3 * i] < -100.0 || blendedVertices[3 * i + 1] < -100.0 || blendedVertices[3 * i + 2] < -100.0) {
+			//oxyde::log::printText(resultString);
 		}
+
+
+		//TCHAR outputString[400];
+		//if (shouldIPrintIt) {
+		//	int textOffset = swprintf(outputString, TEXT("{%i, {%f, %f, %f}}"),
+		//		i,
+		//		blendedVertices[3 * i],
+		//		blendedVertices[3 * i + 1],
+		//		blendedVertices[3 * i + 2]);
+		//	if (i < (numVertices - 1)) {
+		//		swprintf(outputString + textOffset, TEXT(",\n"));
+		//	}
+		//	else {
+		//		swprintf(outputString + textOffset, TEXT("\n"));
+		//	}
+		//	OutputDebugString(outputString);
+		//}
 
 		//		Transforming the vertices normals
 

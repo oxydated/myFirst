@@ -7,11 +7,13 @@
 //
 
 #if defined _WIN32
+#define NOMINMAX
 #include "stdafx.h"
 #endif
 
 #include<array>
 #include<algorithm>
+#include <limits>
 
 #include "vertexArrays.h"
 #include "linearAlg.h"
@@ -25,12 +27,13 @@
 #include "projections.h"
 #include "lookAtCamera.h"
 #include "interactivity.h"
-#include "macroUtilities.h"           1.0f,   0.0f,  0.0f   };
+#include "macroUtilities.h" 
+#include "debugLog.h"
 
 //static float Camera[] = { 50.0, 200.0, 0.0 };
 
 static float Up[] = { 0.00000000, 0.000000000, 1.000000000 };
-static float Camera[] = { 50.0, -50.0, -100.0, 1.0 };
+static float Camera[] = { 80.0, -100.0, 100.0, 1.0 };
 
 static float originalCameraPos[] = { 0.0, 0.0, 0.0, 1.0 };
 static float originalWorldPos[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -184,6 +187,8 @@ void reorient() {
 
 void drawVertexArray() {
 
+	static bool executeOnce = true;
+
 	TCHAR outputString[200];
 	glBindTexture(GL_TEXTURE_2D, 1);
 	static float teta = 0.0;
@@ -199,6 +204,9 @@ void drawVertexArray() {
 		theTime = 0.0;
 		printit = false;
 	}
+
+	//theTime = 3702.1484375;//O
+	theTime = 3703.125;//
 
 	float mat[16];
 	oxyde::linAlg::identity(mat);
@@ -240,55 +248,95 @@ void drawVertexArray() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	if (executeOnce) {
+	//if (true) {
+		executeOnce = false;
 
-	//if (printit) {
-	//	swprintf(outputString, TEXT("(* { time,	{ boneIndex,{ localTransformQuat },{ globalTransformQuat } }, ...} *)\n"));
-	//	OutputDebugString(outputString);
-	//	swprintf(outputString, TEXT("{\n"));
-	//	OutputDebugString(outputString);
-	//}
+		//if (printit) {
+		//	swprintf(outputString, TEXT("(* { time,	{ boneIndex,{ localTransformQuat },{ globalTransformQuat } }, ...} *)\n"));
+		//	OutputDebugString(outputString);
+		//	swprintf(outputString, TEXT("{\n"));
+		//	OutputDebugString(outputString);
+		//}
 
-	getSkeletonForTime(theSkeleton, theSceneTracks, theTime, false);
+		getSkeletonForTime(theSkeleton, theSceneTracks, theTime, false);
+		//getSkeletonForTime(theSkeleton, theSceneTracks, 1920, false);
 
-	//if (printit) {
-	//	swprintf(outputString, TEXT("}\n"));
-	//	OutputDebugString(outputString);
-	//}
+		//if (printit) {
+		//	swprintf(outputString, TEXT("}\n"));
+		//	OutputDebugString(outputString);
+		//}
 
-	if (printit) {
-		swprintf(outputString, TEXT("{%f, {\n"),
-			theTime);
-		OutputDebugString(outputString);
+		if (printit) {
+			swprintf(outputString, TEXT("{%f, {\n"),
+				theTime);
+			OutputDebugString(outputString);
+		}
+
+		transformFromSkinPoseToCurrentPose(theSkin, theSceneTracks, printit);
+
+		if (printit) {
+			swprintf(outputString, TEXT("}},\n"));
+			OutputDebugString(outputString);
+		}
+
+		if (false) {
+			swprintf(outputString, TEXT("{%f, {\n"),
+				theTime);
+			OutputDebugString(outputString);
+		}
+		blendDualQuatFromMesh(theSkin, vertices, normals, blendedVertices, blendedNormals, numVerts, false);
+
+		if (false) {
+			swprintf(outputString, TEXT("}},\n"));
+			OutputDebugString(outputString);
+		}
 	}
-
-	transformFromSkinPoseToCurrentPose(theSkin, theSceneTracks, printit);
-
-	if (printit) {
-		swprintf(outputString, TEXT("}},\n"));
-		OutputDebugString(outputString);
-	}
-
-	if (false) {
-		swprintf(outputString, TEXT("{%f, {\n"),
-			theTime);
-		OutputDebugString(outputString);
-	}
-	blendDualQuatFromMesh(theSkin, vertices, normals, blendedVertices, blendedNormals, numVerts, false);
-
-	if (false) {
-		swprintf(outputString, TEXT("}},\n"));
-		OutputDebugString(outputString);
-	}
+	float maxX = std::numeric_limits<float>::min();
+	float minX = std::numeric_limits<float>::max();
+	float maxY = std::numeric_limits<float>::min();
+	float minY = std::numeric_limits<float>::max();
+	float maxZ = std::numeric_limits<float>::min();
+	float minZ = std::numeric_limits<float>::max();
 
 	float sumVX = 0.0, sumVY = 0.0, sumVZ = 0.0;
+
+	//oxyde::log::printLine();
+	//oxyde::log::printText(L"Degenerated vertices:");
+
 	for (int itv = 0; itv < numVerts; ++itv) {
 		int itvX = 3 * itv;
 		int itvY = 3 * itv + 1;
 		int itvZ = 3 * itv + 2;
+
+		//if (blendedVertices[itvX] > 100.0 || blendedVertices[itvY] > 100.0 || blendedVertices[itvZ] > 100.0 ||
+		//	blendedVertices[itvX] < -100.0 || blendedVertices[itvY] < -100.0 || blendedVertices[itvZ] < -100.0) {
+		//	oxyde::log::printText(std::to_wstring(itv));
+		//}
+
+		//blendedVertices[itvX] = blendedVertices[itvX] < 100.0 ? blendedVertices[itvX] : 0.0;
+		//blendedVertices[itvY] = blendedVertices[itvY] < 100.0 ? blendedVertices[itvY] : 0.0;
+		//blendedVertices[itvZ] = blendedVertices[itvZ] < 100.0 ? blendedVertices[itvZ] : 0.0;
+
+		//blendedVertices[itvX] = blendedVertices[itvX] > -100.0 ? blendedVertices[itvX] : 0.0;
+		//blendedVertices[itvY] = blendedVertices[itvY] > -100.0 ? blendedVertices[itvY] : 0.0;
+		//blendedVertices[itvZ] = blendedVertices[itvZ] > -100.0 ? blendedVertices[itvZ] : 0.0;
+
+		maxX = blendedVertices[itvX] > maxX ? blendedVertices[itvX] : maxX;
+		maxY = blendedVertices[itvY] > maxY ? blendedVertices[itvY] : maxY;
+		maxZ = blendedVertices[itvZ] > maxZ ? blendedVertices[itvZ] : maxZ;
+
+		minX = blendedVertices[itvX] < minX ? blendedVertices[itvX] : minX;
+		minY = blendedVertices[itvY] < minY ? blendedVertices[itvY] : minY;
+		minZ = blendedVertices[itvZ] < minZ ? blendedVertices[itvZ] : minZ;
+
 		sumVX += blendedVertices[itvX];
 		sumVY += blendedVertices[itvY];
 		sumVZ += blendedVertices[itvZ];
 	}
+
+	//oxyde::log::printLine();
+
 	float centerX = sumVX / numVerts;
 	float centerY = sumVY / numVerts;
 	float centerZ = sumVZ / numVerts;
@@ -529,3 +577,4 @@ void drawVertexArray() {
 
 	glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, faces);
 }
+
