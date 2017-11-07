@@ -21,6 +21,8 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 	}
 	oxyde::log::printText(__FUNCTION__);
 
+	oxyde::log::printText(L"nodeIndexToBoneIndex = {");
+
 	for (int i = 0; i < theSkin.numBones; i++) {
 
 		float* boneGlobalTransform = &theTracks.globalTransforms[theSkin.skinPoseSkeleton[i].boneIndex * 8];
@@ -28,19 +30,25 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 
 		oxyde::DQ::transformFromSourceToDestinationAxis(DUALQUAARRAY(theSkin.skinPoseSkeleton[i].skinPose), DUALQUAARRAY(boneGlobalTransform), DUALQUAARRAY(transformedFromSkin));
 		
-		oxyde::log::printLine();
-		oxyde::log::printNamedParameter(L"boneIndex in the skin", std::to_wstring(i));
-		oxyde::log::printDualQuat(L"skinPose", theSkin.skinPoseSkeleton[i].skinPose);
-		oxyde::log::printDualQuat(L"boneGlobalTransform", boneGlobalTransform);
-		oxyde::log::printDualQuat(L"transformedFromSkin", transformedFromSkin);
+		//oxyde::log::printLine();
+
+
+
+		//oxyde::log::printNamedParameter(L"boneIndexIn the skin", std::to_wstring(i));
+
+		oxyde::log::printText(std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex) + L"->{" + std::to_wstring(i) + L", ");
+
+		oxyde::log::printDualQuat(L"skinPose" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), theSkin.skinPoseSkeleton[i].skinPose);
+		oxyde::log::printText(L",");
+		oxyde::log::printDualQuat(L"boneGlobalTransform" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), boneGlobalTransform);
+		oxyde::log::printText(L",");
+		oxyde::log::printDualQuat(L"transformedFromSkin" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), transformedFromSkin);
+		oxyde::log::printText(L",");
 
 		float theComplement[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		bool complementIt = false;
-		//if(false){
-		//if (transformedFromSkin[0] < 0.0 || transformedFromSkin[4] > 2.0) {
-		if (transformedFromSkin[0] > 0.0 ) {
-		//if (transformedFromSkin[0] < 0.0 ) {
-		//if (transformedFromSkin[4] > 0.0001) {
+		if(false){
+		//if (transformedFromSkin[0] < 0.0) {
 			complementIt = true;
 			oxyde::DQ::dual_quaternion_complement(DUALQUAARRAY(transformedFromSkin), DUALQUAARRAY(theComplement));
 
@@ -52,10 +60,14 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 			transformedFromSkin[5] = theComplement[5];
 			transformedFromSkin[6] = theComplement[6];
 			transformedFromSkin[7] = theComplement[7];
+
+			//oxyde::log::printText(std::wstring(L"Complemented: ") + std::to_wstring(i));
 		}
+		oxyde::log::printNamedParameter(L"Complemented" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), int(complementIt));
+		oxyde::log::printText(L"},");
 	}
 
-	oxyde::log::printLine();
+	oxyde::log::printText(L"}");
 }
 
 //def blendDualQuatFromMesh( theSkinWeights, theVerticesDic, theChoosenBone = theTreeRoot-1 ): 
@@ -81,8 +93,8 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 
 		//        for (vertexBone, vertexWeight) in theWeight:
 
-		std::wstring vertexOutput(L"vertex: ");
-		vertexOutput += std::to_wstring(i) += L"\n";
+		//std::wstring vertexOutput(L"vertex: ");
+		//vertexOutput += std::to_wstring(i) += L"\n";
 
 		for (int j = 0; j < int(theSkin.boneNumVertAttrib[i]); j++) {
 			//            ##############################################################
@@ -91,12 +103,12 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 			//            isInverted = (theCos < 0.0)
 			int boneIndex = int(theSkin.boneIndexesForSkinVertices[j + int(theSkin.boneOffsetVertAttrib[i])]);
 
-			(vertexOutput += L"		boneIndex: " )+= std::to_wstring(boneIndex);
+			//(vertexOutput += L"		boneIndex: " )+= std::to_wstring(boneIndex);
 
 			//float weight = theSkin.boneWeightForSkinVertices[8 * (j + int(theSkin.boneOffsetVertAttrib[i]))];
 			float weight = theSkin.boneWeightForSkinVertices[j + int(theSkin.boneOffsetVertAttrib[i])];
 
-			(vertexOutput += L"  weight: ") += std::to_wstring(weight) += L"\n";
+			//(vertexOutput += L"  weight: ") += std::to_wstring(weight) += L"\n";
 
 			float *theVersor = &theSkin.fromSkinPoseToCurrentTransf[8 * boneIndex];
 

@@ -198,15 +198,31 @@ void drawVertexArray() {
 
 	static bool printit = true;
 
-	static float theTime = 0.0;
-	theTime += 100.0;
-	if (theTime > float(endTimeForScene)) {
-		theTime = 0.0;
+	float startTime = 0.0;
+	float endTime = endTimeForScene;
+	//startTime = 1910;
+	//endTime = 1930;
+
+	static float theTime = startTime;
+	theTime += 10.0;
+	//theTime += 100.0;
+	if (theTime > float(endTime)) {
+		theTime = startTime;
 		printit = false;
 	}
 
-	//theTime = 3702.1484375;//O
-	theTime = 3703.125;//
+	//theTime = 3672.4765625;
+	//theTime = 3702.4765625;
+	//theTime = 3702.47734375;
+	//theTime = 3709.47734375;
+
+
+	//theTime = 1920.0;
+	//theTime = 1920.01;
+
+	//theTime = 4000.0;
+	//theTime = 4000.01;
+	//theTime = 0.001;
 
 	float mat[16];
 	oxyde::linAlg::identity(mat);
@@ -248,8 +264,8 @@ void drawVertexArray() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if (executeOnce) {
-	//if (true) {
+	//if (executeOnce) {
+	if (true) {
 		executeOnce = false;
 
 		//if (printit) {
@@ -334,6 +350,29 @@ void drawVertexArray() {
 		sumVY += blendedVertices[itvY];
 		sumVZ += blendedVertices[itvZ];
 	}
+	//{19.2066, 20.4101, 103.101}
+
+	//blendedVertices[100 * 3 + 0] = 19.2066;
+	//blendedVertices[100 * 3 + 1] = 20.4101;
+	//blendedVertices[100 * 3 + 2] = 103.101;
+
+	//{32.3473, 21.3105, 117.296}
+
+	//blendedVertices[101 * 3 + 0] = 32.3473;
+	//blendedVertices[101 * 3 + 1] = 21.3105;
+	//blendedVertices[101 * 3 + 2] = 117.296;
+
+	//{32.3473, 21.3105, 117.296}
+
+	//blendedVertices[601 * 3 + 0] = 32.3473;
+	//blendedVertices[601 * 3 + 1] = 21.3105;
+	//blendedVertices[601 * 3 + 2] = 117.296;
+
+	//{31.842, 21.7759, 123.946}
+
+	//blendedVertices[602 * 3 + 0] = 31.842;
+	//blendedVertices[602 * 3 + 1] = 21.7759;
+	//blendedVertices[602 * 3 + 2] = 123.946;
 
 	//oxyde::log::printLine();
 

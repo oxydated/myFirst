@@ -70,23 +70,28 @@ void getQuatFromTrackForKeyFrameAndStep(keyFrame* theKeyFrame, float step, DUALQ
 	oxyde::DQ::dual_quaternion_product(DUALQUACOMP(r),
 		DUALQUAARRAY(curr),
 		DUALQUACOMP(q));
+
+	//oxyde::DQ::dual_quaternion_product(	DUALQUAARRAY(curr),
+	//	DUALQUACOMP(r),
+	//	DUALQUACOMP(q));
+
 	//										trackIntervalsDic[(lastTime, nextTime)][0]
 	//										)
 	//return currentQuat
 	std::wstring outStr;
 	std::wostringstream outStream(outStr);
 
-	oxyde::log::printText(__FUNCTION__);
-	oxyde::log::printLine();
-	oxyde::log::printDualQuat(L"curr", curr);
-	oxyde::log::printText("");
-	oxyde::log::printDualQuat(L"rTrans", DUALQUACOMP(r));
-	oxyde::log::printText("");
-	oxyde::log::printDualQuat(L"qEnd", DUALQUACOMP(q));
-	oxyde::log::printLine();
+	//oxyde::log::printText(__FUNCTION__);
+	//oxyde::log::printLine();
+	//oxyde::log::printDualQuat(L"curr", curr);
+	//oxyde::log::printText("");
+	//oxyde::log::printDualQuat(L"rTrans", DUALQUACOMP(r));
+	//oxyde::log::printText("");
+	//oxyde::log::printDualQuat(L"qEnd", DUALQUACOMP(q));
+	//oxyde::log::printLine();
 
 	std::wstring resultString(outStream.str());
-	OutputDebugString(resultString.c_str());
+	//OutputDebugString(resultString.c_str());
 }
 
 void getQuatFromTrackForTime(track theTrack, float currentTime, DUALQUAARG(q)){
@@ -130,6 +135,7 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 
 	oxyde::log::printText(__FUNCTION__);
 
+	oxyde::log::printText(L"skeletonStructure = {");
 	while (!theBoneStack.empty()){
 		boneNode* currentNode = theBoneStack.top();
 		theBoneStack.pop();
@@ -157,7 +163,8 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 			//	);
 			//	OutputDebugString(outputString);
 			//}
-			oxyde::log::printLine();
+			oxyde::log::printText(std::to_wstring(currentNode->boneNodeIndex) + L"->" + std::to_wstring(currentChild.boneNodeIndex) + L",");
+			//oxyde::log::printLine();
 			oxyde::log::printNamedParameter(L"currentChild.boneNodeIndex", std::to_wstring(currentChild.boneNodeIndex));
 			oxyde::log::printDualQuat(L"parentGlobalTransform", parentGlobalTransform);
 			oxyde::log::printDualQuat(L"localTransform", localTransform);
@@ -183,13 +190,14 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 
 			float distanceFromChildToParent = 0.0;
 			oxyde::linAlg::norm(fromChildToParent, &distanceFromChildToParent);
-			oxyde::log::printText(std::wstring(L"distance = ") += std::to_wstring(distanceFromChildToParent));
+			//oxyde::log::printText(std::wstring(L"distance = ") += std::to_wstring(distanceFromChildToParent));
 
 			//////////////////////////////
 
 			theBoneStack.push(&currentNode->children[i]);
 		}
 	}
+	oxyde::log::printText(L"}");
 
 	oxyde::log::printLine();
 
