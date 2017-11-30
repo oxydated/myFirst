@@ -1,4 +1,5 @@
 #include "xmlSkinLoader.h"
+#include "debugLog.h"
 
 // load skinPose bone structure
 
@@ -328,6 +329,8 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 	hr = getFloatAttributeFromElementInNode(meshMatrixNode, "r3c1", objectMatrix[13]);
 	hr = getFloatAttributeFromElementInNode(meshMatrixNode, "r3c2", objectMatrix[14]);
 	objectMatrix[15] = 1.0;
+
+	oxyde::log::printMatrix(L"objectMatrix", objectMatrix);
 
 	/////////// apply mesh matrix on vertices
 

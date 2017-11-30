@@ -163,12 +163,18 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 			//	);
 			//	OutputDebugString(outputString);
 			//}
+			oxyde::log::printText(L"{");
 			oxyde::log::printText(std::to_wstring(currentNode->boneNodeIndex) + L"->" + std::to_wstring(currentChild.boneNodeIndex) + L",");
 			//oxyde::log::printLine();
-			oxyde::log::printNamedParameter(L"currentChild.boneNodeIndex", std::to_wstring(currentChild.boneNodeIndex));
+			oxyde::log::printNamedParameter(L"NodeIndex", std::to_wstring(currentChild.boneNodeIndex));
+			oxyde::log::printText(L",");
 			oxyde::log::printDualQuat(L"parentGlobalTransform", parentGlobalTransform);
+			oxyde::log::printText(L",");
 			oxyde::log::printDualQuat(L"localTransform", localTransform);
+			oxyde::log::printText(L",");
 			oxyde::log::printDualQuat(L"boneGlobalTransform", boneGlobalTransform);
+
+			oxyde::log::printText(L"},");
 
 			/////////////////// checking bones
 
@@ -198,6 +204,8 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 		}
 	}
 	oxyde::log::printText(L"}");
+
+	oxyde::log::printText(L"ruleToSkeletonStructure = Thread[{edge, NodeIndex, parentGlobalTransform, localTransform, boneGlobalTransform }->#]");
 
 	oxyde::log::printLine();
 

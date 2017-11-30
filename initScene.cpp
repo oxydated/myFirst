@@ -72,7 +72,8 @@ void initGLES(int x, int y, int width, int height){
     float pers[16];
 	float invPers[16];
 
-	perspectiveMatrix( -1.0, 1.0, -1.5, -400.0, -1.0, 1.0, mat, pers );
+	perspectiveMatrix( -1.0, 1.0, -4.0, 1200.0, -1.0, 1.0, mat, pers );
+	//perspectiveMatrix(-1.0, 1.0, -1.5, -400.0, -1.0, 1.0, mat, pers);
 
 	float testVec[] = { 1.0, -1.0, 1.5, 1.0 };
 	float testVec_should_b_1_minus1_minus1[4];

@@ -76,6 +76,7 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 	//    for aVertex in theSkinWeights:
 
 	//oxyde::log::printText(__FUNCTION__);
+	oxyde::log::printText(L"vertexBlending = {");
 	for (int i = 0; i < numVertices; i++) {
 		//        (theWeight, aVertexPos) = theSkinWeights[aVertex]
 		//        
@@ -96,6 +97,8 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 		//std::wstring vertexOutput(L"vertex: ");
 		//vertexOutput += std::to_wstring(i) += L"\n";
 
+		float neatTrick0[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
 		for (int j = 0; j < int(theSkin.boneNumVertAttrib[i]); j++) {
 			//            ##############################################################
 			//            
@@ -111,6 +114,16 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 			//(vertexOutput += L"  weight: ") += std::to_wstring(weight) += L"\n";
 
 			float *theVersor = &theSkin.fromSkinPoseToCurrentTransf[8 * boneIndex];
+			if (j==0) {
+				neatTrick0[0] = theVersor[0];
+				neatTrick0[1] = theVersor[1];
+				neatTrick0[2] = theVersor[2];
+				neatTrick0[3] = theVersor[3];
+				neatTrick0[4] = theVersor[4];
+				neatTrick0[5] = theVersor[5];
+				neatTrick0[6] = theVersor[6];
+				neatTrick0[7] = theVersor[7];
+			}
 
 			float theComplement[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 			//            theVersor = None
@@ -171,33 +184,30 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 			DUALQUAARRAY(vertQuat),
 			DUALQUAARRAY(vertBlendQuat));
 
-		//oxyde::log::printDualQuat(L"	normalizedBlend", normalizedBlend);
+		//this is a neat trick
+		//oxyde::DQ::dual_quat_transform_point(DUALQUAARRAY(neatTrick0),
+		//	DUALQUAARRAY(vertQuat),
+		//	DUALQUAARRAY(vertBlendQuat));
 
+		// neat trick indeed
 
 		blendedVertices[3 * i] = vertBlendQuat[5];
 		blendedVertices[3 * i + 1] = vertBlendQuat[6];
 		blendedVertices[3 * i + 2] = vertBlendQuat[7];
 
-		if (blendedVertices[3 * i] > 100.0 || blendedVertices[3 * i + 1] > 100.0 || blendedVertices[3 * i + 2] > 100.0 ||
-			blendedVertices[3 * i] < -100.0 || blendedVertices[3 * i + 1] < -100.0 || blendedVertices[3 * i + 2] < -100.0) {
-			//oxyde::log::printText(resultString);
-		}
+		//oxyde::log::printText(L"{");
+		//oxyde::log::printNamedParameter(L"vertex", i);
+		//oxyde::log::printText(L",");
+		//oxyde::log::printPointInSpace(L"skin", px, py, pz);
+		//oxyde::log::printText(L",");
+		//oxyde::log::printDualQuat(L"neatTrick0", neatTrick0);
+		//oxyde::log::printText(L",");
+		//oxyde::log::printPointInSpace(L"blendedVertices", blendedVertices[3 * i], blendedVertices[3 * i + 1], blendedVertices[3 * i + 2]);
+		//oxyde::log::printText(L"},");
 
-
-		//TCHAR outputString[400];
-		//if (shouldIPrintIt) {
-		//	int textOffset = swprintf(outputString, TEXT("{%i, {%f, %f, %f}}"),
-		//		i,
-		//		blendedVertices[3 * i],
-		//		blendedVertices[3 * i + 1],
-		//		blendedVertices[3 * i + 2]);
-		//	if (i < (numVertices - 1)) {
-		//		swprintf(outputString + textOffset, TEXT(",\n"));
-		//	}
-		//	else {
-		//		swprintf(outputString + textOffset, TEXT("\n"));
-		//	}
-		//	OutputDebugString(outputString);
+		//if (blendedVertices[3 * i] > 100.0 || blendedVertices[3 * i + 1] > 100.0 || blendedVertices[3 * i + 2] > 100.0 ||
+		//	blendedVertices[3 * i] < -100.0 || blendedVertices[3 * i + 1] < -100.0 || blendedVertices[3 * i + 2] < -100.0) {
+		//	//oxyde::log::printText(resultString);
 		//}
 
 		//		Transforming the vertices normals
@@ -219,14 +229,7 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 		blendedNormals[3 * i + 1] = normalBlendQuat[6];
 		blendedNormals[3 * i + 2] = normalBlendQuat[7];
 
-		/// just for test:
-
-		//blendedVertices[3 * i] = vertices[3 * i];
-		//blendedVertices[3 * i + 1] = vertices[3 * i + 1];
-		//blendedVertices[3 * i + 2] = vertices[3 * i + 2];
-
-		//blendedNormals[3 * i] = normals[3 * i];
-		//blendedNormals[3 * i + 1] = normals[3 * i + 1];
-		//blendedNormals[3 * i + 2] = normals[3 * i + 2];
 	}
+
+	oxyde::log::printText(L"}");
 }

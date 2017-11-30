@@ -33,7 +33,8 @@
 //static float Camera[] = { 50.0, 200.0, 0.0 };
 
 static float Up[] = { 0.00000000, 0.000000000, 1.000000000 };
-static float Camera[] = { 80.0, -100.0, 100.0, 1.0 };
+static float Camera[] = {400, -100.0, 100.0, 1.0 };
+//static float Camera[] = { -100, -100.0, 100.0, 1.0 };
 
 static float originalCameraPos[] = { 0.0, 0.0, 0.0, 1.0 };
 static float originalWorldPos[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -350,6 +351,9 @@ void drawVertexArray() {
 		sumVY += blendedVertices[itvY];
 		sumVZ += blendedVertices[itvZ];
 	}
+
+	oxyde::log::printPointInSpace(L"maxCorner", maxX, maxY, maxZ);
+	oxyde::log::printPointInSpace(L"minCorner", minX, minY, minZ);
 	//{19.2066, 20.4101, 103.101}
 
 	//blendedVertices[100 * 3 + 0] = 19.2066;
