@@ -27,6 +27,6 @@ int loadFileIntoString(const char* fileName, char* &theString, int &stringSize){
 }
 
 void loadShaders( char* &vertexShader, int &vsSize, char* &fragmentShader, int &fsSize){
-	loadFileIntoString("vertexShader_per_pixel_lighting.vs", vertexShader, vsSize);
-	loadFileIntoString("fragmentShader_per_pixel_lighting.fs", fragmentShader, fsSize);
+	loadFileIntoString("vertexShader_per_pixel_lighting_4_3.vs", vertexShader, vsSize);
+	loadFileIntoString("fragmentShader_per_pixel_lighting_4_3.fs", fragmentShader, fsSize);
 }

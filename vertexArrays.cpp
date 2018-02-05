@@ -30,6 +30,12 @@
 #include "macroUtilities.h" 
 #include "debugLog.h"
 
+static GLuint vao = 1;
+static GLuint element_index_buffer = 1;
+static GLuint vertex_position_buffer = 1;
+static GLuint vertex_texcoord_buffer = 1;
+static GLuint vertex_normal_buffer = 1;
+
 //static float Camera[] = { 50.0, 200.0, 0.0 };
 
 static float Up[] = { 0.00000000, 0.000000000, 1.000000000 };
@@ -161,15 +167,51 @@ void createVertexBuffer() {
 
 	endTimeForScene = getEndTimeForTracks(theSceneTracks);
 
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	GLenum myMistake = glGetError();
+
+	glGenBuffers(1, &element_index_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_index_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*numFaces * 3, faces, GL_STATIC_DRAW);
+
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	//myMistake = glGetError();
+
+	myMistake = glGetError();
+
+
 	//////////////////////////////////////////////// for lookAt Cam
 
-	glVertexAttribPointer(VERTEX_POSITION_ATT, VERTEX_POSITION_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)blendedVertices);
-	glVertexAttribPointer(VERTEX_TEXCOORD_ATT, VERTEX_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)texcoord);
-	glVertexAttribPointer(VERTEX_NORMAL_ATT, VERTEX_NORMAL_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)blendedNormals);
-	glVertexAttribPointer(VERTEX_WEIGHT_ATT, VERTEX_WEIGHT_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)vIndices);
+	glGenBuffers(1, &vertex_position_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_position_buffer);
+	glBufferData(GL_ARRAY_BUFFER, VERTEX_POSITION_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)blendedVertices, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(VERTEX_POSITION_ATT, VERTEX_POSITION_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	myMistake = glGetError();
 
-	////////////////////////////////////////////////////////////////////
+	glGenBuffers(1, &vertex_texcoord_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_texcoord_buffer);
+	glBufferData(GL_ARRAY_BUFFER, VERTEX_TEXCOORD_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)texcoord, GL_STATIC_DRAW);
+	glVertexAttribPointer(VERTEX_TEXCOORD_ATT, VERTEX_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	myMistake = glGetError();
 
+	glGenBuffers(1, &vertex_normal_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_normal_buffer);
+	glBufferData(GL_ARRAY_BUFFER, VERTEX_NORMAL_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)normals, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(VERTEX_NORMAL_ATT, VERTEX_NORMAL_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	myMistake = glGetError();
+
+
+	//glVertexAttribPointer(VERTEX_TEXCOORD_ATT, VERTEX_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)texcoord);
+	//glVertexAttribPointer(VERTEX_NORMAL_ATT, VERTEX_NORMAL_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)blendedNormals);
+	//glVertexAttribPointer(VERTEX_WEIGHT_ATT, VERTEX_WEIGHT_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)vIndices);
+
+	//////////////////////////////////////////////////////////////////// 
+	myMistake = glGetError();
+
+		//glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, faces);
 	setUpVector(Up[0], Up[1], Up[2]);
 }
 
@@ -258,8 +300,8 @@ void drawVertexArray() {
 		vWeights[i] = cos(pulse + teta * 50)*0.05;
 	}
 
-	GLint weightLocation = glGetUniformLocation(theProgram, "weight");
-	glUniform1fv(weightLocation, 200, (GLfloat*)vWeights);
+	//GLint weightLocation = glGetUniformLocation(theProgram, "weight");
+	//glUniform1fv(weightLocation, 200, (GLfloat*)vWeights);
 
 	//////////
 
@@ -409,15 +451,15 @@ void drawVertexArray() {
 
 	oxyde::linAlg::multiplyVectorByMatrix(RCp, r, cameraAfterTransform);
 
-	//float lightVectorBeforeTransform[] = { 100.0, 50.0, -200.0, 1.0 };
+	float lightVectorBeforeTransform[] = { 100.0, 50.0, -200.0, 1.0 };
 	//float lightVectorBeforeTransform[] = { RCp[0], RCp[1], RCp[2], 1.0 };
-	float lightVectorBeforeTransform[] = { 0.0, 0.0, 0.0, 1.0 };
+	//float lightVectorBeforeTransform[] = { 0.0, 0.0, 0.0, 1.0 };
 	float lightVectorAfterTransform[] = { 0.0, 0.0, 100.0, 1.0 };
 
 	//multiplyVectorByMatrix(lightVectorBeforeTransform, inv_r, lightVectorAfterTransform);
 	oxyde::linAlg::multiplyVectorByMatrix(lightVectorBeforeTransform, inv_r, lightVectorAfterTransform);
-	setLightPosition(theProgram, lightVectorAfterTransform[0], lightVectorAfterTransform[1], lightVectorAfterTransform[2]);
-	//setLightPosition(theProgram, lightVectorBeforeTransform[0], lightVectorBeforeTransform[1], lightVectorBeforeTransform[2]);
+	//setLightPosition(theProgram, lightVectorAfterTransform[0], lightVectorAfterTransform[1], lightVectorAfterTransform[2]);
+	setLightPosition(theProgram, lightVectorBeforeTransform[0], lightVectorBeforeTransform[1], lightVectorBeforeTransform[2]);
 	//setLightPosition(theProgram, 0.0, 0.0, 0.0);
 
 	float transposePerspective[16];
@@ -607,6 +649,16 @@ void drawVertexArray() {
 	glUniformMatrix4fv(invlocation, 1, GL_FALSE, normalM);
 
 	//
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_position_buffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, VERTEX_POSITION_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)blendedVertices);
+	GLenum myMistake = glGetError();
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_normal_buffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, VERTEX_NORMAL_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)blendedNormals);
+	myMistake = glGetError();
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	myMistake = glGetError();
 
 	glEnableVertexAttribArray(VERTEX_POSITION_ATT);
 	glEnableVertexAttribArray(VERTEX_TEXCOORD_ATT);
@@ -614,10 +666,21 @@ void drawVertexArray() {
 
 	/////
 
-	glEnableVertexAttribArray(VERTEX_WEIGHT_ATT);
+	//glEnableVertexAttribArray(VERTEX_WEIGHT_ATT);
 
 	/////
 
-	glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, faces);
+	//glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, faces);
+	glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, 0);
+
+	myMistake = glGetError();
+
+	int i = 0;
+	//glDrawElements(GL_TRIANGLES, 10, GL_UNSIGNED_SHORT, 0);
+
+	//glDrawElements(GL_TRIANGLES, 600, GL_UNSIGNED_SHORT, faces);
+
+	//glDrawArrays(GL_TRIANGLES, 0, 300);
+
 }
 

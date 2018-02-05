@@ -50,21 +50,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYGLESTEST));
 
-	// Main message loop:
-	//while (GetMessage(&msg, NULL, 0, 0))
-	//{
-	//	if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-	//	{
-	//		TranslateMessage(&msg);
-	//		DispatchMessage(&msg);
-	//	}else{
-	//		
-	//	
-	//		glClearColor( 0.0, 0.0, 0.5, 1.0);
-	//		glClear(GL_COLOR_BUFFER_BIT);
-	//		SwapBuffers(wglGetCurrentDC());
-	//	}
-	//}
 	ZeroMemory(&msg, sizeof(msg));
 	static float rot = 0.0;
 	bool goOn = true;
@@ -77,26 +62,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 			DispatchMessage(&msg);
 		}
 		{		
-			/*glClearColor( 0.0, 0.0, 0.5, 1.0);
-			glClear(GL_COLOR_BUFFER_BIT);
-			glBegin(GL_TRIANGLES);
-			glColor3f(1.0, 0.0, 0.0);
-			glVertex3f(rot+=0.00001, 0.0, 0.0);
-			glColor3f(0.0, 1.0, 0.0);
-			glVertex3f(1.0, 1.0, 0.0);
-			glColor3f(0.0, 0.0, 1.0);
-			glVertex3f(0.0, 1.0, 0.0);
-			glEnd();
-			glFlush();*/
-
-			//SwapBuffers(GetDC(hWnd));
+			
 			drawVertexArray();
 			SwapBuffers(wglGetCurrentDC());
 		}
-		
-		//if(msg.message == WM_QUIT) break;
-		
-		//SwapBuffers(wglGetCurrentDC());
 	}
 
 	return (int) msg.wParam;
@@ -161,7 +130,6 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return hWnd;
    }
-   //HDC hDc = GetDC(hWnd);
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
    
@@ -200,7 +168,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 		p.x = GET_X_LPARAM(lParam);
 		p.y = GET_Y_LPARAM(lParam);
-		//ScreenToClient(hWnd, (LPPOINT)(&p));
 		setWinX(p.x);
 		setWinY(p.y);
 		setButtonPressed(true);	 
@@ -214,7 +181,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_MOUSEMOVE:
 		p.x = GET_X_LPARAM(lParam);
 		p.y = GET_Y_LPARAM(lParam);
-		//ScreenToClient(hWnd, (LPPOINT)(&p));
 		setWinX(p.x);
 		setWinY(p.y);
 		break;
@@ -241,7 +207,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_CREATE:
 		hdc = GetDC(hWnd);
-		//GetWindowRect( hWnd, &theWindowRect);
 		GetClientRect(hWnd, &theWindowRect);
 		initGLContext(hdc);
 		initGLES(theWindowRect.left, theWindowRect.top, theWindowRect.right - theWindowRect.left, theWindowRect.bottom - theWindowRect.top);

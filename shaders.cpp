@@ -49,7 +49,7 @@ GLint loadAndCompileShader(){
 		PRINTIT("vShader compilation went fine\n");
     }
     
-    GLint infoLogLength;
+    GLint infoLogLength = 0;
     glGetShaderiv( vShader, GL_INFO_LOG_LENGTH, (GLint*) &infoLogLength );
     GLchar* shaderInfoLog = new GLchar[infoLogLength];
 	glGetShaderInfoLog(vShader, infoLogLength, NULL, shaderInfoLog);
@@ -58,7 +58,7 @@ GLint loadAndCompileShader(){
 	sprintf(vshaderInfoString, "For vShader: %s\n", shaderInfoLog);
 	OutputDebugStringA(vshaderInfoString);
 
-    delete shaderInfoLog;
+    //delete shaderInfoLog;
 
     
     GLuint fShader = glCreateShader( GL_FRAGMENT_SHADER ); 
@@ -98,12 +98,12 @@ GLint loadAndCompileShader(){
     glBindAttribLocation(program, VERTEX_POSITION_ATT, "vPosition" );
     
     glBindAttribLocation(program, VERTEX_TEXCOORD_ATT, "vTexCoord" );
-    
+    //
     glBindAttribLocation(program, VERTEX_NORMAL_ATT, "vNormal" );
 
 	//////////////////// uniform array test
     
-	glBindAttribLocation(program, VERTEX_WEIGHT_ATT, "vIndices");
+	//glBindAttribLocation(program, VERTEX_WEIGHT_ATT, "vIndices");
 
 	///////////////////////////////////////
     

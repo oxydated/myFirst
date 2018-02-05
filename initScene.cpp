@@ -21,42 +21,10 @@
 #define SPIT_ERROR     if(glGetError()!= GL_NO_ERROR) printf("error up to line %i\n", __LINE__ ); else printf("ok in %i\n", __LINE__ );
 
 void initGLES(int x, int y, int width, int height){
-    
-//    /////////////////// matrix tests
-//    
-//    float mat[16];
-//    printf("----------\n");
-//
-//    
-//    identity(mat);
-//    
-//    float rotatedX[16];
-//    
-//    rotateX( M_PI/4, mat, rotatedX );
-//    
-//    printMatrix(mat);
-//    printf("----------\n");
-//    printMatrix(rotatedX);
-//    
-//    float inverted[16];
-//    
-//    invertMatrix( rotatedX, inverted );
-//    printf("----------\n");
-//    printMatrix(inverted);
-//    
-//    float invRotX[16];
-//    multiplyMatrices( rotatedX, inverted, invRotX );
-//    printf("----------\n");
-//    printMatrix(invRotX);
-//    printf("----------\n");
-//
-//    
-//    
-//    ///////////////////
+
     glClearDepthf(1.0);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
 
     glViewport(0, 0, width, height);
 
@@ -73,7 +41,6 @@ void initGLES(int x, int y, int width, int height){
 	float invPers[16];
 
 	perspectiveMatrix( -1.0, 1.0, -4.0, 1200.0, -1.0, 1.0, mat, pers );
-	//perspectiveMatrix(-1.0, 1.0, -1.5, -400.0, -1.0, 1.0, mat, pers);
 
 	float testVec[] = { 1.0, -1.0, 1.5, 1.0 };
 	float testVec_should_b_1_minus1_minus1[4];
