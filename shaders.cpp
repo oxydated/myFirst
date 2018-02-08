@@ -100,6 +100,10 @@ GLint loadAndCompileShader(){
     glBindAttribLocation(program, VERTEX_TEXCOORD_ATT, "vTexCoord" );
     //
     glBindAttribLocation(program, VERTEX_NORMAL_ATT, "vNormal" );
+	//
+	glBindAttribLocation(program, VERTEX_BONE_NUM_ATT, "boneNumVertAttrib" );
+
+	glBindAttribLocation(program, VERTEX_BONE_OFFSET_ATT, "boneOffsetVertAttrib" );
 
 	//////////////////// uniform array test
     

@@ -25,25 +25,25 @@ struct skinData{
 	int numBones;
 
 	//	vertex attribute array for offset as defined in 6.4.2.1.1. (float array)
-	float *boneOffsetVertAttrib;
-
+	int *boneOffsetVertAttrib;	//	in int boneOffsetVertAttrib;
+	
 	//	vertex attribute array for number of bones as defined in 6.4.2.1.2. (float array)
-	float *boneNumVertAttrib;
+	int *boneNumVertAttrib;	//	in int boneNumVertAttrib;
 
 	//	vertex attribute length(integer)
 	int vertAttribNum;
 
 	//	uniform array for bone index as defined through 6.4.2.1.and 6.4.2.2. (float array)
-	float *boneIndexesForSkinVertices;
+	int *boneIndexesForSkinVertices;	//	int boneIndexesForSkinVertices
 
 	//	uniform array for bone weight as defined through 6.4.2.1.and 6.4.2.2. (float array)
-	float *boneWeightForSkinVertices;
+	float *boneWeightForSkinVertices;	//	float boneWeightForSkinVertices
 
 	//	uniform array length(integer)
 	int boneUniformNum;
 
 	// tranformations from the bone skin pose to current frame pose. will have the same size as sceneTracks.numTracks (X size of dual quaternion - float[8]) and will be indexed by bone Index
-	float*fromSkinPoseToCurrentTransf;
+	float *fromSkinPoseToCurrentTransf;
 };
 
 void alocateSkinArraysForTracks(sceneTracks theTracks, skinData &theSkin);

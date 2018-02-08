@@ -15,9 +15,9 @@ HRESULT getSkinPoseBones(IXMLDOMDocument3* theDocument, IXMLDOMNode *skinElement
 		// load skin structure
 HRESULT getMeshNodeForSkin(IXMLDOMDocument3* theDocument, IXMLDOMNode *skinElementNode, IXMLDOMNode* &meshElementNode);
 
-HRESULT countVertAttribNum(IXMLDOMNode *skinElementNode, IXMLDOMNode* meshElementNode, int &count);
+//HRESULT countVertAttribNum(IXMLDOMNode *skinElementNode, IXMLDOMNode* meshElementNode, int &count);
 
-HRESULT getSkinVerticesData(IXMLDOMDocument3* theDocument, IXMLDOMNode* skinElementNode, float* &boneOffset, float* &boneNum, float* &boneIndexes, float* &boneWeight, int &vertAttribNum, int& boneUniformNum);
+HRESULT getSkinVerticesData(IXMLDOMDocument3* theDocument, IXMLDOMNode* skinElementNode, int* &boneOffset, int* &boneNum, int* &boneIndexes, float* &boneWeight, int &vertAttribNum, int& boneUniformNum);
 
 HRESULT getSkinData(IXMLDOMDocument3* theDocument, LPCSTR skinElementNodeID, skinData &theSkinData);
 

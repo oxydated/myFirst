@@ -9,19 +9,20 @@ void alocateSkinArraysForTracks(sceneTracks theTracks, skinData &theSkin) {
 }
 
 void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks, bool shouldIPrintIt) {
-	TCHAR outputString[800];
-	TCHAR boolString[10];
+	//TCHAR outputString[800];
+	//TCHAR boolString[10];
 
 	//for aKey in initialSkinPose :
 	//	if aKey in theLinks :
 	//		fromInitialPoseToCurrentTransf[aKey] = transformFromSourceToDestinationAxis(initialSkinPose[aKey], globalTransforms[aKey])
-	if (shouldIPrintIt) {
-		swprintf(outputString, TEXT("(* {boneIndex , Boolean, {transformedFromSkin quat}, {boneGlobalTransform quat}, {skinPoseSkeleton quat}} *)\n"));
-		OutputDebugString(outputString);
-	}
-	oxyde::log::printText(__FUNCTION__);
 
-	oxyde::log::printText(L"nodeIndexToBoneIndex = {");
+	//if (shouldIPrintIt) {
+	//	swprintf(outputString, TEXT("(* {boneIndex , Boolean, {transformedFromSkin quat}, {boneGlobalTransform quat}, {skinPoseSkeleton quat}} *)\n"));
+	//	OutputDebugString(outputString);
+	//}
+	//oxyde::log::printText(__FUNCTION__);
+
+	//oxyde::log::printText(L"nodeIndexToBoneIndex = {");
 
 	for (int i = 0; i < theSkin.numBones; i++) {
 
@@ -36,14 +37,14 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 
 		//oxyde::log::printNamedParameter(L"boneIndexIn the skin", std::to_wstring(i));
 
-		oxyde::log::printText(std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex) + L"->{" + std::to_wstring(i) + L", ");
+		//oxyde::log::printText(std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex) + L"->{" + std::to_wstring(i) + L", ");
 
-		oxyde::log::printDualQuat(L"skinPose" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), theSkin.skinPoseSkeleton[i].skinPose);
-		oxyde::log::printText(L",");
-		oxyde::log::printDualQuat(L"boneGlobalTransform" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), boneGlobalTransform);
-		oxyde::log::printText(L",");
-		oxyde::log::printDualQuat(L"transformedFromSkin" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), transformedFromSkin);
-		oxyde::log::printText(L",");
+		//oxyde::log::printDualQuat(L"skinPose" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), theSkin.skinPoseSkeleton[i].skinPose);
+		//oxyde::log::printText(L",");
+		//oxyde::log::printDualQuat(L"boneGlobalTransform" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), boneGlobalTransform);
+		//oxyde::log::printText(L",");
+		//oxyde::log::printDualQuat(L"transformedFromSkin" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), transformedFromSkin);
+		//oxyde::log::printText(L",");
 
 		float theComplement[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		bool complementIt = false;
@@ -63,15 +64,15 @@ void transformFromSkinPoseToCurrentPose(skinData &theSkin, sceneTracks theTracks
 
 			//oxyde::log::printText(std::wstring(L"Complemented: ") + std::to_wstring(i));
 		}
-		oxyde::log::printNamedParameter(L"Complemented" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), int(complementIt));
-		oxyde::log::printText(L"},");
+		//oxyde::log::printNamedParameter(L"Complemented" + std::to_wstring(i) + L"s" + std::to_wstring(theSkin.skinPoseSkeleton[i].boneIndex), int(complementIt));
+		//oxyde::log::printText(L"},");
 	}
 
-	oxyde::log::printText(L"}");
+	//oxyde::log::printText(L"}");
 }
 
 //def blendDualQuatFromMesh( theSkinWeights, theVerticesDic, theChoosenBone = theTreeRoot-1 ): 
-void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, float *& blendedVertices, float *& blendedNormals, int numVertices, bool shouldIPrintIt) {
+void blendDualQuatFromMesh2(skinData theSkin, float * vertices, float * normals, float *& blendedVertices, float *& blendedNormals, int numVertices, bool shouldIPrintIt) {
 	//blendedVertices = new float[3 * numVertices];
 	//    for aVertex in theSkinWeights:
 
@@ -232,4 +233,68 @@ void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, 
 	}
 
 	oxyde::log::printText(L"}");
+}
+
+void dual_quat_transform_point(float q[], float p[], float pt[]) {
+	pt[0] = -2 * q[5] * q[0] + 2 * q[4] * q[1] - 2 * q[7] * q[2] + 2 * q[6] * q[3] + p[1] * (2 * q[1] * q[2] - 2 * q[0] * q[3]) + p[2] * (2 * q[0] * q[2] + 2 * q[1] * q[3]) + p[0] * (q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]);
+	pt[1] = -2 * q[6] * q[0] + 2 * q[7] * q[1] + 2 * q[4] * q[2] - 2 * q[5] * q[3] + p[0] * (2 * q[1] * q[2] + 2 * q[0] * q[3]) + p[2] * (-2 * q[0] * q[1] + 2 * q[2] * q[3]) + p[1] * (q[0] * q[0] - q[1] * q[1] + q[2] * q[2] - q[3] * q[3]);
+	pt[2] = -2 * q[7] * q[0] - 2 * q[6] * q[1] + 2 * q[5] * q[2] + 2 * q[4] * q[3] + p[0] * (-2 * q[0] * q[2] + 2 * q[1] * q[3]) + p[1] * (2 * q[0] * q[1] + 2 * q[2] * q[3]) + p[2] * (q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3]);
+}
+
+void blendDualQuatFromMesh(skinData theSkin, float * vertices, float * normals, float *& blendedVertices, float *& blendedNormals, int numVertices, bool shouldIPrintIt) {
+
+	for (int i = 0; i < numVertices; i++) {
+
+		//for (int j = 0; j < int(theSkin.boneNumVertAttrib[i]); j++) {
+
+		//	int boneIndex = int(theSkin.boneIndexesForSkinVertices[j + int(theSkin.boneOffsetVertAttrib[i])]);
+
+		//	float weight = theSkin.boneWeightForSkinVertices[j + int(theSkin.boneOffsetVertAttrib[i])];
+
+		//	float *theVersor = &theSkin.fromSkinPoseToCurrentTransf[8 * boneIndex];
+		//	if (j == 0) {
+		//		neatTrick0[0] = theVersor[0];
+		//		neatTrick0[1] = theVersor[1];
+		//		neatTrick0[2] = theVersor[2];
+		//		neatTrick0[3] = theVersor[3];
+		//		neatTrick0[4] = theVersor[4];
+		//		neatTrick0[5] = theVersor[5];
+		//		neatTrick0[6] = theVersor[6];
+		//		neatTrick0[7] = theVersor[7];
+		//	}
+
+		//	float theComplement[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+		//	float o[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		//	oxyde::DQ::dual_quaternion_product_by_scalar(DUALQUAARRAY(theVersor), weight, DUALQUAARRAY(o));
+
+		//	float theSum[] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		//	oxyde::DQ::dual_quaternion_sum(DUALQUAARRAY(theBlendedQuat),
+		//		DUALQUAARRAY(o),
+		//		DUALQUAARRAY(theSum));
+
+		//	theBlendedQuat[0] = theSum[0]; theBlendedQuat[4] = theSum[4];
+		//	theBlendedQuat[1] = theSum[1]; theBlendedQuat[5] = theSum[5];
+		//	theBlendedQuat[2] = theSum[2]; theBlendedQuat[6] = theSum[6];
+		//	theBlendedQuat[3] = theSum[3]; theBlendedQuat[7] = theSum[7];
+
+		//	theTotalWeight = theTotalWeight + weight;
+		//}
+
+		int boneIndex = int(theSkin.boneIndexesForSkinVertices[ int(theSkin.boneOffsetVertAttrib[i])]);
+
+		float weight = theSkin.boneWeightForSkinVertices[int(theSkin.boneOffsetVertAttrib[i])];
+
+		float *theVersor = &theSkin.fromSkinPoseToCurrentTransf[8 * boneIndex];
+
+		float p[] = { vertices[3 * i], vertices[3 * i + 1], vertices[3 * i + 2] };
+		float pt[3];
+
+		dual_quat_transform_point(theVersor, p, pt);
+
+		blendedVertices[3 * i] = pt[0];
+		blendedVertices[3 * i + 1] = pt[1];
+		blendedVertices[3 * i + 2] = pt[2];
+
+	}
 }

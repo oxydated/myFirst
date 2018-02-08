@@ -119,23 +119,23 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 	getQuatFromTrackForTime(theTracks.theTracks[boneIndex], currentTime, DUALQUAARRAY(boneGlobalTransform));
 	theBoneStack.push(theSkeleton.theRoot);
 	////////////////////////////// printing it
-	TCHAR outputString[400];
-	if (true) {
-		swprintf(outputString, TEXT("{%f, {\n"), currentTime);
-		OutputDebugString(outputString);
+	//TCHAR outputString[400];
+	//if (true) {
+	//	swprintf(outputString, TEXT("{%f, {\n"), currentTime);
+	//	OutputDebugString(outputString);
 
-		swprintf(outputString, TEXT("{%i, {%f, %f, %f, %f, %f, %f, %f, %f}, {%f, %f, %f, %f, %f, %f, %f, %f}}"),
-			boneIndex,
-			DUALQUAARRAY(boneGlobalTransform),
-			DUALQUAARRAY(boneGlobalTransform)
-			);
-		OutputDebugString(outputString);
-	}
+	//	swprintf(outputString, TEXT("{%i, {%f, %f, %f, %f, %f, %f, %f, %f}, {%f, %f, %f, %f, %f, %f, %f, %f}}"),
+	//		boneIndex,
+	//		DUALQUAARRAY(boneGlobalTransform),
+	//		DUALQUAARRAY(boneGlobalTransform)
+	//		);
+	//	OutputDebugString(outputString);
+	//}
 	//////////////////////////////
 
-	oxyde::log::printText(__FUNCTION__);
+	//oxyde::log::printText(__FUNCTION__);
 
-	oxyde::log::printText(L"skeletonStructure = {");
+	//oxyde::log::printText(L"skeletonStructure = {");
 	while (!theBoneStack.empty()){
 		boneNode* currentNode = theBoneStack.top();
 		theBoneStack.pop();
@@ -163,18 +163,18 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 			//	);
 			//	OutputDebugString(outputString);
 			//}
-			oxyde::log::printText(L"{");
-			oxyde::log::printText(std::to_wstring(currentNode->boneNodeIndex) + L"->" + std::to_wstring(currentChild.boneNodeIndex) + L",");
-			//oxyde::log::printLine();
-			oxyde::log::printNamedParameter(L"NodeIndex", std::to_wstring(currentChild.boneNodeIndex));
-			oxyde::log::printText(L",");
-			oxyde::log::printDualQuat(L"parentGlobalTransform", parentGlobalTransform);
-			oxyde::log::printText(L",");
-			oxyde::log::printDualQuat(L"localTransform", localTransform);
-			oxyde::log::printText(L",");
-			oxyde::log::printDualQuat(L"boneGlobalTransform", boneGlobalTransform);
+			//oxyde::log::printText(L"{");
+			//oxyde::log::printText(std::to_wstring(currentNode->boneNodeIndex) + L"->" + std::to_wstring(currentChild.boneNodeIndex) + L",");
+			////oxyde::log::printLine();
+			//oxyde::log::printNamedParameter(L"NodeIndex", std::to_wstring(currentChild.boneNodeIndex));
+			//oxyde::log::printText(L",");
+			//oxyde::log::printDualQuat(L"parentGlobalTransform", parentGlobalTransform);
+			//oxyde::log::printText(L",");
+			//oxyde::log::printDualQuat(L"localTransform", localTransform);
+			//oxyde::log::printText(L",");
+			//oxyde::log::printDualQuat(L"boneGlobalTransform", boneGlobalTransform);
 
-			oxyde::log::printText(L"},");
+			//oxyde::log::printText(L"},");
 
 			/////////////////// checking bones
 
@@ -203,16 +203,16 @@ void getSkeletonForTime(skeleton theSkeleton, sceneTracks &theTracks, float curr
 			theBoneStack.push(&currentNode->children[i]);
 		}
 	}
-	oxyde::log::printText(L"}");
+	//oxyde::log::printText(L"}");
 
-	oxyde::log::printText(L"ruleToSkeletonStructure = Thread[{edge, NodeIndex, parentGlobalTransform, localTransform, boneGlobalTransform }->#]");
+	//oxyde::log::printText(L"ruleToSkeletonStructure = Thread[{edge, NodeIndex, parentGlobalTransform, localTransform, boneGlobalTransform }->#]");
 
-	oxyde::log::printLine();
+	//oxyde::log::printLine();
 
 	////////////////////////////// printing it
-	if (shouldIPrintIt) {
-		swprintf(outputString, TEXT("\n}}, \n"));
-		OutputDebugString(outputString);
-	}
+	//if (shouldIPrintIt) {
+	//	swprintf(outputString, TEXT("\n}}, \n"));
+	//	OutputDebugString(outputString);
+	//}
 	//////////////////////////////
 }

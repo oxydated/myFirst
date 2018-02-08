@@ -87,9 +87,9 @@ void initGLES(int x, int y, int width, int height){
 	oxyde::linAlg::homogenize( retPoinmv );
 	oxyde::linAlg::printVector( retPoinmv );
     
-    createVertexBuffer();
     GLint program = loadAndCompileShader();
     setProgram( program );
+    createVertexBuffer();
 	SPIT_ERROR
 	setTexture(program);
 	SPIT_ERROR

@@ -29,6 +29,10 @@
 #define VERTEX_NORMAL_ATT 2
 #define VERTEX_NORMAL_SIZE 3
 
+#define VERTEX_BONE_NUM_ATT	3	// int boneNumVertAttrib;
+
+#define VERTEX_BONE_OFFSET_ATT 4 // int boneOffsetVertAttrib;
+
 ///////////////////// uniform array test
 
 #define VERTEX_WEIGHT_ATT 3
