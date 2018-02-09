@@ -15,8 +15,8 @@ out vec2 theCoord;
 out vec4 varyNormal;
 out vec4 varyLightVec;
 
-in float boneNumVertAttrib;
-in float boneOffsetVertAttrib;
+in int boneNumVertAttrib;
+in int boneOffsetVertAttrib;
 
 layout(std430, binding=1) buffer boneIndexes{
 	int boneIndexesForSkinVertices [];
@@ -50,10 +50,10 @@ void main(){
 
 	mat2x4 theBlendedQuat = mat2x4(0,0,0,0,0,0,0,0) ;
 	
-	for (int j = 0; j < int(boneNumVertAttrib); j++) {	
+	for (int j = 0; j < boneNumVertAttrib; j++) {	
 
-		int boneIndex = int(boneIndexesForSkinVertices[j + int(boneOffsetVertAttrib)]);
-		float  weight = boneWeightForSkinVertices[j + int(boneOffsetVertAttrib)];
+		int boneIndex = boneIndexesForSkinVertices[j + boneOffsetVertAttrib];
+		float  weight = boneWeightForSkinVertices[j + boneOffsetVertAttrib];
 
 		mat2x4 theVersor = mat2x4((fromSkinPoseToCurrentTransf[boneIndex])[0].yzwx, (fromSkinPoseToCurrentTransf[boneIndex])[1].yzwx);
 		theBlendedQuat =  theBlendedQuat + weight * theVersor;	

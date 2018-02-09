@@ -210,13 +210,13 @@ void createVertexBuffer() {
 	glGenBuffers(1, &vertex_bone_num_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_num_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*numVerts, (GLvoid*)theSkin.boneNumVertAttrib, GL_STATIC_DRAW);
-	glVertexAttribPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, GL_FALSE, 0, (GLvoid*)0);
+	glVertexAttribIPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, 0, (GLvoid*)0);
 	myMistake = glGetError();
 
 	glGenBuffers(1, &vertex_bone_offset_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_offset_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*numVerts, (GLvoid*)theSkin.boneOffsetVertAttrib, GL_STATIC_DRAW);
-	glVertexAttribPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, GL_FALSE, 0, (GLvoid*)0);
+	glVertexAttribIPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, 0, (GLvoid*)0);
 	myMistake = glGetError();
 
 	glGenBuffers(1, &store_boneIndexes_buffer);
