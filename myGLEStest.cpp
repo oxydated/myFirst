@@ -4,12 +4,23 @@
 #ifdef _WIN32
 #include "stdafx.h"
 #include <Windowsx.h>
+#include <Shobjidl.h>
 #endif
+#include <string>
+
+//legacy headers
+
 #include "initGL.h"
 #include "initScene.h"
 #include "myGLEStest.h"
 #include "vertexArrays.h"
 #include "interactivity.h"
+
+//new headers
+
+#include "XMLDocument.h"
+#include "scene.h"
+
 
 #define MAX_LOADSTRING 100
 
@@ -61,8 +72,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		{		
-			
+		{				
 			drawVertexArray();
 			SwapBuffers(wglGetCurrentDC());
 		}
@@ -154,6 +164,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HDC hdc;
 	int i;
 
+	IFileDialog *openFile = NULL;
+	COMDLG_FILTERSPEC fileFilter[1];
+	fileFilter[0].pszName = L"oxyde model file";
+	fileFilter[0].pszSpec = L"*.oxy";
+	HRESULT hr = S_OK;
+
 	POINT p = {0, 0};
 
 	switch (message)
@@ -188,6 +204,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		wmId    = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
+
 		// Parse the menu selections:
 		switch (wmId)
 		{
@@ -196,6 +213,44 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
+			break;
+		case ID_FILE_OPENFILE:
+			hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&openFile));;
+			if (SUCCEEDED(hr)) {
+				hr = openFile->SetDefaultExtension(L"oxy");
+				if (SUCCEEDED(hr)) {
+					hr = openFile->SetFileTypes(1, fileFilter);
+					if (SUCCEEDED(hr)) {
+						hr = openFile->Show(hWnd);
+						if (SUCCEEDED(hr)) {
+							IShellItem* fileToLoad = NULL;
+							hr = openFile->GetResult(&fileToLoad);
+							if (SUCCEEDED(hr)) {
+								LPWSTR fileName = NULL;
+								hr = fileToLoad->GetDisplayName(SIGDN_FILESYSPATH, &fileName);
+								if (SUCCEEDED(hr)) {
+									std::wstring fileNameW(fileName);
+									int ilen = fileNameW.length();
+									MSXML2::IXMLDOMDocumentPtr theDocument = oxyde::XML::loadDocument(fileNameW);
+									if (theDocument) {
+										MSXML2::IXMLDOMElementPtr documentElement = theDocument->GetdocumentElement();
+										
+										MSXML2::IXMLDOMNodePtr sceneNode = MSXML2::IXMLDOMNodePtr(documentElement)->selectSingleNode(L"./scene");
+										std::wstring theXML(sceneNode->xml);
+										int i = theXML.length();
+										oxyde::scene::scenePtr theScene = oxyde::scene::scene::createScene(sceneNode);
+
+									}
+									CoTaskMemFree(fileName);
+								}
+								fileToLoad->Release();
+							}
+						}
+					}
+				}
+				openFile->Release();
+			}
+
 			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);

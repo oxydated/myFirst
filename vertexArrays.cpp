@@ -259,6 +259,17 @@ void createVertexBuffer() {
 	glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
 	glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
 
+	std::vector<std::array<float, 3>> testArray(4);
+	for (auto &&i : testArray) {
+		float counter = 0.0;
+		for (auto &&j : i) {
+			j = counter;
+			counter += 1.0;
+		}
+	}
+
+	void* somePointer = testArray.data();
+
 	setUpVector(Up[0], Up[1], Up[2]);
 }
 

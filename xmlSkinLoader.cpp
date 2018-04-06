@@ -235,25 +235,6 @@ HRESULT getSkinVerticesData(IXMLDOMDocument3* theDocument, IXMLDOMNode* skinElem
 		if (theVertexNode != NULL) {
 			theVertexNode->Release();
 		}
-		//int boneNumforVertexID = int(boneNum[vertexID]);
-		//int textOffset = swprintf(outputString, TEXT("{%i, {"), vertexID);
-		//for (int j = 0; j < int(boneNum[vertexID]); ++j) {
-		//	int boneIndexForVertexID = int(boneIndexes[int(boneOffset[vertexID]) + j]);
-		//	float boneWeightForVertexID = boneWeight[int(boneOffset[vertexID]) + j];
-
-		//	textOffset += swprintf(outputString + textOffset, TEXT("{%i, %f}"), boneIndexForVertexID, boneWeightForVertexID);
-		//	if (j < (int(boneNum[vertexID]) - 1)) {
-		//		textOffset += swprintf(outputString + textOffset, TEXT(","));
-		//	}
-		//}
-		//textOffset += swprintf(outputString + textOffset, TEXT("}}"));
-		//if (i < (numVertexElements - 1)) {
-		//	textOffset += swprintf(outputString + textOffset, TEXT(",\n"));
-		//}
-		//else {
-		//	textOffset += swprintf(outputString + textOffset, TEXT("\n"));
-		//}
-		//OutputDebugString(outputString);
 	}
 
 	swprintf(outputString, TEXT("}\n"));
@@ -300,23 +281,13 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 	IXMLDOMNode* meshMatrixNode = NULL;
 	hr = theSkinElementNode->selectSingleNode(_bstr_t("./objectMatrix"), &meshMatrixNode);
 
-	//float objectMatrix[16] = { 1.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00,
-	//	0.00000000e+00, -4.37113883e-08, 1.00000000e+00, 0.00000000e+00,
-	//	0.00000000e+00, -1.00000000e+00, -4.37113883e-08, 0.00000000e+00,
-	//	3.49143505e-01, 1.27211199e+01, 1.99448700e+01, 1.00000000e+00
-	//};
-
 	float objectMatrix[16] = {
 		0.0, 0.0, 0.0, 0.0,
 		0.0, 0.0, 0.0, 0.0,
 		0.0, 0.0, 0.0, 0.0,
 		0.0, 0.0, 0.0, 1.0
 	};
-	// r0c0="1"			r0c1="0"				r0c2="0" 
-	// r1c0="0"			r1c1="-4.371139E-08"	r1c2="1" 
-	// r2c0="0"			r2c1="-1"				r2c2="-4.371139E-08"
-	// r3c0="0.3491435" r3c1="12.72112"			r3c2="19.94487" />
-	
+
 	hr = getFloatAttributeFromElementInNode(meshMatrixNode, "r0c0", objectMatrix[0]);
 	hr = getFloatAttributeFromElementInNode(meshMatrixNode, "r0c1", objectMatrix[1]);
 	hr = getFloatAttributeFromElementInNode(meshMatrixNode, "r0c2", objectMatrix[2]);
@@ -337,10 +308,7 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 	oxyde::log::printMatrix(L"objectMatrix", objectMatrix);
 
 	/////////// apply mesh matrix on vertices
-
-	//swprintf(outputString, TEXT("{\n (* {vertexID, {skinpose x, y, z}} *)\n"));
-	//OutputDebugString(outputString);
-
+	
 	for (int i = 0; i < numVerts; i++) {
 		float myOldVert[4] = { vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2], 1.0 };
 		float myNewVert[4] = { 0.0, 0.0, 0.0, 0.0 };
@@ -349,39 +317,9 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 		vertices[i * 3 + 0] = myNewVert[0];
 		vertices[i * 3 + 1] = myNewVert[1];
 		vertices[i * 3 + 2] = myNewVert[2];
-
-
-		//int textOffset = swprintf(outputString, TEXT("{%i, {%f, %f, %f}}"), 
-		//	i,
-		//	vertices[i * 3 + 0],
-		//	vertices[i * 3 + 1],
-		//	vertices[i * 3 + 2]
-		//);
-		//if (i < (numVerts - 1)) {
-		//	textOffset += swprintf(outputString + textOffset, TEXT(",\n"));
-		//}
-		//else {
-		//	textOffset += swprintf(outputString + textOffset, TEXT("\n"));
-		//}
-		//OutputDebugString(outputString);
 	}
 
-	//swprintf(outputString, TEXT("}\n"));
-	//OutputDebugString(outputString);
-	/////
-
 	return hr;
-
-	//int meshID = 0;
-	//hr = getIntAttributeFromElementInNode(theSkinElementNode, "mesh", meshID);
-	//_variant_t theMeshIDint = _variant_t(meshID);
-	//theMeshIDint.ChangeType(VT_BSTR);
-
-	//////////// get mesh by meshID - LPCSTR
-
-	//_bstr_t meshElementQuery = _bstr_t("./geometry/mesh[@meshID='") + _bstr_t(theMeshIDint) + _bstr_t("']");
-	//IXMLDOMNode* theMeshElementNode = NULL;
-	//hr = theRoot->selectSingleNode(meshElementQuery, &theMeshElementNode);
 }
 
 EXTERN_C void xmlLoadSkin(skinData &theSkinData){
