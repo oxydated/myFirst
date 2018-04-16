@@ -20,6 +20,9 @@
 
 #include "XMLDocument.h"
 #include "scene.h"
+#include "ticker.h"
+#include "mesh.h"
+#include "skindata.h"
 
 
 #define MAX_LOADSTRING 100
@@ -239,6 +242,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										std::wstring theXML(sceneNode->xml);
 										int i = theXML.length();
 										oxyde::scene::scenePtr theScene = oxyde::scene::scene::createScene(sceneNode);
+										oxyde::scene::ticker::setLoopSize(4000);
+										oxyde::scene::ticker::start();
+										//oxyde::scene::ticker::setCurrentTime(50);
+										oxyde::scene::ticker::setCurrentTime(3000);
+										theScene->updateFrame();
+
+										oxyde::geometry::skindataPtr theSkin = std::make_shared<oxyde::geometry::skindata>(documentElement);
 
 									}
 									CoTaskMemFree(fileName);

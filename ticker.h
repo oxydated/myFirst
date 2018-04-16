@@ -1,5 +1,7 @@
 #pragma once
-#include <memory>
+
+#include <chrono>
+#include <ratio>
 
 /*
 Ticker class 
@@ -20,17 +22,27 @@ Ticker class
 namespace oxyde {
 	namespace scene {
 
-		class ticker: std::enable_shared_from_this<ticker> {
+		using clock = std::chrono::high_resolution_clock;
+		using timePoint = std::chrono::time_point<clock>;
+		//using duration = std::chrono::microseconds;
+		using duration = std::chrono::duration<int, std::ratio<1, 4800>>;
+
+		class ticker {
 		protected:
-			ticker();
+			ticker() = default;
+			timePoint startTime;
+			duration currentTime;
+			int loopSize;
+
+			static ticker theSingletonInstance;
 
 		public:
-			void update();
-			int currentTime();
-
-			static std::shared_ptr<ticker> getTicker();
-			static std::shared_ptr<ticker> theSingletonInstance;
+			static void setLoopSize(int);
+			static void start();
+			static void update();
+			static void setCurrentTime(int newTime);
+			static long getCurrentTime();
 		};
-
 	}
 }
+

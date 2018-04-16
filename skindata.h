@@ -4,6 +4,7 @@
 #include <array>
 #include "XMLDocument.h"
 #include "mesh.h"
+#include "dualQuaternionFunctions.h"
 
 /*
 class skinData{
@@ -47,7 +48,7 @@ class skinData{
 namespace oxyde {
 	namespace geometry {
 
-		using dualQuat = std::array<float, 8>;
+		using dualQuat = oxyde::DQ::dualQuat;
 
 		class skindata {
 
@@ -76,8 +77,6 @@ namespace oxyde {
 
 			std::vector<int> boneIndex;
 
-			std::vector<dualQuat> skinPoseSkeleton;
-
 			std::vector<int> boneOffsetVertAttrib;
 
 			std::vector<int> boneNumVertAttrib;
@@ -85,8 +84,6 @@ namespace oxyde {
 			std::vector<int> boneIndexesForSkinVertices;
 
 			std::vector<float> boneWeightForSkinVertices;
-
-			std::vector<dualQuat> fromSkinPoseToCurrentTransf;
 
 		};
 

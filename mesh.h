@@ -30,7 +30,12 @@ namespace oxyde {
 			const float* getTexCoordData();
 			const float* getNormalsData();
 
+			void applyMatrixtoVertices(std::array<float, 16>&);
+
 		private:
+
+			std::vector<std::array<unsigned short, 3>> faces;
+
 			std::vector<std::array<float, 3>> vertices;
 			std::vector<std::array<float, 2>> texcoord;
 			std::vector<std::array<float, 3>> normals;

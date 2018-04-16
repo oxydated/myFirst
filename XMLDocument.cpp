@@ -1,4 +1,18 @@
+#include <locale>
+#include <Windows.h>
 #include "XMLDocument.h"
+
+namespace {
+	class executedBeforeMain {
+	public:
+		explicit executedBeforeMain() {
+			std::locale::global(std::locale("en-US"));
+			SetThreadLocale(LOCALE_INVARIANT);
+		}
+	};
+
+	executedBeforeMain instance = executedBeforeMain();
+}
 
 namespace oxyde {
 	namespace XML {
@@ -20,29 +34,32 @@ namespace oxyde {
 			return theDocument;
 		}
 
-		int getIntAttributeFromElement(MSXML2::IXMLDOMElementPtr &theElement, _bstr_t attribName)
+		int getIntAttributeFromElement(const MSXML2::IXMLDOMElementPtr &theElement, _bstr_t attribName)
 		{
 			_variant_t&& intVariant =  theElement->getAttribute(attribName);
 			intVariant.ChangeType(VT_I4);
 			return intVariant.intVal;
 		}
 
-		/*
-		HRESULT getIntAttributeFromElementInNode(IXMLDOMNode* theNode, LPCSTR theAttribute, int &retIntValue) {
-		HRESULT hr = S_OK;
-		VARIANT attribValue;
-
-		IXMLDOMElement* theElementInNode = NULL;
-		hr = theNode->QueryInterface(__uuidof(IXMLDOMElement), (void**)&theElementInNode);
-		if (hr == S_OK) {
-		hr = theElementInNode->getAttribute(_bstr_t(theAttribute), &attribValue);
-		_variant_t theIntValue = _variant_t(attribValue);
-		theIntValue.ChangeType(VT_I4);
-		retIntValue = theIntValue.intVal;
+		unsigned short getUShortAttributeFromElement(const MSXML2::IXMLDOMElementPtr &theElement, _bstr_t attribName)
+		{
+			_variant_t&& ushortVariant = theElement->getAttribute(attribName);
+			ushortVariant.ChangeType(VT_UI2);
+			return ushortVariant.intVal;
 		}
-		return hr;
-		}
-		*/
 
+		float getFloatAttributeFromElement(const MSXML2::IXMLDOMElementPtr &theElement, _bstr_t attribName)
+		{
+			_variant_t&& intVariant = theElement->getAttribute(attribName);
+			intVariant.ChangeType(VT_BSTR);
+			return std::stof(std::wstring(intVariant.bstrVal));
+		}
+
+		std::wstring getWStringAttributeFromElement(const MSXML2::IXMLDOMElementPtr &theElement, _bstr_t attribName)
+		{
+			_variant_t&& intVariant = theElement->getAttribute(attribName);
+			intVariant.ChangeType(VT_BSTR);
+			return std::wstring(intVariant.bstrVal);
+		}
 	}
 }

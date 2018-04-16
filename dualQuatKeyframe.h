@@ -3,6 +3,9 @@
 #include <array>
 #include "XMLDocument.h"
 #include "keyframe.h"
+#include "dualQuaternionMath.h"
+#include "dualQuaternionFunctions.h"
+
 
 /*
 class quatKeyFrame extends keyFrame{
@@ -17,7 +20,8 @@ class quatKeyFrame extends keyFrame{
 
 namespace oxyde {
 	namespace scene {
-		using dualQuat = std::array<float, 8>;
+
+		using dualQuat = oxyde::DQ::dualQuat;
 
 		class dualQuatKeyframe : public keyframe {
 		protected:

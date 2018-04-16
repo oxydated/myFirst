@@ -5,6 +5,8 @@
 #include <map>
 #include <functional>
 #include "XMLDocument.h"
+#include "dualQuaternionMath.h"
+#include "dualQuaternionFunctions.h"
 
 /*
 Bone class (abstract)
@@ -27,13 +29,26 @@ Bone objects should be constructed by an Abstract Factory. Concrete Factory shou
 namespace oxyde {
 	namespace scene {
 
+		using dualQuat = oxyde::DQ::dualQuat;
+
 		class bone {
 		public:
 			virtual void updateTransform() = 0;
 			const std::vector<int>& getListOfObservedBones() { return listOfObservedBones; }
+			bone(const MSXML2::IXMLDOMNodePtr&);
+			bone() = delete;
+
+			static void setRootNodeObject(int nodeObject);
+			static void setTransformationVector(int sizeOfVector);
+			static const float* getTransformationData();
+			static void printBones();
 
 		protected:
 			std::vector<int> listOfObservedBones;
+			int nodeObject;
+
+			static int rootNodeObject;
+			static std::vector<dualQuat> boneTransformation;
 		};
 
 		using bonePtr = std::shared_ptr<bone>;

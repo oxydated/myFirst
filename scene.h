@@ -41,14 +41,12 @@
 namespace oxyde {
 	namespace scene {
 
-		using dualQuat = std::array<float, 8>;
-
 		class scene: std::enable_shared_from_this<scene> {
 		protected:
 			subjectPtr theTickerSubject;
 			std::map<int, observerPtr> bonesPernodeObject;
+			std::map<int, std::wstring> boneNamesPerNodeObject;
 			std::stack<observerPtr> observersToUpdate;
-			std::vector<dualQuat> boneTransformation;
 
 			static std::shared_ptr<scene> instance;
 

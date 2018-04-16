@@ -57,10 +57,13 @@ namespace oxyde {
 
 			subjectPtr getPairedSubject();
 			bonePtr getBone();
+			void attachIt();
+			void updateCallback();
 
 		protected:
 			subjectPtr subjectForChildren;
 			int numObserved;
+			int calledByHowManySoFar;
 			bonePtr theControlledBone;
 
 		};

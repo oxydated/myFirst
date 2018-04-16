@@ -1,9 +1,11 @@
-#include "scene.h"
-#include "bone.h"
-#include "subject.h"
 #include <Windows.h>
 #include <stdio.h>
 #import<msxml6.dll>
+#include "scene.h"
+#include "bone.h"
+#include "subject.h"
+#include "ticker.h"
+#include "debugLog.h"
 
 namespace oxyde {
 	namespace scene {
@@ -31,7 +33,8 @@ namespace oxyde {
 			std::wstring searchForSceneRootNodeObject = L"./node";
 			MSXML2::IXMLDOMElementPtr sceneRootElement(sceneNode->selectSingleNode(searchForSceneRootNodeObject.data()));
 			if (sceneRootElement) {
-				rootID = oxyde::XML::getIntAttributeFromElement(sceneRootElement, "nodeObject");
+				rootID = oxyde::XML::getIntAttributeFromElement(sceneRootElement, L"nodeObject");
+				bone::setRootNodeObject(rootID);
 			}
 
 
@@ -57,12 +60,14 @@ namespace oxyde {
 				//			Now this Observer is bound to that bone
 				//			Every Observer object has a Subject object as a member
 				//		This Observer is put in a map indexed by "nodeObject" (the bone ID)
-
-				int nodeObject = 0;
-				MSXML2::IXMLDOMElementPtr nodeElement(boneNodes->item[i]);
-				if (nodeElement) {
-					nodeObject = oxyde::XML::getIntAttributeFromElement(sceneRootElement, "nodeObject");
-					bonesPernodeObject[nodeObject] = std::make_shared<observer>(std::make_shared<subject>(updateObserversFunction), newBone);
+				if (newBone) {
+					int nodeObject = 0;
+					const MSXML2::IXMLDOMElementPtr nodeElement(boneNodes->item[i]);
+					if (nodeElement) {
+						nodeObject = oxyde::XML::getIntAttributeFromElement(nodeElement, L"nodeObject");
+						bonesPernodeObject[nodeObject] = std::make_shared<observer>(std::make_shared<subject>(updateObserversFunction), newBone);
+						boneNamesPerNodeObject[nodeObject] = oxyde::XML::getWStringAttributeFromElement(nodeElement, L"nodeName");
+					}
 				}
 			}
 	
@@ -93,7 +98,55 @@ namespace oxyde {
 			}
 			//	Allocate vector of dualquaternions with size of (last key in the map + 1)
 			int sizeOfVectors = bonesPernodeObject.rbegin()->first + 1;
-			boneTransformation.resize(sizeOfVectors);
+			bone::setTransformationVector(sizeOfVectors);
+		}
+
+		void scene::updateFrame()
+		{
+			/*
+			updateFrame();
+			Keeps a stack of observers shared_ptr to be called.
+			This stack is empty at the begining of every frame.
+			The Ticker's subject push it's observers's pointers to the stack
+			The While loop starts and will only end when the stack become empty.
+			The observer pt at the top of the stack has its updateCallback() called;
+			If its respective subject has observers to be notified, it'll put their pointers in the stack to be called as well.
+
+			====================
+
+			FRAME LOOP:
+
+			*/
+
+	//		The Ticker get the time value for the current frame from the system clock.
+	//			This value is the same for all the frame
+
+			//ticker::update();
+	//
+	//		The Ticker's Subject - a member of the Scene Object - Push all it's Observers pointers to the Scene stack
+			theTickerSubject->update();
+
+			oxyde::log::printText(L"entering frame loop");
+	//
+	//		while the stack is not empty:
+			while (!observersToUpdate.empty()) {
+				//			Pop the Observer pointer at the top
+				//			Call UpdateCallback() from the pointer
+				observerPtr theNextObserver = observersToUpdate.top();
+				observersToUpdate.pop();
+				theNextObserver->updateCallback();
+				//				This method calls UpdateTransform() from the bound bone
+				//				This function increment the Subject called counter in the Observer.
+				//					If all of this object's observed Subjects have called on this Observer ( the counter will be equal to the number of observed Subjects):
+				//						This function will call Update() from this Observer's bound Subject.
+				//							That'll push all of this Subjects's Observer pointers, if any, to the Scene stack.
+			}
+
+			bone::printBones();
+			oxyde::log::printText(L"exiting frame loop");
+	//					
+	//		The skin transformation and drawing routine are then executed.
+	//		SkinData::UpdateSkinPose() is called
 		}
 
 		std::shared_ptr<scene> scene::createScene(const MSXML2::IXMLDOMNodePtr & sceneNode)

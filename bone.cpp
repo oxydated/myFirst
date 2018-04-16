@@ -1,8 +1,43 @@
-#include "bone.h"
 #include <string>
+#include <algorithm>
+#include "bone.h"
+#include "debugLog.h"
 
 namespace oxyde {
 	namespace scene {
+		
+		int bone::rootNodeObject = 0;
+		std::vector<dualQuat> bone::boneTransformation(0);
+
+		bone::bone(const MSXML2::IXMLDOMNodePtr &theElement)
+		{
+			nodeObject = oxyde::XML::getIntAttributeFromElement(theElement, "nodeObject");
+		}
+
+		void bone::setRootNodeObject(int nodeObject)
+		{
+			rootNodeObject = nodeObject;
+		}
+
+		void bone::setTransformationVector(int sizeOfVector)
+		{
+			boneTransformation.resize(sizeOfVector);
+			dualQuat unit = { 1.,0.,0.,0.,0.,0.,0.,0. };
+			std::fill(boneTransformation.begin(), boneTransformation.end(), unit);
+		}
+
+		const float * bone::getTransformationData()
+		{
+			return (float*)boneTransformation.data();
+		}
+
+		void bone::printBones()
+		{
+			for (int i = 0; i < boneTransformation.size(); i++) {
+				oxyde::log::printDualQuat(std::wstring(L"bone[ ") + std::to_wstring(i) + std::wstring(L" ]"), boneTransformation[i].data());
+			}
+		}
+		
 		namespace boneFactory {
 
 			std::map<std::wstring, boneConcreteFactoryFunction> boneFactory::factoryMap;

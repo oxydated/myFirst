@@ -10,6 +10,13 @@ namespace oxyde {
 		void subject::attachObserver(observerPtr theObserver)
 		{
 			observers.push_back(theObserver);
+			theObserver->attachIt();
+		}
+		void subject::update()
+		{
+			for (auto eachObserver : observers) {
+				updateObservers(eachObserver);
+			}
 		}
 	}
 }

@@ -309,7 +309,8 @@ void drawVertexArray() {
 		printit = false;
 	}
 
-	//theTime = 100.;
+	//theTime = 50.;
+	theTime = 3000.;
 
 	float mat[16];
 	oxyde::linAlg::identity(mat);
@@ -348,8 +349,8 @@ void drawVertexArray() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//if (executeOnce) {
-	if (true) {
+	if (executeOnce) {
+	//if (true) {
 		executeOnce = false;
 		
 		getSkeletonForTime(theSkeleton, theSceneTracks, theTime, false);
@@ -358,6 +359,10 @@ void drawVertexArray() {
 			swprintf(outputString, TEXT("{%f, {\n"),
 				theTime);
 			OutputDebugString(outputString);
+		}
+
+		for (int i = 0; i < theSceneTracks.numTracks; i++) {
+			oxyde::log::printDualQuat(std::wstring(L"boneOld[ ") + std::to_wstring(i) + std::wstring(L" ]"), theSceneTracks.globalTransforms+(8*i));
 		}
 
 		transformFromSkinPoseToCurrentPose(theSkin, theSceneTracks, printit);

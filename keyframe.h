@@ -23,6 +23,7 @@ namespace oxyde{
 		public:
 
 			keyframe(const MSXML2::IXMLDOMElementPtr&);
+
 			float getNormalizedTime();
 		};
 	}

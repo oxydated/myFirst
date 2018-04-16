@@ -4,6 +4,12 @@
 #include "dualQuatKeyframe.h"
 
 /*
+
+BY NOW, we're assuming all keyframe bones are dual quaternion keyframe bones
+
+*/
+
+/*
 KeyFrameBone class extends Bone
 	
 	(static class member, since the Ticker is a Singleton. ENCAPSULATED IN quatKeyFrame)
@@ -28,6 +34,7 @@ namespace oxyde {
 		protected:
 			int parentBoneID;
 			std::vector<dualQuatKeyframe> track;
+
 			int currentKeyframe;
 
 			class notAccessible {

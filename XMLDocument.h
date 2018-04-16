@@ -16,7 +16,13 @@ namespace oxyde {
 	namespace XML {
 		MSXML2::IXMLDOMDocumentPtr loadDocument(std::wstring filename);
 
-		int getIntAttributeFromElement(MSXML2::IXMLDOMElementPtr&, _bstr_t attribName);
+		int getIntAttributeFromElement(const MSXML2::IXMLDOMElementPtr&, _bstr_t attribName);
+
+		unsigned short getUShortAttributeFromElement(const MSXML2::IXMLDOMElementPtr&, _bstr_t attribName);
+
+		float getFloatAttributeFromElement(const MSXML2::IXMLDOMElementPtr&, _bstr_t attribName);
+
+		std::wstring getWStringAttributeFromElement(const MSXML2::IXMLDOMElementPtr&, _bstr_t attribName);
 	}
 }
 
