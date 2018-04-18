@@ -246,9 +246,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										oxyde::scene::ticker::start();
 										//oxyde::scene::ticker::setCurrentTime(50);
 										oxyde::scene::ticker::setCurrentTime(3000);
-										theScene->updateFrame();
 
 										oxyde::geometry::skindataPtr theSkin = std::make_shared<oxyde::geometry::skindata>(documentElement);
+										oxyde::scene::bone::addModifier(theSkin);
+
+										theScene->updateFrame();
 
 									}
 									CoTaskMemFree(fileName);

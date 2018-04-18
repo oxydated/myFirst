@@ -144,6 +144,7 @@ namespace oxyde {
 
 			bone::printBones();
 			oxyde::log::printText(L"exiting frame loop");
+			bone::updateFrame();
 	//					
 	//		The skin transformation and drawing routine are then executed.
 	//		SkinData::UpdateSkinPose() is called

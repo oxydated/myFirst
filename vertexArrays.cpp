@@ -259,6 +259,35 @@ void createVertexBuffer() {
 	glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
 	glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
 
+
+
+	/// testing
+
+	oxyde::log::printText(L"createVertexBuffer");
+	oxyde::log::printLine();
+
+	for (int i = 0; i < numVerts; i++) {
+		std::wstring tocheck = L"[" + std::to_wstring(i) + L"]  " +
+			L"boneOffsetVertAttrib: " +
+			std::to_wstring(theSkin.boneOffsetVertAttrib[i]) +
+			L"		boneNumVertAttrib: " +
+			std::to_wstring(theSkin.boneNumVertAttrib[i]);
+		oxyde::log::printText(tocheck);
+	}
+
+	oxyde::log::printLine();
+	oxyde::log::printLine();
+
+	for (int i = 0; i < theSkin.boneUniformNum; i++) {
+		std::wstring tocheck = L"[" + std::to_wstring(i) + L"]  " +
+			L"boneIndexesForSkinVertices: " +
+			std::to_wstring(theSkin.boneIndexesForSkinVertices[i]) +
+			L"		boneWeightForSkinVertices: " +
+			std::to_wstring(theSkin.boneWeightForSkinVertices[i]);
+		oxyde::log::printText(tocheck);
+	}
+
+
 	std::vector<std::array<float, 3>> testArray(4);
 	for (auto &&i : testArray) {
 		float counter = 0.0;

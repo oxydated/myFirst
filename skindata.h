@@ -5,6 +5,7 @@
 #include "XMLDocument.h"
 #include "mesh.h"
 #include "dualQuaternionFunctions.h"
+#include "skeletalModifier.h"
 
 /*
 class skinData{
@@ -50,7 +51,7 @@ namespace oxyde {
 
 		using dualQuat = oxyde::DQ::dualQuat;
 
-		class skindata {
+		class skindata: public skeletalModifier {
 
 		public:
 			skindata(const MSXML2::IXMLDOMElementPtr&);
@@ -65,7 +66,7 @@ namespace oxyde {
 
 			const float* getFromSkinPoseToCurrentTransf();
 
-			void updateSkinPose();
+			void updateSkinPose(std::vector<dualQuat>&);
 
 
 		protected:
@@ -84,6 +85,8 @@ namespace oxyde {
 			std::vector<int> boneIndexesForSkinVertices;
 
 			std::vector<float> boneWeightForSkinVertices;
+
+			std::vector<int> nodeObjects;
 
 		};
 

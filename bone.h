@@ -7,6 +7,7 @@
 #include "XMLDocument.h"
 #include "dualQuaternionMath.h"
 #include "dualQuaternionFunctions.h"
+#include "skeletalModifier.h"
 
 /*
 Bone class (abstract)
@@ -42,6 +43,8 @@ namespace oxyde {
 			static void setTransformationVector(int sizeOfVector);
 			static const float* getTransformationData();
 			static void printBones();
+			static void addModifier(oxyde::geometry::skeletalModifierPtr);
+			static void updateFrame();
 
 		protected:
 			std::vector<int> listOfObservedBones;
@@ -49,6 +52,7 @@ namespace oxyde {
 
 			static int rootNodeObject;
 			static std::vector<dualQuat> boneTransformation;
+			static std::vector<oxyde::geometry::skeletalModifierPtr> modifiers;
 		};
 
 		using bonePtr = std::shared_ptr<bone>;

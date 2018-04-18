@@ -1,5 +1,6 @@
 #include <map>
 #include "skindata.h"
+#include "debugLog.h"
 
 namespace oxyde {
 	namespace geometry {
@@ -30,6 +31,8 @@ namespace oxyde {
 
 					MSXML2::IXMLDOMElementPtr nodeElement = MSXML2::IXMLDOMElementPtr(MSXML2::IXMLDOMNodePtr(documentElement)->selectSingleNode(queryByNodeName.data()));
 					int nodeObject = oxyde::XML::getIntAttributeFromElement(nodeElement, L"nodeObject");
+
+					nodeObjects.push_back(nodeObject);
 					nodeObjecByBoneIndex[boneIndex] = nodeObject;
 
 					MSXML2::IXMLDOMElementPtr boneDualQuatElement = MSXML2::IXMLDOMElementPtr(MSXML2::IXMLDOMNodePtr(boneElement)->selectSingleNode(L"./boneDualQuat"));
@@ -105,7 +108,7 @@ namespace oxyde {
 						MSXML2::IXMLDOMElementPtr boneEntryElement = MSXML2::IXMLDOMElementPtr(boneEntriesForVertex->item[i]);
 						if (boneEntryElement) {
 							boneIndexesForSkinVertices.push_back(nodeObjecByBoneIndex[oxyde::XML::getIntAttributeFromElement(boneEntryElement, L"boneIndexForSkin")]);
-							boneWeightForSkinVertices.push_back(oxyde::XML::getIntAttributeFromElement(boneEntryElement, L"weight"));
+							boneWeightForSkinVertices.push_back(oxyde::XML::getFloatAttributeFromElement(boneEntryElement, L"weight"));
 						}
 					}
 				}
@@ -127,6 +130,43 @@ namespace oxyde {
 			boneIndexesForSkinVertices.shrink_to_fit();
 			boneWeightForSkinVertices.shrink_to_fit();
 
+			nodeObjects.shrink_to_fit();
+
+			/// testing
+
+			oxyde::log::printText(L"skindata constructor");
+			oxyde::log::printLine();
+
+			for (int i = 0; i < boneOffsetVertAttrib.size(); i++) {
+				std::wstring tocheck = L"[" + std::to_wstring(i) + L"]  " +
+					L"boneOffsetVertAttrib: " +
+					std::to_wstring(boneOffsetVertAttrib.data()[i]) +
+					L"		boneNumVertAttrib: " +
+					std::to_wstring(boneNumVertAttrib.data()[i]);
+				oxyde::log::printText(tocheck);
+			}
+
+			oxyde::log::printLine();
+			oxyde::log::printLine();
+
+			for (int i = 0; i < boneIndexesForSkinVertices.size(); i++) {
+				std::wstring tocheck = L"[" + std::to_wstring(i) + L"]  " +
+					L"boneIndexesForSkinVertices: " +
+					std::to_wstring(boneIndexesForSkinVertices.data()[i]) +
+					L"		boneWeightForSkinVertices: " +
+					std::to_wstring(boneWeightForSkinVertices.data()[i]);
+				oxyde::log::printText(tocheck);
+			}
+
+			/// end of test
+		}
+
+		void skindata::updateSkinPose(std::vector<dualQuat>& boneGlobalTransform)
+		{
+			for (int nodeObject : nodeObjects) {
+
+				oxyde::DQ::transformFromSourceToDestinationAxis(DUALQUAARRAY(skinPoseSkeleton[nodeObject]), DUALQUAARRAY(boneGlobalTransform[nodeObject]), DUALQUAARRAY(fromSkinPoseToCurrentTransf[nodeObject]));
+			}
 		}
 
 	}

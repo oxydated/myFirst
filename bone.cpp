@@ -8,6 +8,7 @@ namespace oxyde {
 		
 		int bone::rootNodeObject = 0;
 		std::vector<dualQuat> bone::boneTransformation(0);
+		std::vector<oxyde::geometry::skeletalModifierPtr> bone::modifiers;
 
 		bone::bone(const MSXML2::IXMLDOMNodePtr &theElement)
 		{
@@ -35,6 +36,18 @@ namespace oxyde {
 		{
 			for (int i = 0; i < boneTransformation.size(); i++) {
 				oxyde::log::printDualQuat(std::wstring(L"bone[ ") + std::to_wstring(i) + std::wstring(L" ]"), boneTransformation[i].data());
+			}
+		}
+
+		void bone::addModifier(oxyde::geometry::skeletalModifierPtr theModifier)
+		{
+			modifiers.push_back(theModifier);
+		}
+
+		void bone::updateFrame()
+		{
+			for (auto modifier : modifiers) {
+				modifier->updateSkinPose(boneTransformation);
 			}
 		}
 		
