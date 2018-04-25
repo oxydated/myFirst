@@ -5,6 +5,8 @@
 #include "stdafx.h"
 #include <Windowsx.h>
 #include <Shobjidl.h>
+#include <PathCch.h>
+#include <strsafe.h>
 #endif
 #include <string>
 
@@ -236,6 +238,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 									int ilen = fileNameW.length();
 									MSXML2::IXMLDOMDocumentPtr theDocument = oxyde::XML::loadDocument(fileNameW);
 									if (theDocument) {
+										
+										std::array<WCHAR, MAX_PATH> dirName;
+										StringCchCopy(dirName.data(), dirName.size(), fileNameW.data());
+										PathCchRemoveFileSpec(dirName.data(), dirName.size());
+										SetCurrentDirectoryW(dirName.data());
 										MSXML2::IXMLDOMElementPtr documentElement = theDocument->GetdocumentElement();
 										
 										MSXML2::IXMLDOMNodePtr sceneNode = MSXML2::IXMLDOMNodePtr(documentElement)->selectSingleNode(L"./scene");

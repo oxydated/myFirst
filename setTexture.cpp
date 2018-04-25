@@ -10,19 +10,24 @@
 #include "stdafx.h"
 #endif
 
+#include <vector>
 #include "setTexture.h"
 #include "createTexture.h"
 #include "shaders.h"
+#include "imageLoader.h"
 
 #define SPIT_ERROR     if(glGetError()!= GL_NO_ERROR){ printf("error up to line %i\n", __LINE__ );} else {printf("ok in %i\n", __LINE__ );}
 
 void setTexture(int program){
-    int width = 512;
-    int height = 512;
+    unsigned int width = 512;
+	unsigned int height = 512;
     int theGLerror = 0;
 //    unsigned char* theImage = generateTextureData( width, height );
 	//unsigned char* theImage = generateTextureDataFromFile( "CMan0002-M3-Head-D-small", "bmp" );
-	unsigned char* theImage = generateTextureDataFromFile("CMan0002-M3-Head-D-small", "bmp");
+	//std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(L"CMan0002-M3-Head-D-small.bmp", width, height);
+	std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(L"wireframegirl_2_flip.png", width, height);
+	
+	//unsigned char* theImage = generateTextureDataFromFile("CMan0002-M3-Head-D-small", "bmp");
     unsigned int textureName = 0;
     glGenTextures( 1, &textureName);
     printf("textureName: %i\n", textureName );
@@ -32,17 +37,17 @@ void setTexture(int program){
     
     glActiveTexture(GL_TEXTURE0);
     
-    SPIT_ERROR
+	SPIT_ERROR
 
-    
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	SPIT_ERROR
 
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	SPIT_ERROR
@@ -57,11 +62,12 @@ void setTexture(int program){
 
 	SPIT_ERROR
 
-    
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)theImage);
-    
-    SPIT_ERROR
-	if (glGetError() != GL_NO_ERROR){
+
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)theImage);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)imageData.data());
+
+	SPIT_ERROR
+		if (glGetError() != GL_NO_ERROR) {
 		printf("error up to line %i\n", __LINE__);
 	}
 	else {
