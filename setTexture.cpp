@@ -22,12 +22,9 @@ void setTexture(int program){
     unsigned int width = 512;
 	unsigned int height = 512;
     int theGLerror = 0;
-//    unsigned char* theImage = generateTextureData( width, height );
-	//unsigned char* theImage = generateTextureDataFromFile( "CMan0002-M3-Head-D-small", "bmp" );
-	//std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(L"CMan0002-M3-Head-D-small.bmp", width, height);
-	std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(L"wireframegirl_2_flip.png", width, height);
+
+	std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(L"wireframegirl_2.png", width, height);
 	
-	//unsigned char* theImage = generateTextureDataFromFile("CMan0002-M3-Head-D-small", "bmp");
     unsigned int textureName = 0;
     glGenTextures( 1, &textureName);
     printf("textureName: %i\n", textureName );
@@ -39,31 +36,24 @@ void setTexture(int program){
     
 	SPIT_ERROR
 
-
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	SPIT_ERROR
 
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	SPIT_ERROR
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 
 	SPIT_ERROR
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
 	SPIT_ERROR
 
-
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)theImage);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)imageData.data());
 
 	SPIT_ERROR
@@ -88,7 +78,7 @@ void setSampler( int theSampler, int program ){
     SPIT_ERROR
 
     printf("location of theSampler: %i\n", samplerLocation);
-    //glUniformMatrix4fv( persLocation, 1, GL_FALSE, pers );
+
     glUniform1i( samplerLocation, theSampler );
     
     SPIT_ERROR
