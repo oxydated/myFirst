@@ -23,7 +23,8 @@ void setTexture(int program){
 	unsigned int height = 512;
     int theGLerror = 0;
 
-	std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(L"wireframegirl_2.png", width, height);
+	//std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(L"wireframegirl_3.png", width, height);
+	std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(L"CMan0002-M3-Head-D-small.jpg", width, height);
 	
     unsigned int textureName = 0;
     glGenTextures( 1, &textureName);

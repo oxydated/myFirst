@@ -50,6 +50,23 @@ namespace oxyde {
 				modifier->updateSkinPose(boneTransformation);
 			}
 		}
+
+		void bone::reset()
+		{
+			boneTransformation.clear();
+			boneTransformation.shrink_to_fit();
+
+			modifiers.clear();
+			modifiers.shrink_to_fit();
+		}
+
+		 oxyde::geometry::skeletalModifierPtr  bone::getModifierAtIndex(int index)
+		{
+			if (index < 0 || modifiers.size() <= index) {
+				return oxyde::geometry::skeletalModifierPtr(nullptr);
+			}
+			return modifiers[index];
+		}
 		
 		namespace boneFactory {
 

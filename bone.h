@@ -45,6 +45,10 @@ namespace oxyde {
 			static void printBones();
 			static void addModifier(oxyde::geometry::skeletalModifierPtr);
 			static void updateFrame();
+			static void reset();
+
+			//test
+			static oxyde::geometry::skeletalModifierPtr getModifierAtIndex(int index);
 
 		protected:
 			std::vector<int> listOfObservedBones;

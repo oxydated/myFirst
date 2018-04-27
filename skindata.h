@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <array>
+#include <functional>
 #include "XMLDocument.h"
 #include "mesh.h"
 #include "dualQuaternionFunctions.h"
@@ -52,41 +53,45 @@ namespace oxyde {
 		using dualQuat = oxyde::DQ::dualQuat;
 
 		class skindata: public skeletalModifier {
+		protected:
+			class notAccessible { public: explicit notAccessible() = default; };
 
 		public:
-			skindata(const MSXML2::IXMLDOMElementPtr&);
+			skindata(const MSXML2::IXMLDOMElementPtr&, int ID, const notAccessible&);
 
-			const int* getBoneOffsetVertAttrib();
+			const int* getBoneOffsetVertAttrib(size_t &size);
+			const int* getBoneNumVertAttrib(size_t &size);
 
-			const int* getBoneNumVertAttrib();
+			const int* getBoneIndexesForSkinVertices(size_t &size);
+			const float* getBoneWeightForSkinVertices(size_t &size);
 
-			const int* getBoneIndexesForSkinVertices();
-
-			const float* getBoneWeightForSkinVertices();
-
-			const float* getFromSkinPoseToCurrentTransf();
+			const float* getFromSkinPoseToCurrentTransf(size_t &size);
 
 			void updateSkinPose(std::vector<dualQuat>&);
 
+			static void buildSkindata(const MSXML2::IXMLDOMElementPtr&, std::function< void(skeletalModifierPtr)> forEachNewSkin);
+
+			//test
+
+			const meshPtr& getMesh();
+
 
 		protected:
-			std::vector<dualQuat> skinPoseSkeleton;
 
-			std::vector<dualQuat> fromSkinPoseToCurrentTransf;
-
+			int skinID;
 			meshPtr theMesh;
 
-			std::vector<int> boneIndex;
-
 			std::vector<int> boneOffsetVertAttrib;
-
 			std::vector<int> boneNumVertAttrib;
 
+			//std::vector<int> boneIndex;
 			std::vector<int> boneIndexesForSkinVertices;
-
 			std::vector<float> boneWeightForSkinVertices;
 
 			std::vector<int> nodeObjects;
+
+			std::vector<dualQuat> skinPoseSkeleton;
+			std::vector<dualQuat> fromSkinPoseToCurrentTransf;
 
 		};
 

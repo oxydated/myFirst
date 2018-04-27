@@ -29,6 +29,8 @@ namespace oxyde {
 
 			//	Get the Root ID
 
+			bone::reset();
+
 			int rootID = 0;
 			std::wstring searchForSceneRootNodeObject = L"./node";
 			MSXML2::IXMLDOMElementPtr sceneRootElement(sceneNode->selectSingleNode(searchForSceneRootNodeObject.data()));

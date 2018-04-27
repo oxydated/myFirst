@@ -30,6 +30,8 @@
 #include "macroUtilities.h" 
 #include "debugLog.h"
 
+#include "renderer.h"
+
 static GLuint vao = 1;
 static GLuint element_index_buffer = 1;
 static GLuint vertex_position_buffer = 1;
@@ -174,7 +176,7 @@ void createVertexBuffer() {
 	alocateSkinArraysForTracks(theSceneTracks, theSkin);
 
 	endTimeForScene = getEndTimeForTracks(theSceneTracks);
-
+/*
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
@@ -259,7 +261,7 @@ void createVertexBuffer() {
 	glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
 	glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
 
-
+*/
 
 	/// testing
 
@@ -297,7 +299,7 @@ void createVertexBuffer() {
 		}
 	}
 
-	void* somePointer = testArray.data();
+	float* somePointer = (float*) testArray.data();
 
 	setUpVector(Up[0], Up[1], Up[2]);
 }
@@ -645,7 +647,8 @@ void drawVertexArray() {
 	GLint invlocation = glGetUniformLocation(theProgram, "invWorld");
 	printf("location of invWorld: %i\n", invlocation);
 	glUniformMatrix4fv(invlocation, 1, GL_FALSE, normalM);
-
+/*
+	/// draw skin
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
 	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 8 * theSceneTracks.numTracks, (GLvoid*)theSkin.fromSkinPoseToCurrentTransf);
 	GLenum myMistake = glGetError();
@@ -654,5 +657,8 @@ void drawVertexArray() {
 	myMistake = glGetError();
 	
 	glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, 0);
+	///
+*/
+	oxyde::GL::renderer::draw();
 }
 

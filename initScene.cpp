@@ -89,13 +89,13 @@ void initGLES(int x, int y, int width, int height){
     
     GLint program = loadAndCompileShader();
     setProgram( program );
-    createVertexBuffer();
 	SPIT_ERROR
 	setTexture(program);
 	SPIT_ERROR
 	setInvertedPerspectiveMatrix(invPers);
 	setPerspectiveMatrix(pers, program);
     setViewportMatrix( view, program );
+    createVertexBuffer();
     drawVertexArray();
     
 }

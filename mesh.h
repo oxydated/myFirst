@@ -26,9 +26,12 @@ namespace oxyde {
 		public:
 			mesh(const MSXML2::IXMLDOMElementPtr&);
 
-			const float* getVerticesData();
-			const float* getTexCoordData();
-			const float* getNormalsData();
+			const unsigned short* getFacesData(size_t &size);
+			const float* getVerticesData(size_t &size);
+			const float* getTexCoordData(size_t &size);
+			const float* getNormalsData(size_t &size);
+
+			int getNumFaces();
 
 			void applyMatrixtoVertices(std::array<float, 16>&);
 

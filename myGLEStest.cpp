@@ -25,6 +25,7 @@
 #include "ticker.h"
 #include "mesh.h"
 #include "skindata.h"
+#include "renderer.h"
 
 
 #define MAX_LOADSTRING 100
@@ -252,10 +253,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										oxyde::scene::ticker::setLoopSize(4000);
 										oxyde::scene::ticker::start();
 										//oxyde::scene::ticker::setCurrentTime(50);
-										oxyde::scene::ticker::setCurrentTime(3000);
+										oxyde::scene::ticker::setCurrentTime(0);
 
-										oxyde::geometry::skindataPtr theSkin = std::make_shared<oxyde::geometry::skindata>(documentElement);
-										oxyde::scene::bone::addModifier(theSkin);
+										//oxyde::geometry::skindataPtr theSkin = std::make_shared<oxyde::geometry::skindata>(documentElement);
+										oxyde::geometry::skindata::buildSkindata(documentElement, oxyde::scene::bone::addModifier);
+										//oxyde::scene::bone::addModifier(theSkin);
+
+										oxyde::GL::renderer::setSkinAndMeshBuffers();
 
 										theScene->updateFrame();
 

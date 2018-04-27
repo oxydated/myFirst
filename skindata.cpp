@@ -5,9 +5,9 @@
 namespace oxyde {
 	namespace geometry {
 
-		skindata::skindata(const MSXML2::IXMLDOMElementPtr &documentElement)
+		skindata::skindata(const MSXML2::IXMLDOMElementPtr &documentElement, int ID, const notAccessible&):skinID(ID)
 		{
-			MSXML2::IXMLDOMElementPtr skinElement = MSXML2::IXMLDOMElementPtr(MSXML2::IXMLDOMNodePtr(documentElement)->selectSingleNode(L"./objectList/skin[1]"));
+			MSXML2::IXMLDOMElementPtr skinElement = MSXML2::IXMLDOMElementPtr(MSXML2::IXMLDOMNodePtr(documentElement)->selectSingleNode((L"./objectList/skin[@ID=" + std::to_wstring(ID) + L"]").data()));
 
 			/// load the mesh object
 
@@ -161,12 +161,61 @@ namespace oxyde {
 			/// end of test
 		}
 
+		const int * skindata::getBoneOffsetVertAttrib(size_t &size)
+		{
+			size = boneOffsetVertAttrib.size();
+			return boneOffsetVertAttrib.data();
+		}
+
+		const int * skindata::getBoneNumVertAttrib(size_t &size)
+		{
+			size = boneNumVertAttrib.size();
+			return boneNumVertAttrib.data();
+		}
+
+		const int * skindata::getBoneIndexesForSkinVertices(size_t &size)
+		{
+			size = boneIndexesForSkinVertices.size();
+			return boneIndexesForSkinVertices.data();
+		}
+
+		const float * skindata::getBoneWeightForSkinVertices(size_t &size)
+		{
+			size = boneWeightForSkinVertices.size();
+			return boneWeightForSkinVertices.data();
+		}
+
+		const float * skindata::getFromSkinPoseToCurrentTransf(size_t &size)
+		{
+			size = fromSkinPoseToCurrentTransf.size() * 8;
+			return (float*) fromSkinPoseToCurrentTransf.data();
+		}
+
 		void skindata::updateSkinPose(std::vector<dualQuat>& boneGlobalTransform)
 		{
 			for (int nodeObject : nodeObjects) {
 
 				oxyde::DQ::transformFromSourceToDestinationAxis(DUALQUAARRAY(skinPoseSkeleton[nodeObject]), DUALQUAARRAY(boneGlobalTransform[nodeObject]), DUALQUAARRAY(fromSkinPoseToCurrentTransf[nodeObject]));
 			}
+		}
+
+		void skindata::buildSkindata(const MSXML2::IXMLDOMElementPtr &documentElement, std::function<void(skeletalModifierPtr)> forEachNewSkin)
+		{
+			MSXML2::IXMLDOMNodeListPtr allSkinIDinFile = MSXML2::IXMLDOMNodePtr(documentElement)->selectNodes(L"./objectList/skin/@ID");
+			//int testLenght = allSkinIDinFile->length;
+			for (int i = 0; i < allSkinIDinFile->length; i++) {
+				MSXML2::IXMLDOMAttributePtr skinIDatt = MSXML2::IXMLDOMAttributePtr(allSkinIDinFile->item[i]);
+				if (skinIDatt) {
+					_variant_t&& intVariant = skinIDatt->GetnodeTypedValue();
+					intVariant.ChangeType(VT_I4);
+					forEachNewSkin(std::make_shared<skindata>(documentElement, intVariant.intVal, notAccessible()));
+				}
+			}
+		}
+
+		const meshPtr & skindata::getMesh()
+		{
+			return theMesh;
 		}
 
 	}

@@ -57,6 +57,35 @@ namespace oxyde {
 
 		}
 
+		const unsigned short * mesh::getFacesData(size_t &size)
+		{
+			size = faces.size() * 3;
+			return (unsigned short*)faces.data();
+		}
+
+		const float * mesh::getVerticesData(size_t &size)
+		{
+			size = vertices.size() * 3;
+			return (float*)vertices.data();
+		}
+
+		const float * mesh::getTexCoordData(size_t &size)
+		{
+			size = texcoord.size() * 2;
+			return (float*)texcoord.data();
+		}
+
+		const float * mesh::getNormalsData(size_t &size)
+		{
+			size = normals.size() * 3;
+			return (float*)normals.data();
+		}
+
+		int mesh::getNumFaces()
+		{
+			return faces.size() * 3;
+		}
+
 		void mesh::applyMatrixtoVertices(std::array<float, 16>& objectMatrix)
 		{
 			for (auto vertex : vertices) {
