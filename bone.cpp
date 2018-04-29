@@ -27,6 +27,50 @@ namespace oxyde {
 			std::fill(boneTransformation.begin(), boneTransformation.end(), unit);
 		}
 
+		void bone::transformPointByBoneID(int nodeObject, const std::array<float, 3> &pointToTransform, std::array<float, 3> &pointTransformed) {
+			dualQuat pointQuatOriginal = { 1., 0. , 0. , 0. , 0. , 0. , 0. , 0. };
+			dualQuat pointQuatTransformed = { 1., 0. , 0. , 0. , 0. , 0. , 0. , 0. };
+
+			oxyde::DQ::point_quaternion(pointToTransform[0], pointToTransform[1], pointToTransform[2], DUALQUAARRAY(pointQuatOriginal));
+
+			oxyde::DQ::dual_quat_transform_point(DUALQUAARRAY(boneTransformation[nodeObject]),
+				DUALQUAARRAY(pointQuatOriginal),
+				DUALQUAARRAY(pointQuatTransformed));
+
+			pointTransformed[0] = pointQuatTransformed[5];
+			pointTransformed[1] = pointQuatTransformed[6];
+			pointTransformed[2] = pointQuatTransformed[7];
+		}
+
+		void bone::getSkeletonCenter(std::array<float, 3> &pointTransformed) {
+			dualQuat zeroQuat = { 1., 0. , 0. , 0. , 0. , 0. , 0. , 0. };
+			dualQuat jointQuat = { 1., 0. , 0. , 0. , 0. , 0. , 0. , 0. };
+
+			std::array<float, 3> sum = { 0., 0., 0. };
+
+			float count = 0.;
+
+			for (int i = 0; i < boneTransformation.size(); i++) {
+				if (i != rootNodeObject) {
+					count += 1.;
+
+					oxyde::DQ::dual_quat_transform_point(DUALQUAARRAY(boneTransformation[i]),
+						DUALQUAARRAY(zeroQuat),
+						DUALQUAARRAY(jointQuat));
+
+					sum[0] += jointQuat[5];
+					sum[1] += jointQuat[6];
+					sum[2] += jointQuat[7];
+				}
+			}
+
+			pointTransformed[0] = sum[0] / count;
+			pointTransformed[1] = sum[1] / count;
+			pointTransformed[2] = sum[2] / count;
+
+
+		}
+
 		const float * bone::getTransformationData()
 		{
 			return (float*)boneTransformation.data();

@@ -6,6 +6,7 @@
 
 #include "renderer.h"
 #include "bone.h"
+#include "debugLog.h"
 
 ////////////////////////////////////////
 
@@ -43,6 +44,114 @@ static GLuint store_fromSkinPose_buffer = 1;
 namespace oxyde {
 	namespace GL {
 		namespace renderer {
+
+			void printMeshBuffers(const oxyde::geometry::meshPtr &theMesh)
+			{
+				oxyde::log::printText(L"New code");
+
+				size_t sizeFaces;
+				const unsigned short* faces = theMesh->getFacesData(sizeFaces);
+
+				oxyde::log::printText(L"New faces");
+				for (int i = 0; i < sizeFaces; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(faces[i]));
+				}
+				oxyde::log::printText(L"END New faces \n");
+
+				size_t sizeVertices;
+				const float* vertices = theMesh->getVerticesData(sizeVertices);
+
+				oxyde::log::printText(L"New vertices");
+				for (int i = 0; i < sizeVertices; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(vertices[i]));
+				}
+				oxyde::log::printText(L"END New vertices \n");
+
+				size_t sizeTexcoord;
+				const float* texcoord = theMesh->getTexCoordData(sizeTexcoord);
+
+				oxyde::log::printText(L"New texcoord");
+				for (int i = 0; i < sizeTexcoord; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(texcoord[i]));
+				}
+				oxyde::log::printText(L"END New texcoord \n");
+
+				size_t sizeNormals;
+				const float* normals = theMesh->getNormalsData(sizeNormals);
+
+				oxyde::log::printText(L"New normals");
+				for (int i = 0; i < sizeNormals; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(normals[i]));
+				}
+				oxyde::log::printText(L"END New normals \n");
+
+			}
+
+			void printSkinBuffers(const oxyde::geometry::skindataPtr &theSkin)
+			{
+				oxyde::log::printText(L"New code");
+
+				size_t sizeboneNumVert;
+				const int* boneNumVertAtt = theSkin->getBoneNumVertAttrib(sizeboneNumVert);
+
+				oxyde::log::printText(L"New boneNumVertAtt");
+				for (int i = 0; i < sizeboneNumVert; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(boneNumVertAtt[i]));
+				}
+				oxyde::log::printText(L"END New boneNumVertAtt \n");
+				
+
+				size_t sizeBoneOffsetVert;
+				const int* boneOffsetVertAtt = theSkin->getBoneOffsetVertAttrib(sizeBoneOffsetVert);
+
+				oxyde::log::printText(L"New boneOffsetVertAtt");
+				for (int i = 0; i < sizeBoneOffsetVert; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(boneOffsetVertAtt[i]));
+				}
+				oxyde::log::printText(L"END New boneOffsetVertAtt \n");
+				
+
+				size_t sizeBoneIndexesForSkin;
+				const int* boneIndexesForSkin = theSkin->getBoneIndexesForSkinVertices(sizeBoneIndexesForSkin);
+
+				oxyde::log::printText(L"New boneIndexesForSkin");
+				for (int i = 0; i < sizeBoneIndexesForSkin; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(boneIndexesForSkin[i]));
+				}
+				oxyde::log::printText(L"END New boneIndexesForSkin \n");
+				
+
+				size_t sizeBoneWeightForSkin;
+				const float* boneWeightForSkin = theSkin->getBoneWeightForSkinVertices(sizeBoneWeightForSkin);
+
+				oxyde::log::printText(L"New boneWeightForSkin");
+				for (int i = 0; i < sizeBoneWeightForSkin; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(boneWeightForSkin[i]));
+				}
+				oxyde::log::printText(L"END New boneWeightForSkin \n");
+				
+
+				size_t sizeFromSkinposeToCurrent;
+				const float* fromSkinPoseToCurrent = theSkin->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
+
+				oxyde::log::printText(L"New boneWeightForSkin");
+				for (int i = 0; i < sizeFromSkinposeToCurrent; i++) {
+					oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(fromSkinPoseToCurrent[i]));
+				}
+				oxyde::log::printText(L"END New boneWeightForSkin \n");
+				
+			}
+
+			void printSkinAndMeshBuffers()
+			{
+				oxyde::geometry::skindataPtr theSkin = std::dynamic_pointer_cast<oxyde::geometry::skindata>(oxyde::scene::bone::getModifierAtIndex(0));
+				if (theSkin) {
+					oxyde::geometry::meshPtr theMesh = theSkin->getMesh();
+
+					printMeshBuffers(theMesh);
+					printSkinBuffers(theSkin);
+				}
+			}
 
 			void setMeshBuffers(const oxyde::geometry::meshPtr &theMesh)
 			{
@@ -149,24 +258,28 @@ namespace oxyde {
 				glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
 			}
 
-			void drawSkin(const oxyde::geometry::skindataPtr &theSkin)
+			void drawSkin(const oxyde::geometry::skindataPtr &theSkin, GLuint fromSkinPoseBuffer)
 			{
 				oxyde::geometry::meshPtr theMesh = theSkin->getMesh();
 
 				/// draw skin
 
-				glBindVertexArray(vao);
+				if (true) {
 
-				size_t sizeFromSkinposeToCurrent;
-				const float* fromSkinPoseToCurrent = theSkin->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
-				glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent);
-				GLenum myMistake = glGetError();
+					glBindVertexArray(vao);
 
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-				myMistake = glGetError();
+					size_t sizeFromSkinposeToCurrent;
+					const float* fromSkinPoseToCurrent = theSkin->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
+					glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
+					//glBindBuffer(GL_SHADER_STORAGE_BUFFER, fromSkinPoseBuffer);
+					glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent);
+					GLenum myMistake = glGetError();
 
-				glDrawElements(GL_TRIANGLES, theMesh->getNumFaces(), GL_UNSIGNED_SHORT, 0);
+					glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+					myMistake = glGetError();
+
+					glDrawElements(GL_TRIANGLES, theMesh->getNumFaces(), GL_UNSIGNED_SHORT, 0);
+				}
 				///
 			}
 
@@ -184,16 +297,25 @@ namespace oxyde {
 				}
 			}
 
-			void draw()
+			bool draw(GLuint fromSkinPoseBuffer)
 			{
+				bool test = false;
 				if (oxyde::scene::bone::getModifierAtIndex(0)) {
 					oxyde::geometry::skeletalModifierPtr modifier = oxyde::scene::bone::getModifierAtIndex(0);
 					oxyde::geometry::skindataPtr theSkin = std::dynamic_pointer_cast<oxyde::geometry::skindata>(modifier);
 					if (theSkin) {
-						drawSkin(theSkin);
+						drawSkin(theSkin, fromSkinPoseBuffer);
+						test = true;
 					}
 				}
+				return test;
 			}
+
+			GLuint getFromSkinPoseBuffer() {
+				return store_fromSkinPose_buffer;
+			}
+
+
 		}
 	}
 }

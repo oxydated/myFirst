@@ -31,6 +31,7 @@
 #include "debugLog.h"
 
 #include "renderer.h"
+#include "bone.h"
 
 static GLuint vao = 1;
 static GLuint element_index_buffer = 1;
@@ -138,156 +139,223 @@ debugVec debugMatrixName(TCHAR* matArgName) {
 }
 
 void createVertexBuffer() {
-	xmlLoadModel(numFaces, numVerts, faces, vertices, texcoord, normals);
-	blendedVertices = new float[3 * numVerts];
-	blendedNormals = new float[3 * numVerts];
+	//xmlLoadModel(numFaces, numVerts, faces, vertices, texcoord, normals);
+	//blendedVertices = new float[3 * numVerts];
+	//blendedNormals = new float[3 * numVerts];
 
 	//////////////////////////////////////////////	test skin loading
-	xmlLoadSkin(theSkin);
+	//xmlLoadSkin(theSkin);
 
-	int theTestNum = theSkin.boneNumVertAttrib[2];
-	int theTestOffset = theSkin.boneOffsetVertAttrib[2];
-	float boneIndexesTest[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-	float boneWeightsTest[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+	//int theTestNum = theSkin.boneNumVertAttrib[2];
+	//int theTestOffset = theSkin.boneOffsetVertAttrib[2];
+	//float boneIndexesTest[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+	//float boneWeightsTest[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-	for (int i = 0; i< int(theTestNum); i++) {
-		boneIndexesTest[i] = theSkin.boneIndexesForSkinVertices[int(theTestOffset) + i];
-		boneWeightsTest[i] = theSkin.boneWeightForSkinVertices[int(theTestOffset) + i];
-	}
+	//for (int i = 0; i< int(theTestNum); i++) {
+	//	boneIndexesTest[i] = theSkin.boneIndexesForSkinVertices[int(theTestOffset) + i];
+	//	boneWeightsTest[i] = theSkin.boneWeightForSkinVertices[int(theTestOffset) + i];
+	//}
 
-	//////////////////////////////////////////////  test uniform array
+	////////////////////////////////////////////  test uniform array
 
-	vIndices = new float[numVerts];
-	for (int i = 0; i < numVerts; i++) {
-		vIndices[i] = float(i % 200);
-	}
+	//vIndices = new float[numVerts];
+	//for (int i = 0; i < numVerts; i++) {
+	//	vIndices[i] = float(i % 200);
+	//}
 
-	vWeights = new float[200];
+	//vWeights = new float[200];
 
-	////////////////////////////////////////////// test skeleton loading
+	//////////////////////////////////////////// test skeleton loading
 
-	xmlLoadSkeleton(theSkeleton);
+	//xmlLoadSkeleton(theSkeleton);
 
-	////////////////////////////////////////////// test tracks loading
+	//////////////////////////////////////////// test tracks loading
 
 	xmlLoadTracks(theSceneTracks);
 
 	alocateGlobalArraysForTracks(theSceneTracks);
 	alocateSkinArraysForTracks(theSceneTracks, theSkin);
 
-	endTimeForScene = getEndTimeForTracks(theSceneTracks);
-/*
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	/*endTimeForScene = getEndTimeForTracks(theSceneTracks);*/
 
-	GLenum myMistake = glGetError();
+	//if (false) {
 
-	glGenBuffers(1, &element_index_buffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*numFaces * 3, faces, GL_STATIC_DRAW);
+	//	glGenVertexArrays(1, &vao);
+	//	glBindVertexArray(vao);
 
-	myMistake = glGetError();
+	//	oxyde::log::printText(L"Old code");
+
+	//	GLenum myMistake = glGetError();
+
+	//	glGenBuffers(1, &element_index_buffer);
+	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_index_buffer);
+	//	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*numFaces * 3, faces, GL_STATIC_DRAW);
+
+	//	oxyde::log::printText(L"Old faces");
+	//	for (int i = 0; i < (numFaces * 3); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(faces[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old faces \n");
+
+	//	myMistake = glGetError();
 
 
-	//////////////////////////////////////////////// for lookAt Cam
+	//	//////////////////////////////////////////////// for lookAt Cam
 
-	glGenBuffers(1, &vertex_position_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_position_buffer);
-	glBufferData(GL_ARRAY_BUFFER, VERTEX_POSITION_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(VERTEX_POSITION_ATT, VERTEX_POSITION_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	myMistake = glGetError();
+	//	glGenBuffers(1, &vertex_position_buffer);
+	//	glBindBuffer(GL_ARRAY_BUFFER, vertex_position_buffer);
+	//	glBufferData(GL_ARRAY_BUFFER, VERTEX_POSITION_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)vertices, GL_STATIC_DRAW);
+	//	glVertexAttribPointer(VERTEX_POSITION_ATT, VERTEX_POSITION_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	glGenBuffers(1, &vertex_texcoord_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_texcoord_buffer);
-	glBufferData(GL_ARRAY_BUFFER, VERTEX_TEXCOORD_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)texcoord, GL_STATIC_DRAW);
-	glVertexAttribPointer(VERTEX_TEXCOORD_ATT, VERTEX_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	myMistake = glGetError();
+	//	oxyde::log::printText(L"Old vertices");
+	//	for (int i = 0; i < (numVerts * VERTEX_POSITION_SIZE); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(vertices[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old vertices \n");
 
-	glGenBuffers(1, &vertex_normal_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_normal_buffer);
-	glBufferData(GL_ARRAY_BUFFER, VERTEX_NORMAL_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)normals, GL_STATIC_DRAW);
-	glVertexAttribPointer(VERTEX_NORMAL_ATT, VERTEX_NORMAL_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	myMistake = glGetError();
+	//	myMistake = glGetError();
 
-	glGenBuffers(1, &vertex_bone_num_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_num_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*numVerts, (GLvoid*)theSkin.boneNumVertAttrib, GL_STATIC_DRAW);
-	glVertexAttribIPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, 0, (GLvoid*)0);
-	myMistake = glGetError();
+	//	glGenBuffers(1, &vertex_texcoord_buffer);
+	//	glBindBuffer(GL_ARRAY_BUFFER, vertex_texcoord_buffer);
+	//	glBufferData(GL_ARRAY_BUFFER, VERTEX_TEXCOORD_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)texcoord, GL_STATIC_DRAW);
+	//	glVertexAttribPointer(VERTEX_TEXCOORD_ATT, VERTEX_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	glGenBuffers(1, &vertex_bone_offset_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_offset_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*numVerts, (GLvoid*)theSkin.boneOffsetVertAttrib, GL_STATIC_DRAW);
-	glVertexAttribIPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, 0, (GLvoid*)0);
-	myMistake = glGetError();
+	//	oxyde::log::printText(L"Old texcoord");
+	//	for (int i = 0; i < (VERTEX_TEXCOORD_SIZE * numVerts); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(texcoord[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old texcoord \n");
 
-	glGenBuffers(1, &store_boneIndexes_buffer);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_boneIndexes_buffer);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint)*theSkin.boneUniformNum, (GLvoid*)theSkin.boneIndexesForSkinVertices, GL_STATIC_DRAW);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, store_boneIndexes_buffer);
-	myMistake = glGetError();
+	//	myMistake = glGetError();
 
-	//layout(binding = 1) buffer boneIndexes {
-	//	int boneIndexesForSkinVertices[];
-	//};
+	//	glGenBuffers(1, &vertex_normal_buffer);
+	//	glBindBuffer(GL_ARRAY_BUFFER, vertex_normal_buffer);
+	//	glBufferData(GL_ARRAY_BUFFER, VERTEX_NORMAL_SIZE * sizeof(GLfloat)*numVerts, (GLvoid*)normals, GL_STATIC_DRAW);
+	//	glVertexAttribPointer(VERTEX_NORMAL_ATT, VERTEX_NORMAL_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-	glGenBuffers(1, &store_boneWeight_buffer);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_boneWeight_buffer);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat)*theSkin.boneUniformNum, (GLvoid*)theSkin.boneWeightForSkinVertices, GL_STATIC_DRAW);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, store_boneWeight_buffer);
-	myMistake = glGetError();
+	//	oxyde::log::printText(L"Old normals");
+	//	for (int i = 0; i < (VERTEX_NORMAL_SIZE * numVerts); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(normals[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old normals \n");
 
-	//layout(binding = 2) buffer boneWeight {
-	//	float boneWeightForSkinVertices[];
-	//};
+	//	myMistake = glGetError();
 
-	glGenBuffers(1, &store_fromSkinPose_buffer);
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
-	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 8 * theSceneTracks.numTracks, (GLvoid*)theSkin.fromSkinPoseToCurrentTransf, GL_DYNAMIC_DRAW);
-	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, store_fromSkinPose_buffer);
-	myMistake = glGetError();
+	//	glGenBuffers(1, &vertex_bone_num_buffer);
+	//	glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_num_buffer);
+	//	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*numVerts, (GLvoid*)theSkin.boneNumVertAttrib, GL_STATIC_DRAW);
+	//	glVertexAttribIPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, 0, (GLvoid*)0);
 
-	//layout(binding = 3) buffer fromSkinPose {
-	//	mat2x4 fromSkinPoseToCurrentTransf[];
-	//};
+	//	oxyde::log::printText(L"Old theSkin.boneNumVertAttrib");
+	//	for (int i = 0; i < (numVerts); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(theSkin.boneNumVertAttrib[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old theSkin.boneNumVertAttrib \n");
 
-	//////////////////////////////////////////////////////////////////// 
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-	myMistake = glGetError();
+	//	myMistake = glGetError();
 
-	glEnableVertexAttribArray(VERTEX_POSITION_ATT);
-	glEnableVertexAttribArray(VERTEX_TEXCOORD_ATT);
-	glEnableVertexAttribArray(VERTEX_NORMAL_ATT);
-	glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
-	glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
+	//	glGenBuffers(1, &vertex_bone_offset_buffer);
+	//	glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_offset_buffer);
+	//	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*numVerts, (GLvoid*)theSkin.boneOffsetVertAttrib, GL_STATIC_DRAW);
+	//	glVertexAttribIPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, 0, (GLvoid*)0);
 
-*/
+	//	oxyde::log::printText(L"Old theSkin.boneOffsetVertAttrib");
+	//	for (int i = 0; i < (numVerts); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(theSkin.boneOffsetVertAttrib[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old theSkin.boneOffsetVertAttrib \n");
+
+	//	myMistake = glGetError();
+
+	//	glGenBuffers(1, &store_boneIndexes_buffer);
+	//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_boneIndexes_buffer);
+	//	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint)*theSkin.boneUniformNum, (GLvoid*)theSkin.boneIndexesForSkinVertices, GL_STATIC_DRAW);
+	//	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, store_boneIndexes_buffer);
+
+	//	oxyde::log::printText(L"Old theSkin.boneIndexesForSkinVertices");
+	//	for (int i = 0; i < (theSkin.boneUniformNum); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(theSkin.boneIndexesForSkinVertices[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old theSkin.boneIndexesForSkinVertices \n");
+
+	//	myMistake = glGetError();
+
+	//	//layout(binding = 1) buffer boneIndexes {
+	//	//	int boneIndexesForSkinVertices[];
+	//	//};
+
+	//	glGenBuffers(1, &store_boneWeight_buffer);
+	//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_boneWeight_buffer);
+	//	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat)*theSkin.boneUniformNum, (GLvoid*)theSkin.boneWeightForSkinVertices, GL_STATIC_DRAW);
+	//	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, store_boneWeight_buffer);
+
+	//	oxyde::log::printText(L"Old theSkin.boneWeightForSkinVertices");
+	//	for (int i = 0; i < (theSkin.boneUniformNum); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(theSkin.boneWeightForSkinVertices[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old theSkin.boneWeightForSkinVertices \n");
+
+	//	myMistake = glGetError();
+
+	//	//layout(binding = 2) buffer boneWeight {
+	//	//	float boneWeightForSkinVertices[];
+	//	//};
+
+	//	glGenBuffers(1, &store_fromSkinPose_buffer);
+	//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
+	//	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * 8 * theSceneTracks.numTracks, (GLvoid*)theSkin.fromSkinPoseToCurrentTransf, GL_DYNAMIC_DRAW);
+	//	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, store_fromSkinPose_buffer);
+
+	//	oxyde::log::printText(L"Old theSkin.fromSkinPoseToCurrentTransf");
+	//	for (int i = 0; i < (8 * theSceneTracks.numTracks); i++) {
+	//		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(theSkin.fromSkinPoseToCurrentTransf[i]));
+	//	}
+	//	oxyde::log::printText(L"END Old theSkin.fromSkinPoseToCurrentTransf \n");
+
+	//	myMistake = glGetError();
+
+	//	//layout(binding = 3) buffer fromSkinPose {
+	//	//	mat2x4 fromSkinPoseToCurrentTransf[];
+	//	//};
+
+	//	////////////////////////////////////////////////////////////////////
+	//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+	//	myMistake = glGetError();
+
+	//	glEnableVertexAttribArray(VERTEX_POSITION_ATT);
+	//	glEnableVertexAttribArray(VERTEX_TEXCOORD_ATT);
+	//	glEnableVertexAttribArray(VERTEX_NORMAL_ATT);
+	//	glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
+	//	glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
+
+
+	//}
 
 	/// testing
 
-	oxyde::log::printText(L"createVertexBuffer");
-	oxyde::log::printLine();
+	//oxyde::log::printText(L"createVertexBuffer");
+	//oxyde::log::printLine();
 
-	for (int i = 0; i < numVerts; i++) {
-		std::wstring tocheck = L"[" + std::to_wstring(i) + L"]  " +
-			L"boneOffsetVertAttrib: " +
-			std::to_wstring(theSkin.boneOffsetVertAttrib[i]) +
-			L"		boneNumVertAttrib: " +
-			std::to_wstring(theSkin.boneNumVertAttrib[i]);
-		oxyde::log::printText(tocheck);
-	}
+	//for (int i = 0; i < numVerts; i++) {
+	//	std::wstring tocheck = L"[" + std::to_wstring(i) + L"]  " +
+	//		L"boneOffsetVertAttrib: " +
+	//		std::to_wstring(theSkin.boneOffsetVertAttrib[i]) +
+	//		L"		boneNumVertAttrib: " +
+	//		std::to_wstring(theSkin.boneNumVertAttrib[i]);
+	//	oxyde::log::printText(tocheck);
+	//}
 
-	oxyde::log::printLine();
-	oxyde::log::printLine();
+	//oxyde::log::printLine();
+	//oxyde::log::printLine();
 
-	for (int i = 0; i < theSkin.boneUniformNum; i++) {
-		std::wstring tocheck = L"[" + std::to_wstring(i) + L"]  " +
-			L"boneIndexesForSkinVertices: " +
-			std::to_wstring(theSkin.boneIndexesForSkinVertices[i]) +
-			L"		boneWeightForSkinVertices: " +
-			std::to_wstring(theSkin.boneWeightForSkinVertices[i]);
-		oxyde::log::printText(tocheck);
-	}
+	//for (int i = 0; i < theSkin.boneUniformNum; i++) {
+	//	std::wstring tocheck = L"[" + std::to_wstring(i) + L"]  " +
+	//		L"boneIndexesForSkinVertices: " +
+	//		std::to_wstring(theSkin.boneIndexesForSkinVertices[i]) +
+	//		L"		boneWeightForSkinVertices: " +
+	//		std::to_wstring(theSkin.boneWeightForSkinVertices[i]);
+	//	oxyde::log::printText(tocheck);
+	//}
 
 
 	std::vector<std::array<float, 3>> testArray(4);
@@ -299,7 +367,7 @@ void createVertexBuffer() {
 		}
 	}
 
-	float* somePointer = (float*) testArray.data();
+	float* somePointer = (float*)testArray.data();
 
 	setUpVector(Up[0], Up[1], Up[2]);
 }
@@ -341,7 +409,7 @@ void drawVertexArray() {
 	}
 
 	//theTime = 50.;
-	theTime = 3000.;
+	theTime = 50.;
 
 	float mat[16];
 	oxyde::linAlg::identity(mat);
@@ -371,93 +439,98 @@ void drawVertexArray() {
 
 	//////////
 
-	for (int i = 0; i < 200; i++) {
-		float pulse = 2.0*M_PI*((float(i) / 100.0) - 1.0);
-		vWeights[i] = cos(pulse + teta * 50)*0.05;
-	}
+	//for (int i = 0; i < 200; i++) {
+	//	float pulse = 2.0*M_PI*((float(i) / 100.0) - 1.0);
+	//	vWeights[i] = cos(pulse + teta * 50)*0.05;
+	//}
 
 	//////////
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	if (executeOnce) {
-	//if (true) {
-		executeOnce = false;
-		
-		getSkeletonForTime(theSkeleton, theSceneTracks, theTime, false);
+	//if (executeOnce) {
+	//	//if (true) {
+	//	executeOnce = false;
 
-		if (printit) {
-			swprintf(outputString, TEXT("{%f, {\n"),
-				theTime);
-			OutputDebugString(outputString);
-		}
+	//	//getSkeletonForTime(theSkeleton, theSceneTracks, theTime, false);
 
-		for (int i = 0; i < theSceneTracks.numTracks; i++) {
-			oxyde::log::printDualQuat(std::wstring(L"boneOld[ ") + std::to_wstring(i) + std::wstring(L" ]"), theSceneTracks.globalTransforms+(8*i));
-		}
+	//	if (printit) {
+	//		swprintf(outputString, TEXT("{%f, {\n"),
+	//			theTime);
+	//		OutputDebugString(outputString);
+	//	}
 
-		transformFromSkinPoseToCurrentPose(theSkin, theSceneTracks, printit);
+	//	for (int i = 0; i < theSceneTracks.numTracks; i++) {
+	//		oxyde::log::printDualQuat(std::wstring(L"boneOld[ ") + std::to_wstring(i) + std::wstring(L" ]"), theSceneTracks.globalTransforms + (8 * i));
+	//	}
 
-		if (printit) {
-			swprintf(outputString, TEXT("}},\n"));
-			OutputDebugString(outputString);
-		}
+	//	//transformFromSkinPoseToCurrentPose(theSkin, theSceneTracks, printit);
 
-		if (false) {
-			swprintf(outputString, TEXT("{%f, {\n"),
-				theTime);
-			OutputDebugString(outputString);
-		}
-		//blendDualQuatFromMesh(theSkin, vertices, normals, blendedVertices, blendedNormals, numVerts, false);
+	//	if (printit) {
+	//		swprintf(outputString, TEXT("}},\n"));
+	//		OutputDebugString(outputString);
+	//	}
 
-		if (false) {
-			swprintf(outputString, TEXT("}},\n"));
-			OutputDebugString(outputString);
-		}
-	}
-	float maxX = std::numeric_limits<float>::min();
-	float minX = std::numeric_limits<float>::max();
-	float maxY = std::numeric_limits<float>::min();
-	float minY = std::numeric_limits<float>::max();
-	float maxZ = std::numeric_limits<float>::min();
-	float minZ = std::numeric_limits<float>::max();
+	//	if (false) {
+	//		swprintf(outputString, TEXT("{%f, {\n"),
+	//			theTime);
+	//		OutputDebugString(outputString);
+	//	}
+	//	//blendDualQuatFromMesh(theSkin, vertices, normals, blendedVertices, blendedNormals, numVerts, false);
 
-	float sumVX = 0.0, sumVY = 0.0, sumVZ = 0.0;
+	//	if (false) {
+	//		swprintf(outputString, TEXT("}},\n"));
+	//		OutputDebugString(outputString);
+	//	}
+	//}
+
+	//float maxX = std::numeric_limits<float>::min();
+	//float minX = std::numeric_limits<float>::max();
+	//float maxY = std::numeric_limits<float>::min();
+	//float minY = std::numeric_limits<float>::max();
+	//float maxZ = std::numeric_limits<float>::min();
+	//float minZ = std::numeric_limits<float>::max();
+
+	//float sumVX = 0.0, sumVY = 0.0, sumVZ = 0.0;
 
 
-	for (int itv = 0; itv < numVerts; ++itv) {
-		int itvX = 3 * itv;
-		int itvY = 3 * itv + 1;
-		int itvZ = 3 * itv + 2;
+	//for (int itv = 0; itv < numVerts; ++itv) {
+	//	int itvX = 3 * itv;
+	//	int itvY = 3 * itv + 1;
+	//	int itvZ = 3 * itv + 2;
 
-		maxX = vertices[itvX] > maxX ? vertices[itvX] : maxX;
-		maxY = vertices[itvY] > maxY ? vertices[itvY] : maxY;
-		maxZ = vertices[itvZ] > maxZ ? vertices[itvZ] : maxZ;
+	//	maxX = vertices[itvX] > maxX ? vertices[itvX] : maxX;
+	//	maxY = vertices[itvY] > maxY ? vertices[itvY] : maxY;
+	//	maxZ = vertices[itvZ] > maxZ ? vertices[itvZ] : maxZ;
 
-		minX = vertices[itvX] < minX ? vertices[itvX] : minX;
-		minY = vertices[itvY] < minY ? vertices[itvY] : minY;
-		minZ = vertices[itvZ] < minZ ? vertices[itvZ] : minZ;
+	//	minX = vertices[itvX] < minX ? vertices[itvX] : minX;
+	//	minY = vertices[itvY] < minY ? vertices[itvY] : minY;
+	//	minZ = vertices[itvZ] < minZ ? vertices[itvZ] : minZ;
 
-		sumVX += vertices[itvX];
-		sumVY += vertices[itvY];
-		sumVZ += vertices[itvZ];
-	}
+	//	sumVX += vertices[itvX];
+	//	sumVY += vertices[itvY];
+	//	sumVZ += vertices[itvZ];
+	//}
 
-	oxyde::log::printPointInSpace(L"maxCorner", maxX, maxY, maxZ);
-	oxyde::log::printPointInSpace(L"minCorner", minX, minY, minZ);
+	//oxyde::log::printPointInSpace(L"maxCorner", maxX, maxY, maxZ);
+	//oxyde::log::printPointInSpace(L"minCorner", minX, minY, minZ);
 
-	float centerX = sumVX / numVerts;
-	float centerY = sumVY / numVerts;
-	float centerZ = sumVZ / numVerts;
+	//float centerX = sumVX / numVerts;
+	//float centerY = sumVY / numVerts;
+	//float centerZ = sumVZ / numVerts;
 
-	float ROp[] = { centerX, centerY, centerZ, 1.0 };
+	std::array<float, 3> center = { 0.,0.,0. };
+	oxyde::scene::bone::getSkeletonCenter(center);
+
+	//float ROp[] = { centerX, centerY, centerZ, 1.0 };
+	float ROp[] = { center[0], center[1], center[2], 1.0 };
 
 	float RCp[] = { Camera[0], Camera[1], Camera[2], 1.00000000 };
 	float viewerVec[] = { 0., 0., 1., 0. };
 
 	float r[16];
 	float normalM[16];
-	
+
 	lookAtCameraMatrix3(ROp, RCp, normalM, r);
 
 	lookAtCameraMatrix4(ROp, RCp, Up, normalM, r);
@@ -569,9 +642,9 @@ void drawVertexArray() {
 
 		float WinTransformed[4];
 		oxyde::linAlg::multiplyMatrixByVector(originalInv_r, winInCamSpace, WinTransformed);
-		blendedVertices[(302 + 1) * 3 + 0] = WinTransformed[0];
-		blendedVertices[(302 + 1) * 3 + 1] = WinTransformed[1];
-		blendedVertices[(302 + 1) * 3 + 2] = WinTransformed[2];
+		//blendedVertices[(302 + 1) * 3 + 0] = WinTransformed[0];
+		//blendedVertices[(302 + 1) * 3 + 1] = WinTransformed[1];
+		//blendedVertices[(302 + 1) * 3 + 2] = WinTransformed[2];
 
 		if (currentState == states::START_PRESSING) {
 			originalCameraPos[0] = RCp[0];
@@ -591,9 +664,9 @@ void drawVertexArray() {
 			currentWorldPos[2] = WinTransformed[2];
 			currentWorldPos[3] = WinTransformed[3];
 
-			blendedVertices[(302 + 0) * 3 + 0] = originalWorldPos[0];
-			blendedVertices[(302 + 0) * 3 + 1] = originalWorldPos[1];
-			blendedVertices[(302 + 0) * 3 + 2] = originalWorldPos[2];
+			//blendedVertices[(302 + 0) * 3 + 0] = originalWorldPos[0];
+			//blendedVertices[(302 + 0) * 3 + 1] = originalWorldPos[1];
+			//blendedVertices[(302 + 0) * 3 + 2] = originalWorldPos[2];
 
 			float vectorV[4];
 			vectorV[0] = currentWorldPos[0] - ROp[0];
@@ -647,18 +720,20 @@ void drawVertexArray() {
 	GLint invlocation = glGetUniformLocation(theProgram, "invWorld");
 	printf("location of invWorld: %i\n", invlocation);
 	glUniformMatrix4fv(invlocation, 1, GL_FALSE, normalM);
-/*
-	/// draw skin
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
-	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 8 * theSceneTracks.numTracks, (GLvoid*)theSkin.fromSkinPoseToCurrentTransf);
-	GLenum myMistake = glGetError();
 
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-	myMistake = glGetError();
-	
-	glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, 0);
-	///
-*/
-	oxyde::GL::renderer::draw();
+	if (oxyde::GL::renderer::draw(store_fromSkinPose_buffer)) {
+		/// draw skin
+		//if (false) {
+		//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
+		//	glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * 8 * theSceneTracks.numTracks, (GLvoid*)theSkin.fromSkinPoseToCurrentTransf);
+		//	GLenum myMistake = glGetError();
+
+		//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+		//	myMistake = glGetError();
+
+		//	glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, 0);
+		//}
+		///
+	}
 }
 

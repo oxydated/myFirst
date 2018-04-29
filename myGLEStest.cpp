@@ -252,14 +252,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										oxyde::scene::scenePtr theScene = oxyde::scene::scene::createScene(sceneNode);
 										oxyde::scene::ticker::setLoopSize(4000);
 										oxyde::scene::ticker::start();
-										//oxyde::scene::ticker::setCurrentTime(50);
-										oxyde::scene::ticker::setCurrentTime(0);
+										oxyde::scene::ticker::setCurrentTime(1000);
+										//oxyde::scene::ticker::setCurrentTime(0);
 
 										//oxyde::geometry::skindataPtr theSkin = std::make_shared<oxyde::geometry::skindata>(documentElement);
 										oxyde::geometry::skindata::buildSkindata(documentElement, oxyde::scene::bone::addModifier);
 										//oxyde::scene::bone::addModifier(theSkin);
 
 										oxyde::GL::renderer::setSkinAndMeshBuffers();
+										//oxyde::GL::renderer::printSkinAndMeshBuffers();
 
 										theScene->updateFrame();
 

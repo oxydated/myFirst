@@ -1,6 +1,7 @@
 #include "mesh.h"
 #include "linearAlg.h"
 #include "transformations.h"
+#include "debugLog.h"
 
 namespace oxyde {
 	namespace geometry {
@@ -88,16 +89,39 @@ namespace oxyde {
 
 		void mesh::applyMatrixtoVertices(std::array<float, 16>& objectMatrix)
 		{
-			for (auto vertex : vertices) {
+
+			float* verticesPointer = (float*)vertices.data();
+			size_t sizeVertices = vertices.size() * 3;
+
+			oxyde::log::printText(L"New vertices before transform");
+			for (int i = 0; i < sizeVertices; i++) {
+				oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(verticesPointer[i]));
+			}
+			oxyde::log::printText(L"END New vertices before transform \n");
+
+
+
+			oxyde::log::printText(L"New objectMatrix ");
+			for (int i = 0; i < 16; i++) {
+				oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(objectMatrix.data()[i]));
+			}
+			oxyde::log::printText(L"END New objectMatrix ");
+
+			for (auto &vertex : vertices) {
 				float myOldVert[4] = { vertex[0], vertex[1], vertex[2], 1.0 };
 				float myNewVert[4] = { 0.0, 0.0, 0.0, 0.0 };
-
 
 				oxyde::linAlg::multiplyMatrixByVector(objectMatrix.data(), myOldVert, myNewVert);
 				vertex[0] = myNewVert[0];
 				vertex[1] = myNewVert[1];
 				vertex[2] = myNewVert[2];
 			}
+			
+			oxyde::log::printText(L"New vertices AFTER transform");
+			for (int i = 0; i < sizeVertices; i++) {
+				oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(verticesPointer[i]));
+			}
+			oxyde::log::printText(L"END New vertices AFTER transform \n");
 		}
 
 	}

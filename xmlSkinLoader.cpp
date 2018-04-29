@@ -308,6 +308,18 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 	oxyde::log::printMatrix(L"objectMatrix", objectMatrix);
 
 	/////////// apply mesh matrix on vertices
+
+	oxyde::log::printText(L"Old vertices before transform");
+	for (int i = 0; i < (numVerts * 3); i++) {
+		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(vertices[i]));
+	}
+	oxyde::log::printText(L"END Old vertice before transforms \n");
+
+	oxyde::log::printText(L"Old objectMatrix ");
+	for (int i = 0; i < 16; i++) {
+		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(objectMatrix[i]));
+	}
+	oxyde::log::printText(L"END Old objectMatrix ");
 	
 	for (int i = 0; i < numVerts; i++) {
 		float myOldVert[4] = { vertices[i * 3 + 0], vertices[i * 3 + 1], vertices[i * 3 + 2], 1.0 };
@@ -319,6 +331,12 @@ HRESULT getVertexDataFromSkinDoc(IXMLDOMDocument3* theDocument, LPCSTR theSkinNo
 		vertices[i * 3 + 2] = myNewVert[2];
 	}
 
+	oxyde::log::printText(L"Old vertices AFTER transform");
+	for (int i = 0; i < (numVerts * 3); i++) {
+		oxyde::log::printText(L"[" + std::to_wstring(i) + L"] " + std::to_wstring(vertices[i]));
+	}
+	oxyde::log::printText(L"END Old vertice AFTER transforms \n");
+	
 	return hr;
 }
 

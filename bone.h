@@ -47,6 +47,9 @@ namespace oxyde {
 			static void updateFrame();
 			static void reset();
 
+			static void transformPointByBoneID(int nodeObject, const std::array<float, 3>& pointToTransform, std::array<float, 3>& pointTransformed);
+			static void getSkeletonCenter(std::array<float, 3>& pointTransformed);
+
 			//test
 			static oxyde::geometry::skeletalModifierPtr getModifierAtIndex(int index);
 
