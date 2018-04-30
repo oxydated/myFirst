@@ -32,6 +32,8 @@
 
 #include "renderer.h"
 #include "bone.h"
+#include "scene.h"
+#include "ticker.h"
 
 static GLuint vao = 1;
 static GLuint element_index_buffer = 1;
@@ -518,6 +520,12 @@ void drawVertexArray() {
 	//float centerX = sumVX / numVerts;
 	//float centerY = sumVY / numVerts;
 	//float centerZ = sumVZ / numVerts;
+
+	if (oxyde::scene::scene::getScene()) {
+
+		oxyde::scene::ticker::update();
+		oxyde::scene::scene::getScene()->updateFrame();
+	}
 
 	std::array<float, 3> center = { 0.,0.,0. };
 	oxyde::scene::bone::getSkeletonCenter(center);

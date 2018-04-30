@@ -32,6 +32,7 @@ namespace oxyde {
 				//						This function will call Update() from this Observer's bound Subject.
 				subjectForChildren->update();
 				//							That'll push all of this Subjects's Observer pointers, if any, to the Scene stack.
+				calledByHowManySoFar = 0;
 			}
 		}
 	}

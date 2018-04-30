@@ -101,6 +101,21 @@ namespace oxyde {
 			//	Allocate vector of dualquaternions with size of (last key in the map + 1)
 			int sizeOfVectors = bonesPernodeObject.rbegin()->first + 1;
 			bone::setTransformationVector(sizeOfVectors);
+
+			// Set the animation length
+			int animationLength = 0;
+			MSXML2::IXMLDOMNodeListPtr endTimeNodes = sceneNode->selectNodes(L".//node//keyFrames//@endTime");
+			for (int i = 0; i < endTimeNodes->length; i++) {
+				MSXML2::IXMLDOMAttributePtr endTimeAtt = MSXML2::IXMLDOMAttributePtr(endTimeNodes->item[i]);
+				if (endTimeAtt) {
+
+					_variant_t&& intVariant = endTimeAtt->GetnodeTypedValue();
+					intVariant.ChangeType(VT_I4);
+					animationLength = intVariant.intVal > animationLength ? intVariant.intVal : animationLength;
+				}
+			}
+			oxyde::scene::ticker::setLoopSize(animationLength);
+
 		}
 
 		void scene::updateFrame()
@@ -125,10 +140,11 @@ namespace oxyde {
 
 			//ticker::update();
 	//
-	//		The Ticker's Subject - a member of the Scene Object - Push all it's Observers pointers to the Scene stack
-			theTickerSubject->update();
 
 			oxyde::log::printText(L"entering frame loop");
+
+	//		The Ticker's Subject - a member of the Scene Object - Push all it's Observers pointers to the Scene stack
+			theTickerSubject->update();
 	//
 	//		while the stack is not empty:
 			while (!observersToUpdate.empty()) {
@@ -160,7 +176,7 @@ namespace oxyde {
 
 		std::shared_ptr<scene> scene::getScene()
 		{
-			return instance->shared_from_this();
+			return instance;
 		}
 
 	}
