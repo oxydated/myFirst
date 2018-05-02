@@ -56,6 +56,14 @@ namespace oxyde {
 				}
 			}
 
+			MSXML2::IXMLDOMAttributePtr mapFileAttr = MSXML2::IXMLDOMAttributePtr(
+				MSXML2::IXMLDOMNodePtr(meshElement)->selectSingleNode(L"./textureMap/@mapFile"));
+			if (mapFileAttr) {
+				_variant_t &&mapVar = mapFileAttr->Getvalue();
+				mapVar.ChangeType(VT_BSTR);
+				textureFileName = std::wstring(mapVar.bstrVal);
+			}
+
 		}
 
 		const unsigned short * mesh::getFacesData(size_t &size)
@@ -80,6 +88,11 @@ namespace oxyde {
 		{
 			size = normals.size() * 3;
 			return (float*)normals.data();
+		}
+
+		const std::wstring mesh::getMapFileName()
+		{
+			return textureFileName;
 		}
 
 		int mesh::getNumFaces()

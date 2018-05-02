@@ -729,7 +729,8 @@ void drawVertexArray() {
 	printf("location of invWorld: %i\n", invlocation);
 	glUniformMatrix4fv(invlocation, 1, GL_FALSE, normalM);
 
-	if (oxyde::GL::renderer::draw(store_fromSkinPose_buffer)) {
+	oxyde::GL::renderer::skinRenderer::drawAllSkins();
+	//if (oxyde::GL::renderer::draw(store_fromSkinPose_buffer)) {
 		/// draw skin
 		//if (false) {
 		//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
@@ -742,6 +743,6 @@ void drawVertexArray() {
 		//	glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_SHORT, 0);
 		//}
 		///
-	}
+	//}
 }
 

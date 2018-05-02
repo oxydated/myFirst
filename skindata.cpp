@@ -1,6 +1,7 @@
 #include <map>
 #include "skindata.h"
 #include "debugLog.h"
+#include "renderer.h"
 
 namespace oxyde {
 	namespace geometry {
@@ -208,7 +209,9 @@ namespace oxyde {
 				if (skinIDatt) {
 					_variant_t&& intVariant = skinIDatt->GetnodeTypedValue();
 					intVariant.ChangeType(VT_I4);
-					forEachNewSkin(std::make_shared<skindata>(documentElement, intVariant.intVal, notAccessible()));
+					skindataPtr newSkin = std::make_shared<skindata>(documentElement, intVariant.intVal, notAccessible());
+					oxyde::GL::renderer::skinRenderer::addSkiToRender(newSkin);
+					forEachNewSkin(newSkin);
 				}
 			}
 		}

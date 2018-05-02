@@ -7,6 +7,7 @@
 #include "renderer.h"
 #include "bone.h"
 #include "debugLog.h"
+#include "imageLoader.h"
 
 ////////////////////////////////////////
 
@@ -25,18 +26,18 @@
 
 ////////////////////////////////////////
 
-static GLuint vao = 1;
-static GLuint element_index_buffer = 1;
-static GLuint vertex_position_buffer = 1;
-static GLuint vertex_texcoord_buffer = 1;
-static GLuint vertex_normal_buffer = 1;
-
-static GLuint vertex_bone_num_buffer = 1;
-static GLuint vertex_bone_offset_buffer = 1;
-
-static GLuint store_boneIndexes_buffer = 1;
-static GLuint store_boneWeight_buffer = 1;
-static GLuint store_fromSkinPose_buffer = 1;
+//static GLuint vao = 1;
+//static GLuint element_index_buffer = 1;
+//static GLuint vertex_position_buffer = 1;
+//static GLuint vertex_texcoord_buffer = 1;
+//static GLuint vertex_normal_buffer = 1;
+//
+//static GLuint vertex_bone_num_buffer = 1;
+//static GLuint vertex_bone_offset_buffer = 1;
+//
+//static GLuint store_boneIndexes_buffer = 1;
+//static GLuint store_boneWeight_buffer = 1;
+//static GLuint store_fromSkinPose_buffer = 1;
 
 ////////////////////////////////////////
 
@@ -152,7 +153,7 @@ namespace oxyde {
 					printSkinBuffers(theSkin);
 				}
 			}
-
+/*
 			void setMeshBuffers(const oxyde::geometry::meshPtr &theMesh)
 			{
 
@@ -195,69 +196,71 @@ namespace oxyde {
 				glEnableVertexAttribArray(VERTEX_NORMAL_ATT);
 
 			}
+			*/
 
-			void setSkinBuffers(const oxyde::geometry::skindataPtr &theSkin)
-			{
-				size_t sizeboneNumVert;
-				const int* boneNumVertAtt = theSkin->getBoneNumVertAttrib(sizeboneNumVert);
-				glGenBuffers(1, &vertex_bone_num_buffer);
-				glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_num_buffer);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeboneNumVert, (GLvoid*)boneNumVertAtt, GL_STATIC_DRAW);
-				glVertexAttribIPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, 0, (GLvoid*)0);
-				GLenum myMistake = glGetError();
+			//void setSkinBuffers(const oxyde::geometry::skindataPtr &theSkin)
+			//{
+			//	size_t sizeboneNumVert;
+			//	const int* boneNumVertAtt = theSkin->getBoneNumVertAttrib(sizeboneNumVert);
+			//	glGenBuffers(1, &vertex_bone_num_buffer);
+			//	glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_num_buffer);
+			//	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeboneNumVert, (GLvoid*)boneNumVertAtt, GL_STATIC_DRAW);
+			//	glVertexAttribIPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, 0, (GLvoid*)0);
+			//	GLenum myMistake = glGetError();
 
-				size_t sizeBoneOffsetVert;
-				const int* boneOffsetVertAtt = theSkin->getBoneOffsetVertAttrib(sizeBoneOffsetVert);
-				glGenBuffers(1, &vertex_bone_offset_buffer);
-				glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_offset_buffer);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeBoneOffsetVert, (GLvoid*)boneOffsetVertAtt, GL_STATIC_DRAW);
-				glVertexAttribIPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, 0, (GLvoid*)0);
-				myMistake = glGetError();
+			//	size_t sizeBoneOffsetVert;
+			//	const int* boneOffsetVertAtt = theSkin->getBoneOffsetVertAttrib(sizeBoneOffsetVert);
+			//	glGenBuffers(1, &vertex_bone_offset_buffer);
+			//	glBindBuffer(GL_ARRAY_BUFFER, vertex_bone_offset_buffer);
+			//	glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeBoneOffsetVert, (GLvoid*)boneOffsetVertAtt, GL_STATIC_DRAW);
+			//	glVertexAttribIPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, 0, (GLvoid*)0);
+			//	myMistake = glGetError();
 
-				size_t sizeBoneIndexesForSkin;
-				const int* boneIndexesForSkin = theSkin->getBoneIndexesForSkinVertices(sizeBoneIndexesForSkin);
-				glGenBuffers(1, &store_boneIndexes_buffer);
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_boneIndexes_buffer);
-				glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint)*sizeBoneIndexesForSkin, (GLvoid*)boneIndexesForSkin, GL_STATIC_DRAW);
-				glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, store_boneIndexes_buffer);
-				myMistake = glGetError();
+			//	size_t sizeBoneIndexesForSkin;
+			//	const int* boneIndexesForSkin = theSkin->getBoneIndexesForSkinVertices(sizeBoneIndexesForSkin);
+			//	glGenBuffers(1, &store_boneIndexes_buffer);
+			//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_boneIndexes_buffer);
+			//	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint)*sizeBoneIndexesForSkin, (GLvoid*)boneIndexesForSkin, GL_STATIC_DRAW);
+			//	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, store_boneIndexes_buffer);
+			//	myMistake = glGetError();
 
-				//layout(binding = 1) buffer boneIndexes {
-				//	int boneIndexesForSkinVertices[];
-				//};
+			//	//layout(binding = 1) buffer boneIndexes {
+			//	//	int boneIndexesForSkinVertices[];
+			//	//};
 
-				size_t sizeBoneWeightForSkin;
-				const float* boneWeightForSkin = theSkin->getBoneWeightForSkinVertices(sizeBoneWeightForSkin);
-				glGenBuffers(1, &store_boneWeight_buffer);
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_boneWeight_buffer);
-				glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat)*sizeBoneWeightForSkin, (GLvoid*)boneWeightForSkin, GL_STATIC_DRAW);
-				glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, store_boneWeight_buffer);
-				myMistake = glGetError();
+			//	size_t sizeBoneWeightForSkin;
+			//	const float* boneWeightForSkin = theSkin->getBoneWeightForSkinVertices(sizeBoneWeightForSkin);
+			//	glGenBuffers(1, &store_boneWeight_buffer);
+			//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_boneWeight_buffer);
+			//	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat)*sizeBoneWeightForSkin, (GLvoid*)boneWeightForSkin, GL_STATIC_DRAW);
+			//	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, store_boneWeight_buffer);
+			//	myMistake = glGetError();
 
-				//layout(binding = 2) buffer boneWeight {
-				//	float boneWeightForSkinVertices[];
-				//};
+			//	//layout(binding = 2) buffer boneWeight {
+			//	//	float boneWeightForSkinVertices[];
+			//	//};
 
-				size_t sizeFromSkinposeToCurrent;
-				const float* fromSkinPoseToCurrent = theSkin->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
-				glGenBuffers(1, &store_fromSkinPose_buffer);
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
-				glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent, GL_DYNAMIC_DRAW);
-				glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, store_fromSkinPose_buffer);
-				myMistake = glGetError();
+			//	size_t sizeFromSkinposeToCurrent;
+			//	const float* fromSkinPoseToCurrent = theSkin->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
+			//	glGenBuffers(1, &store_fromSkinPose_buffer);
+			//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, store_fromSkinPose_buffer);
+			//	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent, GL_DYNAMIC_DRAW);
+			//	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, store_fromSkinPose_buffer);
+			//	myMistake = glGetError();
 
-				//layout(binding = 3) buffer fromSkinPose {
-				//	mat2x4 fromSkinPoseToCurrentTransf[];
-				//};
+			//	//layout(binding = 3) buffer fromSkinPose {
+			//	//	mat2x4 fromSkinPoseToCurrentTransf[];
+			//	//};
 
-				//////////////////////////////////////////////////////////////////// 
-				glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-				myMistake = glGetError();
+			//	//////////////////////////////////////////////////////////////////// 
+			//	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+			//	myMistake = glGetError();
 
-				glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
-				glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
-			}
+			//	glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
+			//	glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
+			//}
 
+			/*
 			void drawSkin(const oxyde::geometry::skindataPtr &theSkin, GLuint fromSkinPoseBuffer)
 			{
 				oxyde::geometry::meshPtr theMesh = theSkin->getMesh();
@@ -282,40 +285,285 @@ namespace oxyde {
 				}
 				///
 			}
+			*/
 
-			void setSkinAndMeshBuffers()
+			//void setSkinAndMeshBuffers()
+			//{
+			//	oxyde::geometry::skindataPtr theSkin = std::dynamic_pointer_cast<oxyde::geometry::skindata>(oxyde::scene::bone::getModifierAtIndex(0));
+			//	if (theSkin) {
+			//		oxyde::geometry::meshPtr theMesh = theSkin->getMesh();
+
+			//		glGenVertexArrays(1, &vao);
+			//		glBindVertexArray(vao);
+
+			//		setMeshBuffers(theMesh);
+			//		setSkinBuffers(theSkin);
+			//	}
+			//}
+
+			//bool draw(GLuint fromSkinPoseBuffer)
+			//{
+			//	bool test = false;
+			//	if (oxyde::scene::bone::getModifierAtIndex(0)) {
+			//		oxyde::geometry::skeletalModifierPtr modifier = oxyde::scene::bone::getModifierAtIndex(0);
+			//		oxyde::geometry::skindataPtr theSkin = std::dynamic_pointer_cast<oxyde::geometry::skindata>(modifier);
+			//		if (theSkin) {
+			//			drawSkin(theSkin, fromSkinPoseBuffer);
+			//			test = true;
+			//		}
+			//	}
+			//	return test;
+			//}
+
+			//GLuint getFromSkinPoseBuffer() {
+			//	return store_fromSkinPose_buffer;
+			//}
+
+			std::vector<skinRendererPtr> skinRenderer::skinsToRender;
+
+			skinRenderer::skinRenderer(const oxyde::geometry::skindataPtr &theSkin):theSkinToRender(theSkin)
 			{
-				oxyde::geometry::skindataPtr theSkin = std::dynamic_pointer_cast<oxyde::geometry::skindata>(oxyde::scene::bone::getModifierAtIndex(0));
-				if (theSkin) {
-					oxyde::geometry::meshPtr theMesh = theSkin->getMesh();
+				//oxyde::geometry::skindataPtr theSkin = std::dynamic_pointer_cast<oxyde::geometry::skindata>(oxyde::scene::bone::getModifierAtIndex(0));
+				if (theSkinToRender) {
+					oxyde::geometry::meshPtr theMesh = theSkinToRender->getMesh();
 
 					glGenVertexArrays(1, &vao);
 					glBindVertexArray(vao);
 
-					setMeshBuffers(theMesh);
-					setSkinBuffers(theSkin);
+					//setMeshBuffers(theMesh);
+					theMeshRenderer = std::make_shared<meshRenderer>(theMesh);
+					//setSkinBuffers(theSkin);
+					//void setSkinBuffers(const oxyde::geometry::skindataPtr &theSkin)
+					//{
+						size_t sizeboneNumVert;
+						const int* boneNumVertAtt = theSkinToRender->getBoneNumVertAttrib(sizeboneNumVert);
+						glGenBuffers(1, &vertexBoneNumBuffer);
+						glBindBuffer(GL_ARRAY_BUFFER, vertexBoneNumBuffer);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeboneNumVert, (GLvoid*)boneNumVertAtt, GL_STATIC_DRAW);
+						glVertexAttribIPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, 0, (GLvoid*)0);
+						GLenum myMistake = glGetError();
+
+						size_t sizeBoneOffsetVert;
+						const int* boneOffsetVertAtt = theSkinToRender->getBoneOffsetVertAttrib(sizeBoneOffsetVert);
+						glGenBuffers(1, &vertexBoneOffsetBuffer);
+						glBindBuffer(GL_ARRAY_BUFFER, vertexBoneOffsetBuffer);
+						glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeBoneOffsetVert, (GLvoid*)boneOffsetVertAtt, GL_STATIC_DRAW);
+						glVertexAttribIPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, 0, (GLvoid*)0);
+						myMistake = glGetError();
+
+						size_t sizeBoneIndexesForSkin;
+						const int* boneIndexesForSkin = theSkinToRender->getBoneIndexesForSkinVertices(sizeBoneIndexesForSkin);
+						glGenBuffers(1, &storeBoneIndexesBuffer);
+						glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeBoneIndexesBuffer);
+						glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint)*sizeBoneIndexesForSkin, (GLvoid*)boneIndexesForSkin, GL_STATIC_DRAW);
+						glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, storeBoneIndexesBuffer);
+						myMistake = glGetError();
+
+						//layout(binding = 1) buffer boneIndexes {
+						//	int boneIndexesForSkinVertices[];
+						//};
+
+						size_t sizeBoneWeightForSkin;
+						const float* boneWeightForSkin = theSkinToRender->getBoneWeightForSkinVertices(sizeBoneWeightForSkin);
+						glGenBuffers(1, &storeBoneWeightBuffer);
+						glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeBoneWeightBuffer);
+						glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat)*sizeBoneWeightForSkin, (GLvoid*)boneWeightForSkin, GL_STATIC_DRAW);
+						glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, storeBoneWeightBuffer);
+						myMistake = glGetError();
+
+						//layout(binding = 2) buffer boneWeight {
+						//	float boneWeightForSkinVertices[];
+						//};
+
+						size_t sizeFromSkinposeToCurrent;
+						const float* fromSkinPoseToCurrent = theSkinToRender->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
+						glGenBuffers(1, &storeFromSkinPoseBuffer);
+						glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeFromSkinPoseBuffer);
+						glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent, GL_DYNAMIC_DRAW);
+						glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, storeFromSkinPoseBuffer);
+						myMistake = glGetError();
+
+						//layout(binding = 3) buffer fromSkinPose {
+						//	mat2x4 fromSkinPoseToCurrentTransf[];
+						//};
+
+						//////////////////////////////////////////////////////////////////// 
+						glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+						myMistake = glGetError();
+
+						glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
+						glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
+					//}
 				}
 			}
 
-			bool draw(GLuint fromSkinPoseBuffer)
+			void skinRenderer::drawSkin()
 			{
-				bool test = false;
-				if (oxyde::scene::bone::getModifierAtIndex(0)) {
-					oxyde::geometry::skeletalModifierPtr modifier = oxyde::scene::bone::getModifierAtIndex(0);
-					oxyde::geometry::skindataPtr theSkin = std::dynamic_pointer_cast<oxyde::geometry::skindata>(modifier);
-					if (theSkin) {
-						drawSkin(theSkin, fromSkinPoseBuffer);
-						test = true;
-					}
+				//oxyde::geometry::meshPtr theMesh = theSkinToRender->getMesh();
+
+					glBindVertexArray(vao);
+
+					size_t sizeFromSkinposeToCurrent;
+					const float* fromSkinPoseToCurrent = theSkinToRender->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
+					glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeFromSkinPoseBuffer);
+					glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent);
+					GLenum myMistake = glGetError();
+
+					glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+					myMistake = glGetError();
+
+					theMeshRenderer->drawMesh();
+
+					//glDrawElements(GL_TRIANGLES, theMesh->getNumFaces(), GL_UNSIGNED_SHORT, 0);
+			}
+
+			skinRenderer::~skinRenderer()
+			{
+				glDeleteBuffers(1, &vertexBoneNumBuffer);				
+				glDeleteBuffers(1, &vertexBoneOffsetBuffer);				
+				glDeleteBuffers(1, &storeBoneIndexesBuffer);				
+				glDeleteBuffers(1, &storeBoneWeightBuffer);
+				glDeleteBuffers(1, &storeFromSkinPoseBuffer);
+				theMeshRenderer.reset();
+				glDeleteVertexArrays(1, &vao);
+			}
+
+			void skinRenderer::addSkiToRender(const oxyde::geometry::skindataPtr &theSkin)
+			{
+				skinsToRender.push_back(std::make_shared<skinRenderer>(theSkin));
+			}
+
+			void skinRenderer::drawAllSkins()
+			{
+				for (auto skin : skinsToRender) {
+					skin->drawSkin();
 				}
-				return test;
 			}
 
-			GLuint getFromSkinPoseBuffer() {
-				return store_fromSkinPose_buffer;
+			meshRenderer::meshRenderer(const oxyde::geometry::meshPtr & theMesh):
+				theTextureMap(std::make_shared<textureRenderer>(theMesh)), theMeshToRender(theMesh)
+			{
+
+				GLenum myMistake = glGetError();
+
+				size_t sizeFaces;
+				const unsigned short* faces = theMeshToRender->getFacesData(sizeFaces);
+				glGenBuffers(1, &elementIndexBuffer);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementIndexBuffer);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*sizeFaces, faces, GL_STATIC_DRAW);
+
+				myMistake = glGetError();
+
+				size_t sizeVertices;
+				const float* vertices = theMeshToRender->getVerticesData(sizeVertices);
+				glGenBuffers(1, &vertexPositionBuffer);
+				glBindBuffer(GL_ARRAY_BUFFER, vertexPositionBuffer);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeVertices, (GLvoid*)vertices, GL_STATIC_DRAW);
+				glVertexAttribPointer(VERTEX_POSITION_ATT, VERTEX_POSITION_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+				myMistake = glGetError();
+
+				size_t sizeTexcoord;
+				const float* texcoord = theMeshToRender->getTexCoordData(sizeTexcoord);
+				glGenBuffers(1, &vertexTexcoordBuffer);
+				glBindBuffer(GL_ARRAY_BUFFER, vertexTexcoordBuffer);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeTexcoord, (GLvoid*)texcoord, GL_STATIC_DRAW);
+				glVertexAttribPointer(VERTEX_TEXCOORD_ATT, VERTEX_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+				myMistake = glGetError();
+
+				size_t sizeNormals;
+				const float* normals = theMeshToRender->getNormalsData(sizeNormals);
+				glGenBuffers(1, &vertexNormalBuffer);
+				glBindBuffer(GL_ARRAY_BUFFER, vertexNormalBuffer);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeNormals, (GLvoid*)normals, GL_STATIC_DRAW);
+				glVertexAttribPointer(VERTEX_NORMAL_ATT, VERTEX_NORMAL_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+				myMistake = glGetError();
+
+				glEnableVertexAttribArray(VERTEX_POSITION_ATT);
+				glEnableVertexAttribArray(VERTEX_TEXCOORD_ATT);
+				glEnableVertexAttribArray(VERTEX_NORMAL_ATT);
+
 			}
 
+			void meshRenderer::drawMesh()
+			{
+				theTextureMap->makeTextureActive();
+				glDrawElements(GL_TRIANGLES, theMeshToRender->getNumFaces(), GL_UNSIGNED_SHORT, 0);
+			}
 
-		}
+			meshRenderer::~meshRenderer()
+			{
+				glDeleteBuffers(1, &elementIndexBuffer);
+				glDeleteBuffers(1, &vertexPositionBuffer);
+				glDeleteBuffers(1, &vertexTexcoordBuffer);
+				glDeleteBuffers(1, &vertexNormalBuffer);
+			}
+
+			GLuint textureRenderer::textureUnitUsed = 0;
+
+			textureRenderer::textureRenderer(const oxyde::geometry::meshPtr & theMesh):mapFileName(theMesh->getMapFileName())
+			{
+				GLint program = -1;
+				glGetIntegerv(GL_CURRENT_PROGRAM, &program);
+				if (program) {
+					textureUnit = textureUnitUsed++;
+
+					glActiveTexture(textureUnit);
+					
+					//////////////////////
+					
+					unsigned int width = 512;
+					unsigned int height = 512;
+					int theGLerror = 0;
+
+					std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(mapFileName, width, height);
+
+					glGenTextures(1, &textureName);
+
+					printf("textureName: %i\n", textureName);
+
+					glBindTexture(GL_TEXTURE_2D, textureName);
+
+					glActiveTexture(GL_TEXTURE0);
+
+					glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)imageData.data());
+
+					if (glGetError() != GL_NO_ERROR) {
+						printf("error up to line %i\n", __LINE__);
+					}
+					else {
+						printf("ok in %i\n", __LINE__);
+					}
+
+					glGenerateMipmap(GL_TEXTURE_2D);
+
+					//////////////////////
+
+					GLint samplerLocation = glGetUniformLocation(program, "theSampler");
+
+					glUniform1i(samplerLocation, textureUnit);
+				}
+			}
+
+			void textureRenderer::makeTextureActive()
+			{
+				glActiveTexture(textureUnit);
+			}
+
+			textureRenderer::~textureRenderer()
+			{
+				glDeleteTextures(1, &textureName);
+			}
+
+}
 	}
 }

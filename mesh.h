@@ -31,11 +31,15 @@ namespace oxyde {
 			const float* getTexCoordData(size_t &size);
 			const float* getNormalsData(size_t &size);
 
+			const std::wstring getMapFileName();
+
 			int getNumFaces();
 
 			void applyMatrixtoVertices(std::array<float, 16>&);
 
 		private:
+
+			std::wstring textureFileName;
 
 			std::vector<std::array<unsigned short, 3>> faces;
 

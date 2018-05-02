@@ -259,7 +259,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										oxyde::geometry::skindata::buildSkindata(documentElement, oxyde::scene::bone::addModifier);
 										//oxyde::scene::bone::addModifier(theSkin);
 
-										oxyde::GL::renderer::setSkinAndMeshBuffers();
+										//oxyde::GL::renderer::setSkinAndMeshBuffers();
 										//oxyde::GL::renderer::printSkinAndMeshBuffers();
 
 										theScene->updateFrame();
