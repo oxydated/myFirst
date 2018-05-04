@@ -30,6 +30,7 @@ namespace oxyde {
 						track.push_back(dualQuatKeyframe(dualQuatKeyframeElement));
 					}
 				}
+				trackSize = track.size();
 				std::set<int> setToKeepObservedIDsUnique({ rootNodeObject, parentBoneID });
 				listOfObservedBones = std::vector<int>(setToKeepObservedIDsUnique.begin(), setToKeepObservedIDsUnique.end());
 				listOfObservedBones.shrink_to_fit();
@@ -45,9 +46,13 @@ namespace oxyde {
 			dualQuat &parentGlobalTransform = boneTransformation[parentBoneID];
 
 			int inInterval = -1;
-			while (inInterval != 0) {
+			while ((inInterval != 0) && (currentKeyframe < trackSize)) {
 				inInterval = track[currentKeyframe].getInterpolatedQuaternion(localTransform);
 				currentKeyframe += inInterval;
+			}
+
+			if (currentKeyframe >= trackSize) {
+				track[trackSize - 1].getEndTransformation(localTransform);
 			}
 
 			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(parentGlobalTransform),

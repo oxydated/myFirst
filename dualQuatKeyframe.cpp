@@ -67,5 +67,32 @@ namespace oxyde {
 			return retValue;
 
 		}
+
+		void dualQuatKeyframe::getStartTransformation(dualQuat &startQuat)
+		{
+			startQuat[0] = startTransform[0];
+			startQuat[1] = startTransform[1];
+			startQuat[2] = startTransform[2];
+			startQuat[3] = startTransform[3];
+			startQuat[4] = startTransform[4];
+			startQuat[5] = startTransform[5];
+			startQuat[6] = startTransform[6];
+			startQuat[7] = startTransform[7];
+		}
+
+		void dualQuatKeyframe::getEndTransformation(dualQuat &endQuat)
+		{
+			dualQuat r;
+			
+			oxyde::DQ::dual_Versor(theAngle,
+				theUvector[0], theUvector[1], theUvector[2],
+				theSfactor,
+				theMvector[0], theMvector[1], theMvector[2],
+				DUALQUAARRAY(r));
+			
+			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(r),
+				DUALQUAARRAY(startTransform),
+				DUALQUAARRAY(endQuat));
+		}
 	}
 }

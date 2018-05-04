@@ -36,6 +36,8 @@ namespace oxyde {
 
 			dualQuatKeyframe(const MSXML2::IXMLDOMElementPtr&);
 			int getInterpolatedQuaternion(dualQuat&);
+			void getStartTransformation(dualQuat&);
+			void getEndTransformation(dualQuat&);
 		};
 	}
 }

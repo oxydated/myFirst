@@ -256,6 +256,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										//oxyde::scene::ticker::setCurrentTime(0);
 
 										//oxyde::geometry::skindataPtr theSkin = std::make_shared<oxyde::geometry::skindata>(documentElement);
+										oxyde::GL::renderer::skinRenderer::reset();
 										oxyde::geometry::skindata::buildSkindata(documentElement, oxyde::scene::bone::addModifier);
 										//oxyde::scene::bone::addModifier(theSkin);
 

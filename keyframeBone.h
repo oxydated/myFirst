@@ -34,6 +34,7 @@ namespace oxyde {
 		protected:
 			int parentBoneID;
 			std::vector<dualQuatKeyframe> track;
+			int trackSize;
 
 			int currentKeyframe;
 

@@ -440,6 +440,12 @@ namespace oxyde {
 				}
 			}
 
+			void skinRenderer::reset()
+			{
+				skinsToRender.clear();
+				textureRenderer::reset();
+			}
+
 			meshRenderer::meshRenderer(const oxyde::geometry::meshPtr & theMesh):
 				theTextureMap(std::make_shared<textureRenderer>(theMesh)), theMeshToRender(theMesh)
 			{
@@ -562,6 +568,11 @@ namespace oxyde {
 			textureRenderer::~textureRenderer()
 			{
 				glDeleteTextures(1, &textureName);
+			}
+
+			void textureRenderer::reset()
+			{
+				textureUnitUsed = 0;
 			}
 
 }

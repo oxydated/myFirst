@@ -17,6 +17,7 @@ namespace oxyde {
 				void makeTextureActive();
 				//unsigned int getTextureUnit();
 				~textureRenderer();
+				static void reset();
 
 			private:
 				std::wstring mapFileName;
@@ -57,6 +58,7 @@ namespace oxyde {
 
 				static void addSkiToRender(const oxyde::geometry::skindataPtr &theSkin);
 				static void drawAllSkins();
+				static void reset();
 
 			private:
 				oxyde::geometry::skindataPtr theSkinToRender;
@@ -85,10 +87,10 @@ namespace oxyde {
 
 			//void drawSkin(const oxyde::geometry::skindataPtr&, GLuint fromSkinPoseBuffer);
 
-			void setSkinAndMeshBuffers();
-			bool draw(GLuint fromSkinPoseBuffer);
+			//void setSkinAndMeshBuffers();
+			//bool draw(GLuint fromSkinPoseBuffer);
 
-			GLuint getFromSkinPoseBuffer();
+			//GLuint getFromSkinPoseBuffer();
 		}
 	}
 }
