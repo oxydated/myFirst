@@ -92,9 +92,9 @@ void initGLES(int x, int y, int width, int height){
 	SPIT_ERROR
 	//setTexture(program);
 	SPIT_ERROR
-	setInvertedPerspectiveMatrix(invPers);
-	setPerspectiveMatrix(pers, program);
-    setViewportMatrix( view, program );
+	//setInvertedPerspectiveMatrix(invPers);
+	//setPerspectiveMatrix(pers, program);
+    //setViewportMatrix( view, program );
     createVertexBuffer();
     drawVertexArray();
     

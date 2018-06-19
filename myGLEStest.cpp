@@ -26,6 +26,7 @@
 #include "mesh.h"
 #include "skindata.h"
 #include "renderer.h"
+#include "camera.h"
 
 
 #define MAX_LOADSTRING 100
@@ -194,10 +195,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		setWinY(p.y);
 		setButtonPressed(true);	 
 		OutputDebugString(TEXT("\n\nDOWN\n"));
+		oxyde::GL::renderer::camera::mouseButtonDown(p.x, p.y);
 		break;
+
 	case WM_LBUTTONUP:
 		setButtonPressed(false);
 		OutputDebugString(TEXT("\nUP\n\n"));
+		oxyde::GL::renderer::camera::mouseButtonUp();
 		break;
 
 	case WM_MOUSEMOVE:
@@ -205,6 +209,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		p.y = GET_Y_LPARAM(lParam);
 		setWinX(p.x);
 		setWinY(p.y);
+		oxyde::GL::renderer::camera::mouseMove(p.x, p.y);
+		break;
+
+	case WM_MOUSEWHEEL:
+		oxyde::GL::renderer::camera::mouseWheel(GET_WHEEL_DELTA_WPARAM(wParam));
+
+	case WM_KEYDOWN:
+
+		switch (wParam)
+		{
+		case VK_LEFT:
+			oxyde::GL::renderer::camera::keyDown(-1);
+			break;
+		case VK_RIGHT:
+			oxyde::GL::renderer::camera::keyDown(1);
+			break;
+		default:
+			break;
+		}
+
+
+		//if ((1 << 30) & lParam) {
+		//	switch (wParam)
+		//	{
+		//	case VK_LEFT:
+		//		oxyde::GL::renderer::camera::keyDown(-1);
+		//		break;
+		//	case VK_RIGHT:
+		//		oxyde::GL::renderer::camera::keyDown(1);
+		//		break;
+		//	default:
+		//		break;
+		//	}
+
+		//}
 		break;
 
 	case WM_COMMAND:
@@ -258,6 +297,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										//oxyde::geometry::skindataPtr theSkin = std::make_shared<oxyde::geometry::skindata>(documentElement);
 										oxyde::GL::renderer::skinRenderer::reset();
 										oxyde::geometry::skindata::buildSkindata(documentElement, oxyde::scene::bone::addModifier);
+
+										//camera::createCamera();
+										
+										GetClientRect(hWnd, &theWindowRect);
+										
+										LONG width = theWindowRect.right - theWindowRect.left;
+										LONG height = theWindowRect.bottom - theWindowRect.top;
+										
+										oxyde::GL::renderer::camera::createCamera(1200., 4., -1., 1., 1., -1., float(width), float(height));
+
 										//oxyde::scene::bone::addModifier(theSkin);
 
 										//oxyde::GL::renderer::setSkinAndMeshBuffers();

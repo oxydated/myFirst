@@ -11,6 +11,8 @@
 
 #include "linAlg.h"
 
+void getPerspectiveParameters(float &out_l, float &out_r, float &out_n, float &out_f, float &out_b, float &out_t);
+
 void perspectiveMatrix(float in_l, float in_r, float in_n, float in_f, float in_b, float in_t, float *m, float *res );
 
 void windowCoordToCameraSpace(float xw, float yw, float z, float *pointInCamSpace);

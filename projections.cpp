@@ -25,6 +25,15 @@ static float t = 0.0;
 static float tx = 0.0;
 static float ty = 0.0;
 
+void getPerspectiveParameters(float &out_l, float &out_r, float &out_n, float &out_f, float &out_b, float &out_t) {
+	out_l = le;
+	out_r = ri;
+	out_n = n;
+	out_f = f;
+	out_b = b;
+	out_t = t;
+}
+
 void perspectiveMatrix( float in_l, float in_r, float in_n, float in_f, float in_b, float in_t, float *m, float *res ){
 	le = in_l;
 	ri = in_r;

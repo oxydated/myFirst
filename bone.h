@@ -48,7 +48,12 @@ namespace oxyde {
 			static void reset();
 
 			static void transformPointByBoneID(int nodeObject, const std::array<float, 3>& pointToTransform, std::array<float, 3>& pointTransformed);
-			static void getSkeletonCenter(std::array<float, 3>& pointTransformed);
+			static void setSkeletonJointsPosition();
+			static float getSkeletonCenterAndSize(std::array<float, 3>& pointTransformed);
+
+			static int getNumJoints();
+
+			static std::array<float, 3>  getJointPositionAtIndex(int i);
 
 			//test
 			static oxyde::geometry::skeletalModifierPtr getModifierAtIndex(int index);
@@ -59,6 +64,7 @@ namespace oxyde {
 
 			static int rootNodeObject;
 			static std::vector<dualQuat> boneTransformation;
+			static std::vector<std::array<float, 3>> boneJoints;
 			static std::vector<oxyde::geometry::skeletalModifierPtr> modifiers;
 		};
 

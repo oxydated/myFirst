@@ -34,6 +34,7 @@
 #include "bone.h"
 #include "scene.h"
 #include "ticker.h"
+#include "camera.h"
 
 static GLuint vao = 1;
 static GLuint element_index_buffer = 1;
@@ -173,10 +174,10 @@ void createVertexBuffer() {
 
 	//////////////////////////////////////////// test tracks loading
 
-	xmlLoadTracks(theSceneTracks);
+	//xmlLoadTracks(theSceneTracks);
 
-	alocateGlobalArraysForTracks(theSceneTracks);
-	alocateSkinArraysForTracks(theSceneTracks, theSkin);
+	//alocateGlobalArraysForTracks(theSceneTracks);
+	//alocateSkinArraysForTracks(theSceneTracks, theSkin);
 
 	/*endTimeForScene = getEndTimeForTracks(theSceneTracks);*/
 
@@ -360,16 +361,16 @@ void createVertexBuffer() {
 	//}
 
 
-	std::vector<std::array<float, 3>> testArray(4);
-	for (auto &&i : testArray) {
-		float counter = 0.0;
-		for (auto &&j : i) {
-			j = counter;
-			counter += 1.0;
-		}
-	}
+	//std::vector<std::array<float, 3>> testArray(4);
+	//for (auto &&i : testArray) {
+	//	float counter = 0.0;
+	//	for (auto &&j : i) {
+	//		j = counter;
+	//		counter += 1.0;
+	//	}
+	//}
 
-	float* somePointer = (float*)testArray.data();
+	//float* somePointer = (float*)testArray.data();
 
 	setUpVector(Up[0], Up[1], Up[2]);
 }
@@ -521,14 +522,39 @@ void drawVertexArray() {
 	//float centerY = sumVY / numVerts;
 	//float centerZ = sumVZ / numVerts;
 
+	std::array<float, 3> center = { 0.,0.,0. };
+	//float modelRadius = oxyde::scene::bone::getSkeletonCenterAndSize(center);
+	float modelRadius = 0.0;
+
 	if (oxyde::scene::scene::getScene()) {
+
+		//camera::updateTargetPos();
 
 		oxyde::scene::ticker::update();
 		oxyde::scene::scene::getScene()->updateFrame();
-	}
 
-	std::array<float, 3> center = { 0.,0.,0. };
-	oxyde::scene::bone::getSkeletonCenter(center);
+		modelRadius = oxyde::scene::bone::getSkeletonCenterAndSize(center);
+
+		if (executeOnce) {
+			executeOnce = false;
+			float dist = std::sqrt(
+				std::pow(Camera[0] - center[0], 2) +
+				std::pow(Camera[1] - center[1], 2) +
+				std::pow(Camera[2] - center[2], 2)
+			);
+
+			float l, r, n, f, b, t;
+			getPerspectiveParameters(l, r, n, f, b, t);
+
+			float newSize = 2 * modelRadius * (-n / t) / dist;
+			Camera[0] = newSize*(Camera[0] - center[0]) + center[0];
+			Camera[1] = newSize*(Camera[1] - center[1]) + center[1];
+			Camera[2] = newSize*(Camera[2] - center[2]) + center[2];
+		}
+
+
+		oxyde::GL::renderer::camera::updateTargetPos();
+	}
 
 	//float ROp[] = { centerX, centerY, centerZ, 1.0 };
 	float ROp[] = { center[0], center[1], center[2], 1.0 };
@@ -723,11 +749,11 @@ void drawVertexArray() {
 
 	GLint location = glGetUniformLocation(theProgram, "World");
 	printf("location of World: %i\n", location);
-	glUniformMatrix4fv(location, 1, GL_FALSE, r);
+	//glUniformMatrix4fv(location, 1, GL_FALSE, r);
 
 	GLint invlocation = glGetUniformLocation(theProgram, "invWorld");
 	printf("location of invWorld: %i\n", invlocation);
-	glUniformMatrix4fv(invlocation, 1, GL_FALSE, normalM);
+	//glUniformMatrix4fv(invlocation, 1, GL_FALSE, normalM);
 
 	oxyde::GL::renderer::skinRenderer::drawAllSkins();
 	//if (oxyde::GL::renderer::draw(store_fromSkinPose_buffer)) {
