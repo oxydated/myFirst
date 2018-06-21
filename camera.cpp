@@ -2,6 +2,7 @@
 #include "linearAlg.h"
 #include "ticker.h"
 #include "bone.h"
+#include "debugLog.h"
 
 namespace oxyde {
 	namespace GL {
@@ -52,8 +53,8 @@ namespace oxyde {
 				float x, y;
 				fromWindowToCameraSpaceCoord(xw, yw, x, y);
 
-				float radius = std::sqrt((std::pow(n, 2)*std::pow(-1 + targetZ, 2) + (std::pow(l, 2) 
-					+ std::pow(t, 2))*std::pow(targetZ, 2)) / (std::pow(l, 2) + std::pow(n, 2) + std::pow(t, 2)));
+				float radius = (std::sqrt(std::pow(l, 2) + std::pow(t, 2))*targetZ) / std::sqrt(std::pow(l, 2) + std::pow(n, 2) + std::pow(t, 2));
+
 
 				float vectorMultiplier = (n*targetZ - std::sqrt(-(std::pow(targetZ, 2)*(std::pow(x, 2) + std::pow(y, 2))) 
 					+ std::pow(radius, 2)*(std::pow(n, 2) + std::pow(x, 2) + std::pow(y, 2)))) / (std::pow(n, 2) + std::pow(x, 2) + std::pow(y, 2));
@@ -125,7 +126,6 @@ namespace oxyde {
 				beforeTransf[1] = targY;
 				beforeTransf[2] = targZ;
 				beforeTransf[3] = 1.;
-				//oxyde::linAlg::multiplyVectorByMatrix(beforeTransf.data(), camMatrix.data(), afterTransf.data());
 				oxyde::linAlg::multiplyMatrixByVector(camMatrix.data(), beforeTransf.data(), afterTransf.data());
 				float camSpaceTx = afterTransf[0] / afterTransf[3];
 				float camSpaceTy = afterTransf[1] / afterTransf[3];
@@ -176,7 +176,6 @@ namespace oxyde {
 				beforeTransf[1] = camSpaceCurY;
 				beforeTransf[2] = camSpaceCurZ;
 				beforeTransf[3] = 1.;
-				//oxyde::linAlg::multiplyVectorByMatrix(beforeTransf.data(), camMatrixInv.data(), afterTransf.data());
 				oxyde::linAlg::multiplyMatrixByVector(camMatrixInv.data(), beforeTransf.data(), afterTransf.data());
 				dex = afterTransf[0] / afterTransf[3];
 				dey = afterTransf[1] / afterTransf[3];
@@ -186,7 +185,6 @@ namespace oxyde {
 				beforeTransf[1] = camSpaceFormerY;
 				beforeTransf[2] = camSpaceFormerZ;
 				beforeTransf[3] = 1.;
-				//oxyde::linAlg::multiplyVectorByMatrix(beforeTransf.data(), camMatrixInv.data(), afterTransf.data());
 				oxyde::linAlg::multiplyMatrixByVector(camMatrixInv.data(), beforeTransf.data(), afterTransf.data());
 				ox = afterTransf[0] / afterTransf[3];
 				oy = afterTransf[1] / afterTransf[3];
@@ -204,13 +202,21 @@ namespace oxyde {
 
 				//////////////////////
 
-				//std::array<float, 16> ma;
+				oxyde::log::printPointInSpace(L"orig", ox, oy, oz);
+
+				oxyde::log::printPointInSpace(L"dest", dex, dey, dez);
 
 				float lenOriTargetSpace = std::sqrt(std::pow(ox - tx, 2) + std::pow(oy - ty, 2) + std::pow(oz - tz, 2));
 
 				float lenDestTargetSpace = std::sqrt(std::pow(dex - tx, 2) + std::pow(dey - ty, 2) + std::pow(dez - tz, 2));
 
 				float cosTheta = ((dex - tx)*(ox - tx) + (dey - ty)*(oy - ty) + (dez - tz)*(oz - tz)) / (lenDestTargetSpace*lenOriTargetSpace);
+
+				oxyde::log::printNamedParameter(L"cosTheta", cosTheta);
+
+				cosTheta = cosTheta > 1.0 ? 1.0 : cosTheta;
+				cosTheta = cosTheta < -1.0 ? -1.0 : cosTheta;
+
 				float sinTheta = std::sqrt(1 - std::pow(cosTheta, 2));
 
 				float lenCrossOriDest = std::sqrt(std::pow(dey*(ox - tx) + oy*tx - ox*ty + dex*(-oy + ty), 2) + 
@@ -328,7 +334,7 @@ namespace oxyde {
 				case dragState::KEEP_DRAGGING:
 					currentX = winX;
 					currentY = winY;
-					rotateCameraAroundTarget(formerX, formerY, currentX, currentY);
+					rotateCameraAroundTarget(currentX, currentY, formerX, formerY);
 
 					formerX = winX;
 					formerY = winY;
@@ -464,7 +470,7 @@ namespace oxyde {
 
 				camX = 400;
 				camY = 400.0;
-				camZ = 100.0;
+				camZ = -100.0;
 
 				buildPerspectiveMatrix();
 				buildViewportMatrix();
