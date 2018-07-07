@@ -40,6 +40,7 @@ namespace oxyde {
 				void updateCamera();
 				void rotateCameraAroundTarget(float owx, float owy, float dewx, float dewy);
 				void moveCameraToOrFromTheTarget(short);
+				void updateCameraLight();
 				//void updateCamPos();
 
 
@@ -66,9 +67,11 @@ namespace oxyde {
 
 				static void createCamera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h);
 
+				void static updateLight();
+
 			protected:
 				camera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h, 
-					GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation);
+					GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation, GLuint in_lightLocation);
 				camera() = delete;
 				camera(const camera&) = delete;
 
@@ -94,7 +97,11 @@ namespace oxyde {
 				long currentTime;
 				long startTime;
 
-				GLint projLocation; GLint worldLocation; GLint invWorldLocation; GLint viewLocation;
+				GLint projLocation; 
+				GLint worldLocation; 
+				GLint invWorldLocation; 
+				GLint viewLocation; 
+				GLuint lightLocation;
 
 			private:
 				static camera* theInstance;

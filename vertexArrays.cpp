@@ -580,7 +580,7 @@ void drawVertexArray() {
 
 	float lightVectorBeforeTransform[] = { RCp[0], RCp[1], RCp[2], 1.0 };
 
-	setLightPosition(theProgram, lightVectorBeforeTransform[0], lightVectorBeforeTransform[1], lightVectorBeforeTransform[2]);
+	//setLightPosition(theProgram, lightVectorBeforeTransform[0], lightVectorBeforeTransform[1], lightVectorBeforeTransform[2]);
 
 	float transposePerspective[16];
 	oxyde::linAlg::transposeMatrix(getInvertedPersPectiveMatrix(), transposePerspective);

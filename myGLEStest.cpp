@@ -5,8 +5,11 @@
 #include "stdafx.h"
 #include <Windowsx.h>
 #include <Shobjidl.h>
-#include <PathCch.h>
+//#include <PathCch.h>
+#include <shlwapi.h>
 #include <strsafe.h>
+
+//#pragma comment(lib, "pathcch")
 #endif
 #include <string>
 
@@ -281,7 +284,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										
 										std::array<WCHAR, MAX_PATH> dirName;
 										StringCchCopy(dirName.data(), dirName.size(), fileNameW.data());
-										PathCchRemoveFileSpec(dirName.data(), dirName.size());
+										//PathCchRemoveFileSpec(dirName.data(), dirName.size());
+										PathRemoveFileSpecW(dirName.data());
 										SetCurrentDirectoryW(dirName.data());
 										MSXML2::IXMLDOMElementPtr documentElement = theDocument->GetdocumentElement();
 										

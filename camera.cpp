@@ -94,6 +94,9 @@ namespace oxyde {
 				nz = ((-1 + ty)*vx - tx*vy) / den;
 
 				float cosTheta = (-1 + ty - tz*vy + vz + ty*vz) / 2.;
+				cosTheta = cosTheta > 1.0 ? 1.0 : cosTheta;
+				cosTheta = cosTheta < -1.0 ? -1.0 : cosTheta;
+
 				float sinTheta = std::sqrt(-((-3 + ty - tz*vy + vz + ty*vz)*(1 + ty - tz*vy + vz + ty*vz))) / 2.;
 
 				float dx = -cpx;
@@ -151,6 +154,8 @@ namespace oxyde {
 				camMatrixInv[15] = 1;
 
 				glUniformMatrix4fv(invWorldLocation, 1, GL_FALSE, camMatrixInv.data());
+
+				updateCameraLight();
 			}
 
 			void camera::rotateCameraAroundTarget(float owx, float owy, float dewx, float dewy)
@@ -269,6 +274,16 @@ namespace oxyde {
 				camX += (finc*(-camX + targX)) / den;
 				camY += (finc*(-camY + targY)) / den;
 				camZ += (finc*(-camZ + targZ)) / den;
+			}
+
+			void camera::updateCameraLight()
+			{
+				float lighMult = 100.;
+				float lightX = lighMult*(camX - targX) + targX;
+				float lightY = lighMult*(camY - targY) + targY;
+				float lightZ = lighMult*(camZ - targZ) + targZ;
+
+				glUniform3f(lightLocation, lightX, lightY, lightZ);
 			}
 
 			void camera::mouseWheel(short inc)
@@ -441,7 +456,7 @@ namespace oxyde {
 
 			void camera::createCamera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h)
 			{
-				GLint projLocation, worldLocation, invWorldLocation, viewLocation;
+				GLint projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation;
 				GLint program = -1;
 				glGetIntegerv(GL_CURRENT_PROGRAM, &program);
 				if (program) {
@@ -449,19 +464,25 @@ namespace oxyde {
 					worldLocation = glGetUniformLocation(program, "World");
 					invWorldLocation = glGetUniformLocation(program, "invWorld");
 					viewLocation = glGetUniformLocation(program, "View");
+					lightLocation = glGetUniformLocation(program, "vLightPos");
 
 					if (theInstance != nullptr) {
 						delete theInstance;
 					}
 
-					theInstance = new camera(in_f, in_n, in_l, in_r, in_t, in_b, in_w, in_h, projLocation, worldLocation, invWorldLocation, viewLocation);
+					theInstance = new camera(in_f, in_n, in_l, in_r, in_t, in_b, in_w, in_h, projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation);
 				}
 			}
 
+			void camera::updateLight()
+			{
+				theInstance->updateCameraLight();
+			}
+
 			camera::camera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h,
-				GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation) :
+				GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation, GLuint in_lightLocation) :
 				f(in_f), n(in_n), l( in_l), r( in_r), t(in_t), b(in_b), w(in_w), h(in_h),
-				projLocation(in_projLocation), worldLocation(in_worldLocation), invWorldLocation(in_invWorldLocation), viewLocation(in_viewLocation)
+				projLocation(in_projLocation), worldLocation(in_worldLocation), invWorldLocation(in_invWorldLocation), viewLocation(in_viewLocation), lightLocation(in_lightLocation)
 			{
 				currentState = dragState::IDLE;
 				currentTargetState = targetState::ALREADY_ON_TARGET;
