@@ -9,6 +9,7 @@ namespace oxyde {
 		
 		int bone::rootNodeObject = 0;
 		std::vector<dualQuat> bone::boneTransformation(0);
+		std::vector<dualQuat> bone::boneLocalTransformation(0);
 		std::vector<std::array<float, 3>> bone::boneJoints(0);
 		std::vector<oxyde::geometry::skeletalModifierPtr> bone::modifiers;
 
@@ -27,6 +28,9 @@ namespace oxyde {
 			boneTransformation.resize(sizeOfVector);
 			dualQuat unit = { 1.,0.,0.,0.,0.,0.,0.,0. };
 			std::fill(boneTransformation.begin(), boneTransformation.end(), unit);
+
+			boneLocalTransformation.resize(sizeOfVector);
+			std::fill(boneLocalTransformation.begin(), boneLocalTransformation.end(), unit);
 
 			boneJoints.resize(sizeOfVector + 1);
 		}

@@ -64,6 +64,7 @@ namespace oxyde {
 
 			static int rootNodeObject;
 			static std::vector<dualQuat> boneTransformation;
+			static std::vector<dualQuat> boneLocalTransformation;
 			static std::vector<std::array<float, 3>> boneJoints;
 			static std::vector<oxyde::geometry::skeletalModifierPtr> modifiers;
 		};

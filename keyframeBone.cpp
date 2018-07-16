@@ -55,6 +55,8 @@ namespace oxyde {
 				track[trackSize - 1].getEndTransformation(localTransform);
 			}
 
+			boneLocalTransformation[nodeObject] = localTransform;
+
 			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(parentGlobalTransform),
 				DUALQUAARRAY(localTransform),
 				DUALQUAARRAY(boneGlobalTransform));
