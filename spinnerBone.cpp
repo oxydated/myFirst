@@ -209,7 +209,7 @@ namespace oxyde {
 			dualQuat localTransform;
 
 			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(localTransformForNewBoneOnCreation),
-				DUALQUACOMP(s),
+				DUALQUACOMP(r),
 				DUALQUAARRAY(localTransform));
 
 			//oxyde::DQ::dual_quaternion_product(DUALQUACOMP(o), 
