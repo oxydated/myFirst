@@ -554,6 +554,7 @@ void drawVertexArray() {
 
 
 		oxyde::GL::renderer::camera::updateTargetPos();
+		oxyde::GL::renderer::camera::updateLight();
 	}
 
 	//float ROp[] = { centerX, centerY, centerZ, 1.0 };

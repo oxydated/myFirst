@@ -278,10 +278,14 @@ namespace oxyde {
 
 			void camera::updateCameraLight()
 			{
-				float lighMult = 100.;
+				float lighMult = 1000.;
 				float lightX = lighMult*(camX - targX) + targX;
 				float lightY = lighMult*(camY - targY) + targY;
 				float lightZ = lighMult*(camZ - targZ) + targZ;
+
+				//float lightX = camX;
+				//float lightY = camY;
+				//float lightZ = camZ;
 
 				glUniform3f(lightLocation, lightX, lightY, lightZ);
 			}
