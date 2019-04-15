@@ -104,7 +104,7 @@ namespace oxyde {
 
 			// Set the animation length
 			int animationLength = 0;
-			MSXML2::IXMLDOMNodeListPtr endTimeNodes = sceneNode->selectNodes(L".//node//keyFrames//@endTime");
+			MSXML2::IXMLDOMNodeListPtr endTimeNodes = sceneNode->selectNodes(L".//node//animaton//@endTime");
 			for (int i = 0; i < endTimeNodes->length; i++) {
 				MSXML2::IXMLDOMAttributePtr endTimeAtt = MSXML2::IXMLDOMAttributePtr(endTimeNodes->item[i]);
 				if (endTimeAtt) {

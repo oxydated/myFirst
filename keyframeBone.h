@@ -32,12 +32,16 @@ namespace oxyde {
 
 		class keyframeBone : public bone {
 		protected:
+
+			// Must be kept for global transformation of bones articulated in a hierarchy (skeletons)
 			int parentBoneID;
+
 			std::vector<dualQuatKeyframe> track;
 			int trackSize;
 
 			int currentKeyframe;
 
+			// Visible only inside class definition. Will keep construction restricted to the factory
 			class notAccessible {
 			public:
 				explicit notAccessible() = default;
@@ -46,8 +50,13 @@ namespace oxyde {
 		public:
 			keyframeBone(const MSXML2::IXMLDOMNodePtr&, const notAccessible&);
 
-			virtual void updateTransform();
+			// transformation virtual method
+			virtual void updateTransform() override;
+
+			// Bone class factory
 			static bonePtr createKeyframeBone(const MSXML2::IXMLDOMNodePtr&);
+
+			// Register the factory at initialization time
 			static void registerKeyframeBoneFactory();
 		};
 	}

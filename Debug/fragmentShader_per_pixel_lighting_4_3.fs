@@ -38,8 +38,8 @@ void main(){
 	vec4 finalColor = vec4( clamp(theTexColor[0]*lightColor[0], 0.0, 1.0), clamp(theTexColor[1]*lightColor[1], 0.0, 1.0), clamp(theTexColor[2]*lightColor[2], 0.0, 1.0), 1.0);
 	//color = 0.90*finalColor+0.1*backgroundLight;
 	//color = vec4( lightPower, lightPower, lightPower, 1.0);
-	//color = vec4( varyNormal.xyz, 1.0);
 	//color = vec4( lightNorm, 1.0 );	
 	//color = -varyNormal;	
+	//color = vec4( varyNormal.xyz, 1.0);
 	color = theTexColor;
 }

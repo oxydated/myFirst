@@ -51,7 +51,7 @@ namespace oxyde {
 				oxyde::log::printText(L"New code");
 
 				size_t sizeFaces;
-				const unsigned short* faces = theMesh->getFacesData(sizeFaces);
+				const unsigned int* faces = theMesh->getFacesData(sizeFaces);
 
 				oxyde::log::printText(L"New faces");
 				for (int i = 0; i < sizeFaces; i++) {
@@ -453,10 +453,10 @@ namespace oxyde {
 				GLenum myMistake = glGetError();
 
 				size_t sizeFaces;
-				const unsigned short* faces = theMeshToRender->getFacesData(sizeFaces);
+				const unsigned int* faces = theMeshToRender->getFacesData(sizeFaces);
 				glGenBuffers(1, &elementIndexBuffer);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementIndexBuffer);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort)*sizeFaces, faces, GL_STATIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*sizeFaces, faces, GL_STATIC_DRAW);
 
 				myMistake = glGetError();
 
@@ -493,7 +493,7 @@ namespace oxyde {
 			void meshRenderer::drawMesh()
 			{
 				theTextureMap->makeTextureActive();
-				glDrawElements(GL_TRIANGLES, theMeshToRender->getNumFaces(), GL_UNSIGNED_SHORT, 0);
+				glDrawElements(GL_TRIANGLES, theMeshToRender->getNumFaces(), GL_UNSIGNED_INT, 0);
 			}
 
 			meshRenderer::~meshRenderer()

@@ -20,6 +20,8 @@ namespace oxyde {
 
 		unsigned short getUShortAttributeFromElement(const MSXML2::IXMLDOMElementPtr&, _bstr_t attribName);
 
+		unsigned int getUInttAttributeFromElement(const MSXML2::IXMLDOMElementPtr &theElement, _bstr_t attribName);
+
 		float getFloatAttributeFromElement(const MSXML2::IXMLDOMElementPtr&, _bstr_t attribName);
 
 		std::wstring getWStringAttributeFromElement(const MSXML2::IXMLDOMElementPtr&, _bstr_t attribName);

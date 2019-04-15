@@ -22,9 +22,16 @@ namespace oxyde{
 
 		public:
 
+			const int getStartTime() { return startTime; };			
+			const int getEndTime() { return endTime; };
+
 			keyframe(const MSXML2::IXMLDOMElementPtr&);
 
 			float getNormalizedTime();
+			
+			float getNormalizedTimeForTime(long time);
 		};
+
+		using keyframePtr = std::shared_ptr<keyframe>;
 	}
 }

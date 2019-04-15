@@ -14,11 +14,11 @@ namespace oxyde {
 			for (int i = 0; i < allFaces->length; i++) {
 				MSXML2::IXMLDOMElementPtr faceElement = MSXML2::IXMLDOMElementPtr(allFaces->item[i]);
 				if (faceElement) {
-					faces[oxyde::XML::getUShortAttributeFromElement(faceElement, L"faceID")] =
+					faces[oxyde::XML::getUInttAttributeFromElement(faceElement, L"faceID")] =
 					{
-						oxyde::XML::getUShortAttributeFromElement(faceElement, L"v0"),
-						oxyde::XML::getUShortAttributeFromElement(faceElement, L"v1"),
-						oxyde::XML::getUShortAttributeFromElement(faceElement, L"v2")
+						oxyde::XML::getUInttAttributeFromElement(faceElement, L"v0"),
+						oxyde::XML::getUInttAttributeFromElement(faceElement, L"v1"),
+						oxyde::XML::getUInttAttributeFromElement(faceElement, L"v2")
 					};
 				}
 			}
@@ -33,7 +33,7 @@ namespace oxyde {
 			for (int i = 0; i < allVertices->length; i++) {
 				MSXML2::IXMLDOMElementPtr vertexElement = MSXML2::IXMLDOMElementPtr(allVertices->item[i]);
 				if (vertexElement) {
-					unsigned short vertexID = oxyde::XML::getUShortAttributeFromElement(vertexElement, L"vertexID");
+					unsigned int vertexID = oxyde::XML::getUInttAttributeFromElement(vertexElement, L"vertexID");
 					vertices[vertexID] =
 					{
 						oxyde::XML::getFloatAttributeFromElement(vertexElement, L"x"),
@@ -66,10 +66,10 @@ namespace oxyde {
 
 		}
 
-		const unsigned short * mesh::getFacesData(size_t &size)
+		const unsigned int * mesh::getFacesData(size_t &size)
 		{
 			size = faces.size() * 3;
-			return (unsigned short*)faces.data();
+			return (unsigned int*)faces.data();
 		}
 
 		const float * mesh::getVerticesData(size_t &size)

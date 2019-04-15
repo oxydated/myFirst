@@ -14,7 +14,14 @@ namespace oxyde {
 			long currentTime = ticker::getCurrentTime();
 			if (endTime == startTime)
 				return 1.0;
-			return float(currentTime - long(startTime)) / float(endTime - startTime);;
+			return float(currentTime - long(startTime)) / float(endTime - startTime);
+		}
+
+		float keyframe::getNormalizedTimeForTime(long time)
+		{
+			if (endTime == startTime)
+				return 1.0;
+			return float(time - long(startTime)) / float(endTime - startTime);
 		}
 	}
 }

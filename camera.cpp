@@ -278,7 +278,7 @@ namespace oxyde {
 
 			void camera::updateCameraLight()
 			{
-				float lighMult = 1000.;
+				float lighMult = 10.;
 				float lightX = lighMult*(camX - targX) + targX;
 				float lightY = lighMult*(camY - targY) + targY;
 				float lightZ = lighMult*(camZ - targZ) + targZ;
@@ -495,7 +495,7 @@ namespace oxyde {
 
 				camX = 400;
 				camY = 400.0;
-				camZ = -100.0;
+				camZ = -2000.0;
 
 				buildPerspectiveMatrix();
 				buildViewportMatrix();

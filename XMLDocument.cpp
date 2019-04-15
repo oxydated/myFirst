@@ -48,6 +48,13 @@ namespace oxyde {
 			return ushortVariant.intVal;
 		}
 
+		unsigned int getUInttAttributeFromElement(const MSXML2::IXMLDOMElementPtr &theElement, _bstr_t attribName)
+		{
+			_variant_t&& uintVariant = theElement->getAttribute(attribName);
+			uintVariant.ChangeType(VT_UI4);
+			return uintVariant.uintVal;
+		}
+
 		float getFloatAttributeFromElement(const MSXML2::IXMLDOMElementPtr &theElement, _bstr_t attribName)
 		{
 			_variant_t&& intVariant = theElement->getAttribute(attribName);

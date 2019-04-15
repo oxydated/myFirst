@@ -26,7 +26,7 @@ namespace oxyde {
 		public:
 			mesh(const MSXML2::IXMLDOMElementPtr&);
 
-			const unsigned short* getFacesData(size_t &size);
+			const unsigned int* getFacesData(size_t &size);
 			const float* getVerticesData(size_t &size);
 			const float* getTexCoordData(size_t &size);
 			const float* getNormalsData(size_t &size);
@@ -41,7 +41,7 @@ namespace oxyde {
 
 			std::wstring textureFileName;
 
-			std::vector<std::array<unsigned short, 3>> faces;
+			std::vector<std::array<unsigned int, 3>> faces;
 
 			std::vector<std::array<float, 3>> vertices;
 			std::vector<std::array<float, 2>> texcoord;

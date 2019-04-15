@@ -2,6 +2,8 @@
 #include "debugLog.h"
 #include <set>
 
+// Will register this bone class's factory
+
 namespace {
 	class executeBeforeMain {
 	public:
@@ -18,10 +20,15 @@ namespace oxyde {
 
 		keyframeBone::keyframeBone(const MSXML2::IXMLDOMNodePtr & theNode, const notAccessible&) :bone(MSXML2::IXMLDOMElementPtr(theNode->selectSingleNode(L"./../.."))), currentKeyframe(0)
 		{
+			// get the parent node element
 			const MSXML2::IXMLDOMElementPtr theParentElement = MSXML2::IXMLDOMElementPtr(theNode->selectSingleNode(L"./../../.."));
 			if (theParentElement) {
 				std::wstring test(MSXML2::IXMLDOMNodePtr(theParentElement)->xml);
+
+				// need to set parentBoneID
 				parentBoneID = oxyde::XML::getIntAttributeFromElement(theParentElement, "nodeObject");
+
+				// get animation data
 				std::wstring queryKeyframes = L"./dualQuatTrack/dualQuatKey";
 				MSXML2::IXMLDOMNodeListPtr dualQuatKeyframes = theNode->selectNodes(queryKeyframes.data());
 				for (int i = 0; i < dualQuatKeyframes->length; i++) {
@@ -31,6 +38,8 @@ namespace oxyde {
 					}
 				}
 				trackSize = track.size();
+
+				//	set observed bones
 				std::set<int> setToKeepObservedIDsUnique({ rootNodeObject, parentBoneID });
 				listOfObservedBones = std::vector<int>(setToKeepObservedIDsUnique.begin(), setToKeepObservedIDsUnique.end());
 				listOfObservedBones.shrink_to_fit();
@@ -39,12 +48,13 @@ namespace oxyde {
 		}
 
 		void keyframeBone::updateTransform()
-		{			
-			// being implemented
+		{
+			// To transform from local to global coordinates
 			dualQuat localTransform;
 			dualQuat &boneGlobalTransform = boneTransformation[nodeObject];
 			dualQuat &parentGlobalTransform = boneTransformation[parentBoneID];
 
+			// Calculate local transformation
 			int inInterval = -1;
 			while ((inInterval != 0) && (currentKeyframe < trackSize)) {
 				inInterval = track[currentKeyframe].getInterpolatedQuaternion(localTransform);
@@ -55,8 +65,10 @@ namespace oxyde {
 				track[trackSize - 1].getEndTransformation(localTransform);
 			}
 
+			// To keep track of local transformation
 			boneLocalTransformation[nodeObject] = localTransform;
 
+			// Transforming from local to global coordinates
 			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(parentGlobalTransform),
 				DUALQUAARRAY(localTransform),
 				DUALQUAARRAY(boneGlobalTransform));
@@ -66,6 +78,7 @@ namespace oxyde {
 
 		bonePtr keyframeBone::createKeyframeBone(const MSXML2::IXMLDOMNodePtr & theNode)
 		{
+			// To make sure there is actual animation data
 			std::wstring queryForAnyChild(L"./*");
 			MSXML2::IXMLDOMNodeListPtr theChildList = theNode->selectNodes(queryForAnyChild.data());
 

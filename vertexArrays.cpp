@@ -54,7 +54,7 @@ static GLuint store_fromSkinPose_buffer = 1;
 
 static float Up[] = { 0.00000000, 0.000000000, 1.000000000 };
 //static float Camera[] = {1200, 1200.0, 1200.0, 1.0 };
-static float Camera[] = { 400, 400.0, 100.0, 1.0 };
+static float Camera[] = { 400, 400.0, 400.0, 1.0 };
 
 static float originalCameraPos[] = { 0.0, 0.0, 0.0, 1.0 };
 static float originalWorldPos[] = { 0.0, 0.0, 0.0, 1.0 };
