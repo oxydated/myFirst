@@ -25,7 +25,7 @@ namespace oxyde {
 		using clock = std::chrono::high_resolution_clock;
 		using timePoint = std::chrono::time_point<clock>;
 		//using duration = std::chrono::microseconds;
-		using duration = std::chrono::duration<int, std::ratio<1, 1200>>;
+		using duration = std::chrono::duration<int, std::ratio<1, 12000>>;
 
 		class ticker {
 		protected:

@@ -52,6 +52,10 @@ namespace oxyde {
 
 		float bezierFloatTrack::getValueForTime(long time)
 		{
+			//long animationTime = time < endTime ? (time >= startTime ? time : startTime) : endTime;
+
+			//return (std::static_pointer_cast<bezierFloatKeyframe>(getKeyFrameForTime(time)))->getInterpolatedValueForTime(animationTime);
+
 			return (std::static_pointer_cast<bezierFloatKeyframe>(getKeyFrameForTime(time)))->getInterpolatedValueForTime(time);
 		}
 

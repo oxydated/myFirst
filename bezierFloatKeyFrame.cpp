@@ -16,13 +16,15 @@ namespace oxyde {
 		float bezierFloatKeyframe::getInterpolatedValueForTime(long time)
 		{
 			float t = getNormalizedTimeForTime(time);
-			return coeff_B0 + coeff_B1*t + coeff_B2*std::pow(t, 2) + coeff_B3*std::pow(t, 3);
+			return coeff_B0 + t*(coeff_B1 + t*(coeff_B2 + coeff_B3*t));
+			//return coeff_B0 + coeff_B1*t + coeff_B2*std::pow(t, 2) + coeff_B3*std::pow(t, 3);
 		}
 
 		float bezierFloatKeyframe::getCurrentInterpolatedValue()
 		{
 			float t = getNormalizedTime();
-			return coeff_B0 + coeff_B1*t + coeff_B2*std::pow(t, 2) + coeff_B3*std::pow(t, 3);
+			return coeff_B0 + t*(coeff_B1 + t*(coeff_B2 + coeff_B3*t));
+			//return coeff_B0 + coeff_B1*t + coeff_B2*std::pow(t, 2) + coeff_B3*std::pow(t, 3);
 		}
 	}
 }

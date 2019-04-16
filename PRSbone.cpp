@@ -87,7 +87,7 @@ namespace oxyde {
 
 			// Calculate Position
 			dualQuat translationQuat;
-			oxyde::DQ::translation_quaternion(XPos, YPos, ZPos, DUALQUAARRAY(rotationQuat));
+			oxyde::DQ::translation_quaternion(XPos, YPos, ZPos, DUALQUAARRAY(translationQuat));
 
 			// Multiply Rotation by Position to find local transformation
 			// MultiQuat[oxyTranslationQuat, oxyQuat]
