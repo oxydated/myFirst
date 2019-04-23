@@ -1,4 +1,5 @@
 #include "ticker.h"
+#include "debugLog.h"
 
 namespace oxyde {
 	namespace scene {

@@ -1,23 +1,18 @@
 #include "track.h"
 #include "ticker.h"
+#include "debugLog.h"
 
 namespace oxyde {
 	namespace scene {
 		const keyframePtr track::getKeyFrameForTime(long time)
 		{
-			if (time < startTime) {
+			if (time < (*currentKeyframe)->getStartTime()) {
 				currentKeyframe = keyframes.cbegin();
 			}
 
-			if (time < endTime) {
+			for (; ((currentKeyframe != keyframes.cend()) && time >= (*currentKeyframe)->getEndTime()); currentKeyframe++);
 
-				for (; (time >= (*currentKeyframe)->getEndTime()) && (currentKeyframe != keyframes.cend()); currentKeyframe++);
-
-				if (currentKeyframe == keyframes.cend()) {
-					currentKeyframe = keyframes.cend()-1;
-				}
-			}
-			else {
+			if (currentKeyframe == keyframes.cend()) {
 				currentKeyframe = keyframes.cend() - 1;
 			}
 

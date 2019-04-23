@@ -72,7 +72,7 @@ namespace oxyde {
 			dualQuat &parentGlobalTransform = boneTransformation[parentBoneID];
 
 			// Calculate local transformation
-								
+			
 			float XPos = XPosition.getCurrentValue();
 			float YPos = YPosition.getCurrentValue();
 			float ZPos = ZPosition.getCurrentValue();
@@ -104,7 +104,7 @@ namespace oxyde {
 				DUALQUAARRAY(localTransform),
 				DUALQUAARRAY(boneGlobalTransform));
 
-			oxyde::log::printText(L"update bone: " + std::to_wstring(this->nodeObject));
+			//oxyde::log::printText(L"update bone: " + std::to_wstring(this->nodeObject));
 		}
 
 		bonePtr PRSbone::createPRSbone(const MSXML2::IXMLDOMNodePtr & theNode)

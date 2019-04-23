@@ -141,7 +141,7 @@ namespace oxyde {
 			//ticker::update();
 	//
 
-			oxyde::log::printText(L"entering frame loop");
+			//oxyde::log::printText(L"entering frame loop");
 
 	//		The Ticker's Subject - a member of the Scene Object - Push all it's Observers pointers to the Scene stack
 			theTickerSubject->update();
@@ -160,8 +160,8 @@ namespace oxyde {
 				//							That'll push all of this Subjects's Observer pointers, if any, to the Scene stack.
 			}
 
-			bone::printBones();
-			oxyde::log::printText(L"exiting frame loop");
+			//bone::printBones();
+			//oxyde::log::printText(L"exiting frame loop");
 			bone::updateFrame();
 	//					
 	//		The skin transformation and drawing routine are then executed.

@@ -73,7 +73,7 @@ namespace oxyde {
 				DUALQUAARRAY(localTransform),
 				DUALQUAARRAY(boneGlobalTransform));
 
-			oxyde::log::printText(L"update bone: " + std::to_wstring(this->nodeObject));
+			//oxyde::log::printText(L"update bone: " + std::to_wstring(this->nodeObject));
 		}
 
 		bonePtr keyframeBone::createKeyframeBone(const MSXML2::IXMLDOMNodePtr & theNode)
