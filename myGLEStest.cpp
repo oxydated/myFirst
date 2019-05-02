@@ -309,7 +309,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										LONG width = theWindowRect.right - theWindowRect.left;
 										LONG height = theWindowRect.bottom - theWindowRect.top;
 										
-										oxyde::GL::renderer::camera::createCamera(4800., 4., -1., 1., 1., -1., float(width), float(height));
+										oxyde::GL::renderer::camera::importCameraFromDocument(documentElement, width, height);
+										//oxyde::GL::renderer::camera::createCamera(4800., 4., -1., 1., 1., -1., float(width), float(height));
 
 										//oxyde::scene::bone::addModifier(theSkin);
 

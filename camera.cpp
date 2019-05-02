@@ -88,6 +88,21 @@ namespace oxyde {
 				float ty = (upy - upy*std::pow(vy, 2) - vy*(upx*vx + upz*vz)) / den;
 				float tz = (upz - (upx*vx + upy*vy)*vz - upz*std::pow(vz, 2)) / den;
 
+				////////// roll angle
+				float rol = -3.176499;
+				float cosrol = std::cos(rol / 2.);
+				float sirol = std::sin(rol / 2.);
+
+				//float ntx = ty*(-2 * vz*std::cos(rol / 2.)*std::sin(rol / 2.) + 2 * vx*vy*std::pow(std::sin(rol / 2.), 2)) + tz*(2 * vy*std::cos(rol / 2.)*std::sin(rol / 2.) + 2 * vx*vz*std::pow(std::sin(rol / 2.), 2)) + tx*(std::pow(std::cos(rol / 2.), 2) + std::pow(vx, 2)*std::pow(std::sin(rol / 2.), 2) - std::pow(vy, 2)*std::pow(std::sin(rol / 2.), 2) - std::pow(vz, 2)*std::pow(std::sin(rol / 2.), 2));
+				//float nty = tx*(2 * vz*std::cos(rol / 2.)*std::sin(rol / 2.) + 2 * vx*vy*std::pow(std::sin(rol / 2.), 2)) + tz*(-2 * vx*std::cos(rol / 2.)*std::sin(rol / 2.) + 2 * vy*vz*std::pow(std::sin(rol / 2.), 2)) + ty*(std::pow(std::cos(rol / 2.), 2) - std::pow(vx, 2)*std::pow(std::sin(rol / 2.), 2) + std::pow(vy, 2)*std::pow(std::sin(rol / 2.), 2) - std::pow(vz, 2)*std::pow(std::sin(rol / 2.), 2));
+				//float ntz = tx*(-2 * vy*std::cos(rol / 2.)*std::sin(rol / 2.) + 2 * vx*vz*std::pow(std::sin(rol / 2.), 2)) + ty*(2 * vx*std::cos(rol / 2.)*std::sin(rol / 2.) + 2 * vy*vz*std::pow(std::sin(rol / 2.), 2)) + tz*(std::pow(std::cos(rol / 2.), 2) - std::pow(vx, 2)*std::pow(std::sin(rol / 2.), 2) - std::pow(vy, 2)*std::pow(std::sin(rol / 2.), 2) + std::pow(vz, 2)*std::pow(std::sin(rol / 2.), 2));
+
+				//tx = ntx;
+				//ty = nty;
+				//tz = ntz;
+
+				/////////////////////////////////////////
+
 				den = std::sqrt(std::pow((-1 + ty)*vx - tx*vy, 2) + std::pow(tx + tz*vx - tx*vz, 2) + std::pow(-1 + ty + tz*vy + vz - ty*vz, 2));
 				nx = (-1 + ty + tz*vy + vz - ty*vz) / den;
 				ny = (-(tz*vx) + tx*(-1 + vz)) / den;
@@ -103,18 +118,35 @@ namespace oxyde {
 				float dy = -cpy;
 				float dz = -cpz;
 
-				camMatrix[0] = 1 + (-1 + cosTheta)*std::pow(ny, 2) + (-1 + cosTheta)*std::pow(nz, 2);
-				camMatrix[4] = nx*ny - cosTheta*nx*ny - nz*sinTheta;
-				camMatrix[8] = nx*nz - cosTheta*nx*nz + ny*sinTheta;
-				camMatrix[12] = dx + (dy - cosTheta*dy)*nx*ny + (-1 + cosTheta)*dx*std::pow(ny, 2) + (dz - cosTheta*dz)*nx*nz + (-1 + cosTheta)*dx*std::pow(nz, 2) + dz*ny*sinTheta - dy*nz*sinTheta;
-				camMatrix[1] = nx*ny - cosTheta*nx*ny + nz*sinTheta;
-				camMatrix[5] = cosTheta + (1 - cosTheta)*std::pow(ny, 2);
-				camMatrix[9] = ny*nz - cosTheta*ny*nz - nx*sinTheta;
-				camMatrix[13] = ny*(dx*nx + dy*ny + dz*nz) - cosTheta*(dx*nx*ny + dy*(-1 + std::pow(ny, 2)) + dz*ny*nz) + (-(dz*nx) + dx*nz)*sinTheta;
-				camMatrix[2] = nx*nz - cosTheta*nx*nz - ny*sinTheta;
-				camMatrix[6] = ny*nz - cosTheta*ny*nz + nx*sinTheta;
-				camMatrix[10] = cosTheta + (1 - cosTheta)*std::pow(nz, 2);
-				camMatrix[14] = nz*(dx*nx + dy*ny + dz*nz) - cosTheta*((dx*nx + dy*ny)*nz + dz*(-1 + std::pow(nz, 2))) + (dy*nx - dx*ny)*sinTheta;
+				//camMatrix[0] = 1 + (-1 + cosTheta)*std::pow(ny, 2) + (-1 + cosTheta)*std::pow(nz, 2);
+				//camMatrix[4] = nx*ny - cosTheta*nx*ny - nz*sinTheta;
+				//camMatrix[8] = nx*nz - cosTheta*nx*nz + ny*sinTheta;
+				//camMatrix[12] = dx + (dy - cosTheta*dy)*nx*ny + (-1 + cosTheta)*dx*std::pow(ny, 2) + (dz - cosTheta*dz)*nx*nz + (-1 + cosTheta)*dx*std::pow(nz, 2) + dz*ny*sinTheta - dy*nz*sinTheta;
+				//camMatrix[1] = nx*ny - cosTheta*nx*ny + nz*sinTheta;
+				//camMatrix[5] = cosTheta + (1 - cosTheta)*std::pow(ny, 2);
+				//camMatrix[9] = ny*nz - cosTheta*ny*nz - nx*sinTheta;
+				//camMatrix[13] = ny*(dx*nx + dy*ny + dz*nz) - cosTheta*(dx*nx*ny + dy*(-1 + std::pow(ny, 2)) + dz*ny*nz) + (-(dz*nx) + dx*nz)*sinTheta;
+				//camMatrix[2] = nx*nz - cosTheta*nx*nz - ny*sinTheta;
+				//camMatrix[6] = ny*nz - cosTheta*ny*nz + nx*sinTheta;
+				//camMatrix[10] = cosTheta + (1 - cosTheta)*std::pow(nz, 2);
+				//camMatrix[14] = nz*(dx*nx + dy*ny + dz*nz) - cosTheta*((dx*nx + dy*ny)*nz + dz*(-1 + std::pow(nz, 2))) + (dy*nx - dx*ny)*sinTheta;
+				//camMatrix[3] = 0;
+				//camMatrix[7] = 0;
+				//camMatrix[11] = 0;
+				//camMatrix[15] = 1;
+
+				camMatrix[0] = -2 * cosrol*(nx*ny - cosTheta*nx*ny + nz*sinTheta)*sirol + (1 + (-1 + cosTheta)*std::pow(ny, 2) + (-1 + cosTheta)*std::pow(nz, 2))*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrix[4] = -2 * cosrol*(cosTheta + (1 - cosTheta)*std::pow(ny, 2))*sirol + (nx*ny - cosTheta*nx*ny - nz*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrix[8] = -2 * cosrol*(ny*nz - cosTheta*ny*nz - nx*sinTheta)*sirol + (nx*nz - cosTheta*nx*nz + ny*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrix[12] = -2 * cosrol*(ny*(dx*nx + dy*ny + dz*nz) - cosTheta*(dx*nx*ny + dy*(-1 + std::pow(ny, 2)) + dz*ny*nz) + (-(dz*nx) + dx*nz)*sinTheta)*sirol + (dx + (dy - cosTheta*dy)*nx*ny + (-1 + cosTheta)*dx*std::pow(ny, 2) + (dz - cosTheta*dz)*nx*nz + (-1 + cosTheta)*dx*std::pow(nz, 2) + dz*ny*sinTheta - dy*nz*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrix[1] = 2 * cosrol*(1 + (-1 + cosTheta)*std::pow(ny, 2) + (-1 + cosTheta)*std::pow(nz, 2))*sirol + (nx*ny - cosTheta*nx*ny + nz*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrix[5] = 2 * cosrol*(nx*ny - cosTheta*nx*ny - nz*sinTheta)*sirol + (cosTheta + (1 - cosTheta)*std::pow(ny, 2))*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrix[9] = 2 * cosrol*(nx*nz - cosTheta*nx*nz + ny*sinTheta)*sirol + (ny*nz - cosTheta*ny*nz - nx*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrix[13] = 2 * cosrol*(dx + (dy - cosTheta*dy)*nx*ny + (-1 + cosTheta)*dx*std::pow(ny, 2) + (dz - cosTheta*dz)*nx*nz + (-1 + cosTheta)*dx*std::pow(nz, 2) + dz*ny*sinTheta - dy*nz*sinTheta)*sirol + (ny*(dx*nx + dy*ny + dz*nz) - cosTheta*(dx*nx*ny + dy*(-1 + std::pow(ny, 2)) + dz*ny*nz) + (-(dz*nx) + dx*nz)*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrix[2] = (nx*nz - cosTheta*nx*nz - ny*sinTheta)*(std::pow(cosrol, 2) + std::pow(sirol, 2));
+				camMatrix[6] = (ny*nz - cosTheta*ny*nz + nx*sinTheta)*(std::pow(cosrol, 2) + std::pow(sirol, 2));
+				camMatrix[10] = (cosTheta + (1 - cosTheta)*std::pow(nz, 2))*(std::pow(cosrol, 2) + std::pow(sirol, 2));
+				camMatrix[14] = (nz*(dx*nx + dy*ny + dz*nz) - cosTheta*((dx*nx + dy*ny)*nz + dz*(-1 + std::pow(nz, 2))) + (dy*nx - dx*ny)*sinTheta)*(std::pow(cosrol, 2) + std::pow(sirol, 2));
 				camMatrix[3] = 0;
 				camMatrix[7] = 0;
 				camMatrix[11] = 0;
@@ -418,10 +450,25 @@ namespace oxyde {
 				switch (currentTargetState) {
 				case targetState::ALREADY_ON_TARGET:
 					isTargetAnimationRunning = false;
-					std::array<float, 3> bonePos = oxyde::scene::bone::getJointPositionAtIndex(currentBone);
-					targX = bonePos[0];
-					targY = bonePos[1];
-					targZ = bonePos[2];
+					//std::array<float, 3> bonePos = oxyde::scene::bone::getJointPositionAtIndex(currentBone);
+					if (thereIsCamera) {
+						std::array<float, 3> targetPos = oxyde::scene::bone::getJointPositionAtIndex(targetBone);
+						targX = targetPos[0];
+						targY = targetPos[1];
+						targZ = targetPos[2];
+
+						std::array<float, 3> camPos = oxyde::scene::bone::getJointPositionAtIndex(cameraBone);
+						camX = camPos[0];
+						camY = camPos[1];
+						camZ = camPos[2];
+					}
+					else {
+						std::array<float, 3> bonePos = oxyde::scene::bone::getJointPositionAtIndex(currentBone);
+						targX = bonePos[0];
+						targY = bonePos[1];
+						targZ = bonePos[2];
+					}
+
 					updateCamera();
 					break;
 
@@ -450,6 +497,35 @@ namespace oxyde {
 
 			}
 
+			void camera::importCameraFromDocument(const MSXML2::IXMLDOMNodePtr & documentElement, long width, long height)
+			{
+				bool theIsCamera = false;
+				int cameraNode = -1;
+				int targetNode = -1;
+				float f = 4800., n = 4., l = -1., r = 1., t = 1., b = -1.;
+
+				const MSXML2::IXMLDOMElementPtr theCameraElement = MSXML2::IXMLDOMElementPtr(documentElement->selectSingleNode(L"./camerasInScene/Camera[1]"));
+				if (nullptr != theCameraElement) {
+					std::wstring cameraName = oxyde::XML::getWStringAttributeFromElement(theCameraElement, "nodeName");
+					std::wstring targetName = oxyde::XML::getWStringAttributeFromElement(theCameraElement, "target");
+					float fov = oxyde::XML::getFloatAttributeFromElement(theCameraElement, "fov");
+
+					cameraNode = oxyde::XML::getIntAttributeFromElement(
+						MSXML2::IXMLDOMElementPtr(documentElement->selectSingleNode((L"./scene//node[@nodeName=\"" + cameraName + L"\"]").c_str())), L"nodeObject");
+
+					targetNode = oxyde::XML::getIntAttributeFromElement(
+						MSXML2::IXMLDOMElementPtr(documentElement->selectSingleNode((L"./scene//node[@nodeName=\"" + targetName + L"\"]").c_str())), L"nodeObject");
+
+					theIsCamera = true;
+					l = -((std::sqrt(2)*n*std::sin(fov / 2.)) / std::sqrt(1 + std::cos(fov)));
+					r = -l;
+					t = r;
+					b = l;
+				}
+
+				createCamera(f, n, l, r, t, b, float(width), float(height), cameraNode, targetNode, theIsCamera);
+			}
+
 			void camera::keyDown(short increment)
 			{
 				if (theInstance) {
@@ -458,7 +534,8 @@ namespace oxyde {
 				}
 			}
 
-			void camera::createCamera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h)
+			void camera::createCamera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h,
+				int in_cameraNode, int in_targetNode, bool in_thereIsCamera)
 			{
 				GLint projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation;
 				GLint program = -1;
@@ -474,7 +551,7 @@ namespace oxyde {
 						delete theInstance;
 					}
 
-					theInstance = new camera(in_f, in_n, in_l, in_r, in_t, in_b, in_w, in_h, projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation);
+					theInstance = new camera(in_f, in_n, in_l, in_r, in_t, in_b, in_w, in_h, projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation, in_cameraNode, in_targetNode, in_thereIsCamera);
 				}
 			}
 
@@ -484,9 +561,11 @@ namespace oxyde {
 			}
 
 			camera::camera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h,
-				GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation, GLuint in_lightLocation) :
+				GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation, GLuint in_lightLocation,
+				int in_cameraNode, int in_targetNode, bool in_thereIsCamera) :
 				f(in_f), n(in_n), l( in_l), r( in_r), t(in_t), b(in_b), w(in_w), h(in_h),
-				projLocation(in_projLocation), worldLocation(in_worldLocation), invWorldLocation(in_invWorldLocation), viewLocation(in_viewLocation), lightLocation(in_lightLocation)
+				projLocation(in_projLocation), worldLocation(in_worldLocation), invWorldLocation(in_invWorldLocation), viewLocation(in_viewLocation), lightLocation(in_lightLocation),
+				cameraBone(in_cameraNode), targetBone(in_targetNode), thereIsCamera(in_thereIsCamera)
 			{
 				currentState = dragState::IDLE;
 				currentTargetState = targetState::ALREADY_ON_TARGET;
