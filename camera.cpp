@@ -12,7 +12,7 @@ namespace oxyde {
 
 			void camera::buildPerspectiveMatrix()
 			{
-				perpectiveMatrix[0] = (-2 * n) / (l - r);
+				perpectiveMatrix[0] = (2 * n) / (l - r);
 				perpectiveMatrix[4] = 0;
 				perpectiveMatrix[8] = (l + r) / (l - r);
 				perpectiveMatrix[12] = 0;
@@ -28,6 +28,23 @@ namespace oxyde {
 				perpectiveMatrix[7] = 0;
 				perpectiveMatrix[11] = 1;
 				perpectiveMatrix[15] = 0;
+
+				//perpectiveMatrix[0] = (-2 * n) / (l - r);
+				//perpectiveMatrix[4] = 0;
+				//perpectiveMatrix[8] = (l + r) / (l - r);
+				//perpectiveMatrix[12] = 0;
+				//perpectiveMatrix[1] = 0;
+				//perpectiveMatrix[5] = (2 * n) / (-b + t);
+				//perpectiveMatrix[9] = (b + t) / (-b + t);
+				//perpectiveMatrix[13] = 0;
+				//perpectiveMatrix[2] = 0;
+				//perpectiveMatrix[6] = 0;
+				//perpectiveMatrix[10] = (-f - n) / (f - n);
+				//perpectiveMatrix[14] = (-2 * f*n) / (f - n);
+				//perpectiveMatrix[3] = 0;
+				//perpectiveMatrix[7] = 0;
+				//perpectiveMatrix[11] = -1;
+				//perpectiveMatrix[15] = 0;
 
 				glUniformMatrix4fv(projLocation, 1, GL_FALSE, perpectiveMatrix.data());
 			}
@@ -168,17 +185,34 @@ namespace oxyde {
 
 				targetZ = camSpaceTz;
 
-				camMatrixInv[0] = 1 + (-1 + cosTheta)*std::pow(ny, 2) + (-1 + cosTheta)*std::pow(nz, 2);
-				camMatrixInv[4] = nx*ny - cosTheta*nx*ny + nz*sinTheta;
-				camMatrixInv[8] = nx*nz - cosTheta*nx*nz - ny*sinTheta;
+				//camMatrixInv[0] = 1 + (-1 + cosTheta)*std::pow(ny, 2) + (-1 + cosTheta)*std::pow(nz, 2);
+				//camMatrixInv[4] = nx*ny - cosTheta*nx*ny + nz*sinTheta;
+				//camMatrixInv[8] = nx*nz - cosTheta*nx*nz - ny*sinTheta;
+				//camMatrixInv[12] = -dx;
+				//camMatrixInv[1] = nx*ny - cosTheta*nx*ny - nz*sinTheta;
+				//camMatrixInv[5] = cosTheta + (1 - cosTheta)*std::pow(ny, 2);
+				//camMatrixInv[9] = ny*nz - cosTheta*ny*nz + nx*sinTheta;
+				//camMatrixInv[13] = -dy;
+				//camMatrixInv[2] = nx*nz - cosTheta*nx*nz + ny*sinTheta;
+				//camMatrixInv[6] = ny*nz - cosTheta*ny*nz - nx*sinTheta;
+				//camMatrixInv[10] = cosTheta + (1 - cosTheta)*std::pow(nz, 2);
+				//camMatrixInv[14] = -dz;
+				//camMatrixInv[3] = 0;
+				//camMatrixInv[7] = 0;
+				//camMatrixInv[11] = 0;
+				//camMatrixInv[15] = 1;
+
+				camMatrixInv[0] = -2 * cosrol*(nx*ny - cosTheta*nx*ny + nz*sinTheta)*sirol + (1 + (-1 + cosTheta)*std::pow(ny, 2) + (-1 + cosTheta)*std::pow(nz, 2))*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrixInv[4] = 2 * cosrol*(1 + (-1 + cosTheta)*std::pow(ny, 2) + (-1 + cosTheta)*std::pow(nz, 2))*sirol + (nx*ny - cosTheta*nx*ny + nz*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrixInv[8] = -((-(nx*nz) + cosTheta*nx*nz + ny*sinTheta)*(std::pow(cosrol, 2) + std::pow(sirol, 2)));
 				camMatrixInv[12] = -dx;
-				camMatrixInv[1] = nx*ny - cosTheta*nx*ny - nz*sinTheta;
-				camMatrixInv[5] = cosTheta + (1 - cosTheta)*std::pow(ny, 2);
-				camMatrixInv[9] = ny*nz - cosTheta*ny*nz + nx*sinTheta;
+				camMatrixInv[1] = -2 * cosrol*(cosTheta + std::pow(ny, 2) - cosTheta*std::pow(ny, 2))*sirol - (-(nx*ny) + cosTheta*nx*ny + nz*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrixInv[5] = -2 * cosrol*(-(nx*ny) + cosTheta*nx*ny + nz*sinTheta)*sirol + (cosTheta + std::pow(ny, 2) - cosTheta*std::pow(ny, 2))*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrixInv[9] = (ny*nz - cosTheta*ny*nz + nx*sinTheta)*(std::pow(cosrol, 2) + std::pow(sirol, 2));
 				camMatrixInv[13] = -dy;
-				camMatrixInv[2] = nx*nz - cosTheta*nx*nz + ny*sinTheta;
-				camMatrixInv[6] = ny*nz - cosTheta*ny*nz - nx*sinTheta;
-				camMatrixInv[10] = cosTheta + (1 - cosTheta)*std::pow(nz, 2);
+				camMatrixInv[2] = 2 * cosrol*(-(ny*nz) + cosTheta*ny*nz + nx*sinTheta)*sirol + (nx*nz - cosTheta*nx*nz + ny*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrixInv[6] = 2 * cosrol*(nx*nz - cosTheta*nx*nz + ny*sinTheta)*sirol - (-(ny*nz) + cosTheta*ny*nz + nx*sinTheta)*(std::pow(cosrol, 2) - std::pow(sirol, 2));
+				camMatrixInv[10] = (cosTheta + std::pow(nz, 2) - cosTheta*std::pow(nz, 2))*(std::pow(cosrol, 2) + std::pow(sirol, 2));
 				camMatrixInv[14] = -dz;
 				camMatrixInv[3] = 0;
 				camMatrixInv[7] = 0;
