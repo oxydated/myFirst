@@ -29,7 +29,7 @@ namespace oxyde {
 				//perpectiveMatrix[11] = 1;
 				//perpectiveMatrix[15] = 0;
 
-				perpectiveMatrix[0] = (2 * n) / (l - r);
+				perpectiveMatrix[0] = (-2 * n) / (l - r);
 				perpectiveMatrix[4] = 0;
 				perpectiveMatrix[8] = (l + r) / (l - r);
 				perpectiveMatrix[12] = 0;
@@ -51,13 +51,8 @@ namespace oxyde {
 
 			void camera::buildViewportMatrix() {
 
-				//viewPortMatrix[0] = 1.0;			viewPortMatrix[4] = 0.0;            viewPortMatrix[8] = 0.0;        viewPortMatrix[12] = 0;
-				//viewPortMatrix[1] = 0.0;            viewPortMatrix[5] = w / h;			viewPortMatrix[9] = 0.0;        viewPortMatrix[13] = 0;
-				//viewPortMatrix[2] = 0.0;            viewPortMatrix[6] = 0.0;            viewPortMatrix[10] = 1.0;		viewPortMatrix[14] = 0.0;
-				//viewPortMatrix[3] = 0.0;            viewPortMatrix[7] = 0.0;            viewPortMatrix[11] = 0.0;		viewPortMatrix[15] = 1.0;
-
-				viewPortMatrix[0] = h / w;			viewPortMatrix[4] = 0.0;            viewPortMatrix[8] = 0.0;        viewPortMatrix[12] = 0;
-				viewPortMatrix[1] = 0.0;            viewPortMatrix[5] = 1.0;			viewPortMatrix[9] = 0.0;        viewPortMatrix[13] = 0;
+				viewPortMatrix[0] = 1.0;			viewPortMatrix[4] = 0.0;            viewPortMatrix[8] = 0.0;        viewPortMatrix[12] = 0;
+				viewPortMatrix[1] = 0.0;            viewPortMatrix[5] = w / h;			viewPortMatrix[9] = 0.0;        viewPortMatrix[13] = 0;
 				viewPortMatrix[2] = 0.0;            viewPortMatrix[6] = 0.0;            viewPortMatrix[10] = 1.0;		viewPortMatrix[14] = 0.0;
 				viewPortMatrix[3] = 0.0;            viewPortMatrix[7] = 0.0;            viewPortMatrix[11] = 0.0;		viewPortMatrix[15] = 1.0;
 
@@ -83,11 +78,8 @@ namespace oxyde {
 
 			void camera::fromWindowToCameraSpaceCoord( float xw, float yw, float &x, float &y )
 			{
-				//x = l + ((-l + r)*xw) / w;
-				//y = t + ((b - t)*yw) / h;
-
 				x = l + ((-l + r)*xw) / w;
-				y = b + ((-b + t)*yw) / h;
+				y = t + ((b - t)*yw) / h;
 			}
 
 			void camera::fromWindowToTrackBall(float xw, float yw, float &trackX, float &trackY, float &trackZ)
@@ -108,11 +100,8 @@ namespace oxyde {
 
 			void camera::fromCameraSpaceToWindowCoord(float x, float y, float z, float & xw, float & yw)
 			{
-				//xw = (w*(-(n*x) + l*z)) / ((l - r)*z);
-				//yw = (h*n*y - h*t*z) / (b*z - t*z);
-
 				xw = (w*(-(n*x) + l*z)) / ((l - r)*z);
-				yw = (h*(-(n*y) + b*z)) / ((b - t)*z);
+				yw = (h*n*y - h*t*z) / (b*z - t*z);
 			}
 
 			void camera::updateCamera()

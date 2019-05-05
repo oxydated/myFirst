@@ -99,10 +99,10 @@ void main(){
 	tempPos.w = 1.0;
 
 	mat4 tempView = View;
-	tempView[2].z = gl_DepthRange.diff/2.0;
-	tempView[3].z = ( gl_DepthRange.near +gl_DepthRange.far) /2.0;
-	vec4 worldPos = World * tempPos;
-	worldPos = worldPos / worldPos.w;
+	//tempView[2].z = gl_DepthRange.diff/2.0;
+	//tempView[3].z = ( gl_DepthRange.near +gl_DepthRange.far) /2.0;
+	// vec4 worldPos = World * tempPos;
+	// worldPos = worldPos / worldPos.w;
 	mat4 transformPosition = tempView * Proj * World;
 
 	// mat3 forNormalsMat = mat3( transformPosition[0].xyz, transformPosition[1].xyz, transformPosition[2].xyz );
