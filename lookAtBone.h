@@ -47,6 +47,8 @@ namespace oxyde {
 			// Register the factory at initialization time
 			static void registerlookAtboneFactory();
 		};
+		
+		using lookAtbonePtr = std::shared_ptr<lookAtbone>;
 
 	}
 }

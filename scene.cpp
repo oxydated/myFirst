@@ -168,6 +168,11 @@ namespace oxyde {
 	//		SkinData::UpdateSkinPose() is called
 		}
 
+		const bonePtr scene::getBoneForNode(int nodeObject)
+		{
+			return bonesPernodeObject[nodeObject]->getBone();
+		}
+
 		std::shared_ptr<scene> scene::createScene(const MSXML2::IXMLDOMNodePtr & sceneNode)
 		{
 			instance = std::make_shared<scene>(sceneNode, notAccessible());

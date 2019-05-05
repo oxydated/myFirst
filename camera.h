@@ -5,6 +5,7 @@
 #endif
 
 #include "bone.h"
+#include "lookAtBone.h"
 
 namespace oxyde {
 	namespace GL {
@@ -109,6 +110,8 @@ namespace oxyde {
 				GLint invWorldLocation; 
 				GLint viewLocation; 
 				GLuint lightLocation;
+
+				oxyde::scene::lookAtbonePtr theCameraLookAtBone;
 
 			private:
 				static camera* theInstance;

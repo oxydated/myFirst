@@ -58,6 +58,7 @@ namespace oxyde {
 		public:
 			scene(const MSXML2::IXMLDOMNodePtr& sceneNode, const notAccessible&);
 			void updateFrame();
+			const bonePtr getBoneForNode(int);
 
 			static std::shared_ptr<scene> createScene(const MSXML2::IXMLDOMNodePtr&  sceneNode);
 			static std::shared_ptr<scene> getScene();

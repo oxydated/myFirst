@@ -2,7 +2,9 @@
 #include "linearAlg.h"
 #include "ticker.h"
 #include "bone.h"
+#include "scene.h"
 #include "debugLog.h"
+
 
 namespace oxyde {
 	namespace GL {
@@ -134,7 +136,12 @@ namespace oxyde {
 				float tz = (upz - (upx*vx + upy*vy)*vz - upz*std::pow(vz, 2)) / den;
 
 				////////// roll angle
-				float rol = -3.176499;
+				float rol = 0.;
+
+				if (theCameraLookAtBone != nullptr) {
+					rol = theCameraLookAtBone->getRollAngle();
+				}
+
 				float cosrol = std::cos(rol / 2.);
 				float sirol = std::sin(rol / 2.);
 
@@ -640,6 +647,12 @@ namespace oxyde {
 
 				buildPerspectiveMatrix();
 				buildViewportMatrix();
+
+				theCameraLookAtBone = nullptr;
+				if (thereIsCamera) {
+					theCameraLookAtBone = 
+						std::static_pointer_cast<oxyde::scene::lookAtbone>(oxyde::scene::scene::getScene()->getBoneForNode(cameraBone));
+				}
 			}
 
 			void camera::mouseButtonDown(int x, int y)
