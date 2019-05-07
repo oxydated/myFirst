@@ -41,7 +41,8 @@ namespace oxyde {
 
 		const dualQuat& dualQuatTrack::getCurrentValue()
 		{
-			return (std::static_pointer_cast<dualQuatKeyframe>(getCurrentKeyFrame()))->getInterpolatedQuaternion();
+			dualQuat mid = (std::static_pointer_cast<dualQuatKeyframe>(getCurrentKeyFrame()))->getInterpolatedQuaternion();
+			return mid;
 		}
 
 	}

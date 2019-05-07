@@ -18,7 +18,7 @@ namespace {
 namespace oxyde {
 	namespace scene {
 
-		keyframeBone::keyframeBone(const MSXML2::IXMLDOMNodePtr& theNode, const MSXML2::IXMLDOMNodePtr& dualQuatTrackElement, const notAccessible&) :
+		keyframeBone::keyframeBone(const MSXML2::IXMLDOMNodePtr& theNode, const MSXML2::IXMLDOMElementPtr& dualQuatTrackElement, const notAccessible&) :
 			bone(MSXML2::IXMLDOMElementPtr(theNode->selectSingleNode(L"./../.."))), 
 			localTransformTrack(dualQuatTrackElement)
 		{
@@ -67,7 +67,8 @@ namespace oxyde {
 			// if (currentKeyframe >= trackSize) {
 			// track[trackSize - 1].getEndTransformation(localTransform);
 			// }
-			localTransform = localTransformTrack.getCurrentValue();
+			dualQuat currentQuat = localTransformTrack.getCurrentValue();
+			localTransform = { currentQuat[0], currentQuat[1], currentQuat[2], currentQuat[3],currentQuat[4], currentQuat[5], currentQuat[6], currentQuat[7] };
 
 			// To keep track of local transformation
 			boneLocalTransformation[nodeObject] = localTransform;

@@ -51,7 +51,7 @@ namespace oxyde {
 			};
 
 		public:
-			keyframeBone(const MSXML2::IXMLDOMNodePtr&, const MSXML2::IXMLDOMNodePtr&, const notAccessible&);
+			keyframeBone(const MSXML2::IXMLDOMNodePtr&, const MSXML2::IXMLDOMElementPtr&, const notAccessible&);
 
 			// transformation virtual method
 			virtual void updateTransform() override;
