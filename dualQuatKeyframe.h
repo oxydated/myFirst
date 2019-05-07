@@ -35,9 +35,13 @@ namespace oxyde {
 		public:
 
 			dualQuatKeyframe(const MSXML2::IXMLDOMElementPtr&);
-			int getInterpolatedQuaternion(dualQuat&);
-			void getStartTransformation(dualQuat&);
-			void getEndTransformation(dualQuat&);
+
+			const dualQuat& getInterpolatedQuaternion();
+			const dualQuat&  getInterpolatedQuaternionForTime(long time);
+			const dualQuat& getStartTransformation();
+			const dualQuat& dualQuatKeyframe::getEndTransformation();
 		};
+
+		using dualQuatKeyframePtr = std::shared_ptr<dualQuatKeyframe>;
 	}
 }

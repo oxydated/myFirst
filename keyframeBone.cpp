@@ -18,7 +18,9 @@ namespace {
 namespace oxyde {
 	namespace scene {
 
-		keyframeBone::keyframeBone(const MSXML2::IXMLDOMNodePtr & theNode, const notAccessible&) :bone(MSXML2::IXMLDOMElementPtr(theNode->selectSingleNode(L"./../.."))), currentKeyframe(0)
+		keyframeBone::keyframeBone(const MSXML2::IXMLDOMNodePtr& theNode, const MSXML2::IXMLDOMNodePtr& dualQuatTrackElement, const notAccessible&) :
+			bone(MSXML2::IXMLDOMElementPtr(theNode->selectSingleNode(L"./../.."))), 
+			localTransformTrack(dualQuatTrackElement)
 		{
 			// get the parent node element
 			const MSXML2::IXMLDOMElementPtr theParentElement = MSXML2::IXMLDOMElementPtr(theNode->selectSingleNode(L"./../../.."));
@@ -28,16 +30,16 @@ namespace oxyde {
 				// need to set parentBoneID
 				parentBoneID = oxyde::XML::getIntAttributeFromElement(theParentElement, "nodeObject");
 
-				// get animation data
-				std::wstring queryKeyframes = L"./dualQuatTrack/dualQuatKey";
-				MSXML2::IXMLDOMNodeListPtr dualQuatKeyframes = theNode->selectNodes(queryKeyframes.data());
-				for (int i = 0; i < dualQuatKeyframes->length; i++) {
-					MSXML2::IXMLDOMElementPtr dualQuatKeyframeElement = MSXML2::IXMLDOMElementPtr(dualQuatKeyframes->item[i]);
-					if (dualQuatKeyframeElement) {
-						track.push_back(dualQuatKeyframe(dualQuatKeyframeElement));
-					}
-				}
-				trackSize = track.size();
+				//// get animation data
+				//std::wstring queryKeyframes = L"./dualQuatTrack/dualQuatKey";
+				//MSXML2::IXMLDOMNodeListPtr dualQuatKeyframes = theNode->selectNodes(queryKeyframes.data());
+				//for (int i = 0; i < dualQuatKeyframes->length; i++) {
+				//	MSXML2::IXMLDOMElementPtr dualQuatKeyframeElement = MSXML2::IXMLDOMElementPtr(dualQuatKeyframes->item[i]);
+				//	if (dualQuatKeyframeElement) {
+				//		track.push_back(dualQuatKeyframe(dualQuatKeyframeElement));
+				//	}
+				//}
+				//trackSize = track.size();
 
 				//	set observed bones
 				std::set<int> setToKeepObservedIDsUnique({ rootNodeObject, parentBoneID });
@@ -55,15 +57,17 @@ namespace oxyde {
 			dualQuat &parentGlobalTransform = boneTransformation[parentBoneID];
 
 			// Calculate local transformation
-			int inInterval = -1;
-			while ((inInterval != 0) && (currentKeyframe < trackSize)) {
-				inInterval = track[currentKeyframe].getInterpolatedQuaternion(localTransform);
-				currentKeyframe += inInterval;
-			}
 
-			if (currentKeyframe >= trackSize) {
-				track[trackSize - 1].getEndTransformation(localTransform);
-			}
+			// int inInterval = -1;
+			// while ((inInterval != 0) && (currentKeyframe < trackSize)) {
+			// inInterval = track[currentKeyframe].getInterpolatedQuaternion(localTransform);
+			// currentKeyframe += inInterval;
+			// }
+
+			// if (currentKeyframe >= trackSize) {
+			// track[trackSize - 1].getEndTransformation(localTransform);
+			// }
+			localTransform = localTransformTrack.getCurrentValue();
 
 			// To keep track of local transformation
 			boneLocalTransformation[nodeObject] = localTransform;
@@ -79,11 +83,11 @@ namespace oxyde {
 		bonePtr keyframeBone::createKeyframeBone(const MSXML2::IXMLDOMNodePtr & theNode)
 		{
 			// To make sure there is actual animation data
-			std::wstring queryForAnyChild(L"./*");
-			MSXML2::IXMLDOMNodeListPtr theChildList = theNode->selectNodes(queryForAnyChild.data());
 
-			if (theChildList->length > 0) {
-				return std::make_shared<keyframeBone>(theNode, notAccessible());
+			MSXML2::IXMLDOMElementPtr dualQuatTrackElement = (MSXML2::IXMLDOMElementPtr(theNode->selectSingleNode(L"./dualQuatTrack")));
+
+			if (nullptr != dualQuatTrackElement) {
+				return std::make_shared<keyframeBone>(theNode, dualQuatTrackElement, notAccessible());
 			}
 
 			return nullptr;

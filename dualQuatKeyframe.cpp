@@ -33,43 +33,60 @@ namespace oxyde {
 			theMvector[1] = oxyde::XML::getFloatAttributeFromElement(interpolationParamElement, L"my");
 			theMvector[2] = oxyde::XML::getFloatAttributeFromElement(interpolationParamElement, L"mz");
 		}
-		int dualQuatKeyframe::getInterpolatedQuaternion(dualQuat &q)
+
+		const dualQuat& dualQuatKeyframe::getInterpolatedQuaternion()
 		{
-			int retValue = 0;
-			float step = this->getNormalizedTime();
-			if (step > 1.0) {
-				retValue = 1;
-			}
-			else {
-				if (step < 0.0) {
-					retValue = -1;
-				}
-				else {
+			dualQuat q;
+			float step = getNormalizedTime();
 
-					//######################################################
-					//# calculate the weighted motion from the quaternion at the beginning of the interval
+			//######################################################
+			//# calculate the weighted motion from the quaternion at the beginning of the interval
 
-					dualQuat r;
-					//dual_Versor(float theta, float ux, float uy, float uz, float s, float mx, float my, float mz, DUALQUAARG(r));
-					oxyde::DQ::dual_Versor(theAngle * step,
-						theUvector[0], theUvector[1], theUvector[2],
-						theSfactor * step,
-						theMvector[0], theMvector[1], theMvector[2],
-						DUALQUAARRAY(r));
+			dualQuat r;
+			//dual_Versor(float theta, float ux, float uy, float uz, float s, float mx, float my, float mz, DUALQUAARG(r));
+			oxyde::DQ::dual_Versor(theAngle * step,
+				theUvector[0], theUvector[1], theUvector[2],
+				theSfactor * step,
+				theMvector[0], theMvector[1], theMvector[2],
+				DUALQUAARRAY(r));
 
-					//float* curr = startTransform;
+			//float* curr = startTransform;
 
-					oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(r),
-						DUALQUAARRAY(startTransform),
-						DUALQUAARRAY(q));
-				}
-			}
-			return retValue;
+			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(r),
+				DUALQUAARRAY(startTransform),
+				DUALQUAARRAY(q));
 
+			return q;
 		}
 
-		void dualQuatKeyframe::getStartTransformation(dualQuat &startQuat)
+		const dualQuat&  dualQuatKeyframe::getInterpolatedQuaternionForTime(long time)
 		{
+			dualQuat q;
+			float step = getNormalizedTimeForTime(time);
+
+			//######################################################
+			//# calculate the weighted motion from the quaternion at the beginning of the interval
+
+			dualQuat r;
+			//dual_Versor(float theta, float ux, float uy, float uz, float s, float mx, float my, float mz, DUALQUAARG(r));
+			oxyde::DQ::dual_Versor(theAngle * step,
+				theUvector[0], theUvector[1], theUvector[2],
+				theSfactor * step,
+				theMvector[0], theMvector[1], theMvector[2],
+				DUALQUAARRAY(r));
+
+			//float* curr = startTransform;
+
+			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(r),
+				DUALQUAARRAY(startTransform),
+				DUALQUAARRAY(q));
+
+			return q;
+		}
+
+		const  dualQuat& dualQuatKeyframe::getStartTransformation()
+		{
+			dualQuat startQuat;
 			startQuat[0] = startTransform[0];
 			startQuat[1] = startTransform[1];
 			startQuat[2] = startTransform[2];
@@ -78,10 +95,12 @@ namespace oxyde {
 			startQuat[5] = startTransform[5];
 			startQuat[6] = startTransform[6];
 			startQuat[7] = startTransform[7];
+			return startQuat;
 		}
 
-		void dualQuatKeyframe::getEndTransformation(dualQuat &endQuat)
+		const dualQuat& dualQuatKeyframe::getEndTransformation()
 		{
+			dualQuat endQuat;
 			dualQuat r;
 			
 			oxyde::DQ::dual_Versor(theAngle,
@@ -93,6 +112,7 @@ namespace oxyde {
 			oxyde::DQ::dual_quaternion_product(DUALQUAARRAY(r),
 				DUALQUAARRAY(startTransform),
 				DUALQUAARRAY(endQuat));
+			return endQuat;
 		}
 	}
 }

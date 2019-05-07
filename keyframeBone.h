@@ -1,7 +1,8 @@
 #pragma once
 #include "XMLDocument.h"
 #include "bone.h"
-#include "dualQuatKeyframe.h"
+//#include "dualQuatKeyframe.h"
+#include "dualQuatTrack.h"
 
 /*
 
@@ -36,10 +37,12 @@ namespace oxyde {
 			// Must be kept for global transformation of bones articulated in a hierarchy (skeletons)
 			int parentBoneID;
 
-			std::vector<dualQuatKeyframe> track;
-			int trackSize;
+			dualQuatTrack localTransformTrack;
 
-			int currentKeyframe;
+			// std::vector<dualQuatKeyframe> track;
+			// int trackSize;
+
+			// int currentKeyframe;
 
 			// Visible only inside class definition. Will keep construction restricted to the factory
 			class notAccessible {
@@ -48,7 +51,7 @@ namespace oxyde {
 			};
 
 		public:
-			keyframeBone(const MSXML2::IXMLDOMNodePtr&, const notAccessible&);
+			keyframeBone(const MSXML2::IXMLDOMNodePtr&, const MSXML2::IXMLDOMNodePtr&, const notAccessible&);
 
 			// transformation virtual method
 			virtual void updateTransform() override;
