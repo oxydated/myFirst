@@ -80,6 +80,7 @@ namespace oxyde {
 				//viewPortMatrix[11] = 0;
 				//viewPortMatrix[15] = 1;
 
+				glViewport(0, 0, w, h);
 				glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewPortMatrix.data());
 			}
 
@@ -624,6 +625,13 @@ namespace oxyde {
 				}
 			}
 
+			void camera::resizeWindow(long width, long height)
+			{
+				if (theInstance != nullptr) {
+					theInstance->setNewWindowSizeForCamera(width, height);
+				}
+			}
+
 			void camera::updateLight()
 			{
 				theInstance->updateCameraLight();
@@ -653,6 +661,13 @@ namespace oxyde {
 					theCameraLookAtBone = 
 						std::static_pointer_cast<oxyde::scene::lookAtbone>(oxyde::scene::scene::getScene()->getBoneForNode(cameraBone));
 				}
+			}
+
+			void camera::setNewWindowSizeForCamera(long width, long height)
+			{
+				w = width;
+				h = height;
+				buildViewportMatrix();
 			}
 
 			void camera::mouseButtonDown(int x, int y)

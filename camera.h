@@ -71,6 +71,8 @@ namespace oxyde {
 				static void createCamera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h,
 					int in_cameraNode, int in_targetNode, bool in_thereIsCamera);
 
+				static void resizeWindow(long width, long height);
+
 				void static updateLight();
 
 			protected:
@@ -79,6 +81,8 @@ namespace oxyde {
 					int in_cameraNode, int in_targetNode, bool in_thereIsCamera);
 				camera() = delete;
 				camera(const camera&) = delete;
+
+				void setNewWindowSizeForCamera(long width, long height);
 
 				float f, n, l, r, t, b;
 				std::array<float, 16> camMatrix, camMatrixInv;

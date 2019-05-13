@@ -187,8 +187,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		p.x = GET_X_LPARAM(lParam);
 		p.y = GET_Y_LPARAM(lParam);
-		GetWindowRect( hWnd, &theWindowRect);
+		GetWindowRect(hWnd, &theWindowRect);
 		GetClientRect(hWnd, &theWindowRect);
+		oxyde::GL::renderer::camera::resizeWindow(LOWORD(lParam), HIWORD(lParam));
 		break;
 
 	case WM_LBUTTONDOWN:
@@ -231,22 +232,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		default:
 			break;
 		}
-
-
-		//if ((1 << 30) & lParam) {
-		//	switch (wParam)
-		//	{
-		//	case VK_LEFT:
-		//		oxyde::GL::renderer::camera::keyDown(-1);
-		//		break;
-		//	case VK_RIGHT:
-		//		oxyde::GL::renderer::camera::keyDown(1);
-		//		break;
-		//	default:
-		//		break;
-		//	}
-
-		//}
 		break;
 
 	case WM_COMMAND:
@@ -284,7 +269,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										
 										std::array<WCHAR, MAX_PATH> dirName;
 										StringCchCopy(dirName.data(), dirName.size(), fileNameW.data());
-										//PathCchRemoveFileSpec(dirName.data(), dirName.size());
 										PathRemoveFileSpecW(dirName.data());
 										SetCurrentDirectoryW(dirName.data());
 										MSXML2::IXMLDOMElementPtr documentElement = theDocument->GetdocumentElement();
@@ -295,14 +279,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										oxyde::scene::scenePtr theScene = oxyde::scene::scene::createScene(sceneNode);
 
 										oxyde::scene::ticker::start();
-										//oxyde::scene::ticker::setCurrentTime(1000);
-										//oxyde::scene::ticker::setCurrentTime(0);
 
-										//oxyde::geometry::skindataPtr theSkin = std::make_shared<oxyde::geometry::skindata>(documentElement);
 										oxyde::GL::renderer::skinRenderer::reset();
 										oxyde::geometry::skindata::buildSkindata(documentElement, oxyde::scene::bone::addModifier);
-
-										//camera::createCamera();
 										
 										GetClientRect(hWnd, &theWindowRect);
 										
@@ -310,12 +289,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 										LONG height = theWindowRect.bottom - theWindowRect.top;
 										
 										oxyde::GL::renderer::camera::importCameraFromDocument(documentElement, width, height);
-										//oxyde::GL::renderer::camera::createCamera(4800., 4., -1., 1., 1., -1., float(width), float(height));
-
-										//oxyde::scene::bone::addModifier(theSkin);
-
-										//oxyde::GL::renderer::setSkinAndMeshBuffers();
-										//oxyde::GL::renderer::printSkinAndMeshBuffers();
 
 										theScene->updateFrame();
 
