@@ -1,11 +1,11 @@
 #version 430 core
 
 uniform sampler2D theSampler;
-in vec2 theCoord;
+smooth in vec2 theCoord;
 //varying float lightPower;
 
 in vec4 varyNormal;
-flat in vec4 varyLightVec;
+smooth in vec4 varyLightVec;
 
 //in vec4 inWorldPos;
  

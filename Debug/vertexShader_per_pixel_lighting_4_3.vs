@@ -10,10 +10,10 @@ uniform mat4 World;
 uniform mat4 invWorld;
 uniform sampler2D theSampler;
 
-out vec2 theCoord;
+smooth out vec2 theCoord;
 
 out vec4 varyNormal;
-flat out vec4 varyLightVec;
+smooth out vec4 varyLightVec;
 
 //out vec4 inWorldPos;
 
@@ -87,12 +87,13 @@ void main(){
 	
 	vec4 blendedVertex = dual_quat_transform_point( normalizedBlend, vec4(vPosition, 1.0) );
 
-	mat2x4 normalizedBlendForNormals = conjugate_quat(normalizedBlend);	
+	//mat2x4 normalizedBlendForNormals = conjugate_quat(normalizedBlend);
+	mat2x4 normalizedBlendForNormals =mat2x4(normalizedBlend[0][0],normalizedBlend[0][1],normalizedBlend[0][2],normalizedBlend[0][3], 0, 0, 0, 0);	
 
  	//vec4 blendedNormals = dual_quat_transform_vector( normalizedBlendForNormals, vNormal );
 	// vec4 blendedNormals = dual_quat_transform_vector( normalizedBlend, vNormal );
 
-	vec4 blendedNormals = dual_quat_transform_normal( normalizedBlend, vNormal );
+	vec4 blendedNormals = dual_quat_transform_normal( normalizedBlendForNormals, vNormal );
 	//////////////////////////////////////////////
 	vec4 tempPos;
 	tempPos.xyz = blendedVertex.xyz;
@@ -111,7 +112,8 @@ void main(){
 	mat4 transformNormal4 = transpose(inverse(transformPosition));
 
 	vec4 pos = transformPosition * tempPos;
-	vec4 posLatter = pos / pos.w;
+	vec4 posLatter = pos;
+	// vec4 posLatter = pos / pos.w;
 	
 	vec4 tempNormal = vec4(blendedNormals.xyz, 1.0);
 

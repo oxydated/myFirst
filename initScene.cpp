@@ -25,6 +25,12 @@ void initGLES(int x, int y, int width, int height){
     glClearDepthf(1.0);
     glDepthFunc(GL_LESS);
     glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
+	glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
+	glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
+	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
     glViewport(0, 0, width, height);
 
@@ -64,7 +70,7 @@ void initGLES(int x, int y, int width, int height){
     
     float view[16];
 
-	float NEARFAR[] = { 1.0, 0.0 };
+	float NEARFAR[] = { 1.0, -1.0 };
 	glGetFloatv(GL_DEPTH_RANGE, NEARFAR);
     viewportMatrix(x, y, width, height, NEARFAR[0], NEARFAR[1], mat, view);
     printf("\nview Matrix:\n");
