@@ -15,8 +15,6 @@ smooth out vec2 theCoord;
 out vec4 varyNormal;
 smooth out vec4 varyLightVec;
 
-//out vec4 inWorldPos;
-
 in int boneNumVertAttrib;
 in int boneOffsetVertAttrib;
 
@@ -87,72 +85,21 @@ void main(){
 	
 	vec4 blendedVertex = dual_quat_transform_point( normalizedBlend, vec4(vPosition, 1.0) );
 
-	//mat2x4 normalizedBlendForNormals = conjugate_quat(normalizedBlend);
 	mat2x4 normalizedBlendForNormals =mat2x4(normalizedBlend[0][0],normalizedBlend[0][1],normalizedBlend[0][2],normalizedBlend[0][3], 0, 0, 0, 0);	
 
- 	//vec4 blendedNormals = dual_quat_transform_vector( normalizedBlendForNormals, vNormal );
-	// vec4 blendedNormals = dual_quat_transform_vector( normalizedBlend, vNormal );
-
 	vec4 blendedNormals = dual_quat_transform_normal( normalizedBlendForNormals, vNormal );
+
 	//////////////////////////////////////////////
-	vec4 tempPos;
-	tempPos.xyz = blendedVertex.xyz;
-	tempPos.w = 1.0;
 
-	mat4 tempView = View;
-	//tempView[2].z = gl_DepthRange.diff/2.0;
-	//tempView[3].z = ( gl_DepthRange.near +gl_DepthRange.far) /2.0;
-	// vec4 worldPos = World * tempPos;
-	// worldPos = worldPos / worldPos.w;
-	mat4 transformPosition = tempView * Proj * World;
+    vec4 tempPos = vec4(blendedVertex.xyz, 1.0);
 
-	// mat3 forNormalsMat = mat3( transformPosition[0].xyz, transformPosition[1].xyz, transformPosition[2].xyz );
-	// mat3 transformNormal = transpose(inverse(forNormalsMat));
-
-	mat4 transformNormal4 = transpose(inverse(transformPosition));
-
-	vec4 pos = transformPosition * tempPos;
-	vec4 posLatter = pos;
-	// vec4 posLatter = pos / pos.w;
-	
-	vec4 tempNormal = vec4(blendedNormals.xyz, 1.0);
-
-	// vec4 winSpaceNormal = vec4(transformNormal*tempNormal.xyz, 0.);
-	
-	// vec4 tempWinNormal = transformNormal4*tempNormal;
-	// vec4 winSpaceNormal = tempWinNormal/tempWinNormal.w;
-
-	vec4 winSpaceNormal = transformNormal4*tempNormal;
-	
-	vec4 tNormal = invWorld * tempNormal;
-	tNormal = vec4(normalize(tNormal.xyz), 0.0);
-	
-	vec4 worldLight = World * vec4(vLightPos, 1.0);	
-	worldLight = worldLight/worldLight.w;
-	
-	
-	vec4 lightVec = vec4( normalize(vLightPos.xyz - tempPos.xyz), 0.0);
-	//vec4 lightVec = vec4( normalize(tempPos.xyz - vLightPos.xyz ), 0.0);
+    vec4 pos = View * Proj * World * tempPos;
 	
 	theCoord = vTexCoord;
 
-	 varyNormal = tempNormal;
-	//varyNormal = winSpaceNormal;
-	//varyNormal = vec4( normalize(winSpaceNormal.xyz),0.);
-
-	//varyNormal = vNormal;
-	//varyLightVec = lightVec;
-
-	//varyLightVec = vec4( 0., 400., -400., 1.);
-	//varyLightVec = World * vec4(vLightPos, 1.);
-
-	// // vec4 tempLightvec = inverse(transformPosition) * vec4(vLightPos, 1.);
-	// vec4 tempLightvec = transformPosition * vec4(vLightPos, 1.);
-	// varyLightVec = tempLightvec / tempLightvec.w;
+    varyNormal = vec4(blendedNormals.xyz, 1.0);
 
 	varyLightVec = vec4(vLightPos, 1.);
 	
-	//inWorldPos = tempPos;
-	
-	gl_Position = posLatter;
+    gl_Position = pos;
 }
