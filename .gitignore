@@ -22,3 +22,5 @@ myGLEStest.sdf
 /Report20180209-1904.diagsession
 /*.vsp
 /*.psess
+/oxyEngine.VC.db
+*.opendb

@@ -90,18 +90,9 @@ void main(){
 
 		sumWeight += weight;
 
-		// theBlendedQuat =  theBlendedQuat + weight * theVersor;	
-
 	}
-	// float toNormalize = 1./length(theBlendedQuat[0]);
-	// mat2x4 normalizedBlend = toNormalize * theBlendedQuat;
 	
 	vec4 blendedVertex = vec4(unormalizedBlendedVertex.xyz / sumWeight, 1.0);
-
-	// mat2x4 normalizedBlendForNormals =mat2x4(normalizedBlend[0][0],normalizedBlend[0][1],normalizedBlend[0][2],normalizedBlend[0][3], 0, 0, 0, 0);	
-
-	// vec4 blendedNormals = dual_quat_transform_normal( normalizedBlendForNormals, vNormal );
-
 	vec4 blendedNormals = vec4( normalize( (unormalizedBlendedNormal.xyz / sumWeight) ), 1.0);
 
 	//////////////////////////////////////////////
