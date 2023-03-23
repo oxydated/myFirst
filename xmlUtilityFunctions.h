@@ -9,6 +9,7 @@
 
 #include <ObjBase.h>
 #include <msxml6.h>
+//#import <msxml6.dll> named_guids
 #include <comutil.h>
 #include <tchar.h>
 

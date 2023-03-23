@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <memory>
 #include <string>
+//#include <msxml6.h>
 #import<msxml6.dll>
 
 namespace oxyde {

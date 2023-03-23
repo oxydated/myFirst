@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _WIN32
-#include <glew.h>
+#include <GL/glew.h>
 #endif
 
 #include "mesh.h"

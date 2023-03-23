@@ -23,7 +23,8 @@ GLint loadAndCompileShader(){
 	int tester_0_size = 0;
 	int tester_1_size = 0;
 
-	loadShaders((char*)tester[0], tester_0_size, (char*)tester[1], tester_1_size);
+	//loadShaders((char*)tester[0], tester_0_size, (char*)tester[1], tester_1_size);
+    loadShaders(tester[0], tester_0_size, tester[1], tester_1_size);
    
     GLboolean shaderCompiler = GL_FALSE;
     glGetBooleanv(GL_SHADER_COMPILER, &shaderCompiler);
@@ -55,7 +56,7 @@ GLint loadAndCompileShader(){
 	glGetShaderInfoLog(vShader, infoLogLength, NULL, shaderInfoLog);
 
 	char vshaderInfoString[200];
-	sprintf(vshaderInfoString, "For vShader: %s\n", shaderInfoLog);
+	sprintf_s(vshaderInfoString, "For vShader: %s\n", shaderInfoLog);
 	OutputDebugStringA(vshaderInfoString);
 
     //delete shaderInfoLog;
@@ -84,7 +85,7 @@ GLint loadAndCompileShader(){
     glGetShaderInfoLog( fShader, infoLogLength, NULL, shaderInfoLog);
 
 	char shaderInfoString[200];
-	sprintf(shaderInfoString, "For fShader: %s\n", shaderInfoLog);
+	sprintf_s(shaderInfoString, "For fShader: %s\n", shaderInfoLog);
 	OutputDebugStringA(shaderInfoString);
 
     delete shaderInfoLog;

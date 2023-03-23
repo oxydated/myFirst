@@ -39,7 +39,7 @@ namespace oxyde {
 			const dualQuat& getInterpolatedQuaternion();
 			const dualQuat&  getInterpolatedQuaternionForTime(long time);
 			const dualQuat& getStartTransformation();
-			const dualQuat& dualQuatKeyframe::getEndTransformation();
+			const dualQuat& getEndTransformation();
 		};
 
 		using dualQuatKeyframePtr = std::shared_ptr<dualQuatKeyframe>;

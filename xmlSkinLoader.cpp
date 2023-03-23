@@ -20,7 +20,7 @@
 HRESULT getHierarchyBoneIndexForSkinBoneIndex(IXMLDOMDocument3* theDocument, IXMLDOMNode *skinElementNode, int skinBoneIndex, int &boneIndex){
 	HRESULT hr = S_OK;
 	char skinBoneIndexStr[5];
-	itoa(skinBoneIndex, skinBoneIndexStr, 10);
+	_itoa_s(skinBoneIndex, skinBoneIndexStr, 10);
 
 	_bstr_t skinBoneElementQuery = _bstr_t(".//bone[@boneIndex='") + _bstr_t(skinBoneIndexStr) + _bstr_t("']");
 
@@ -217,7 +217,7 @@ HRESULT getSkinVerticesData(IXMLDOMDocument3* theDocument, IXMLDOMNode* skinElem
 
 	vertAttribNum = numVertexElements;
 
-	swprintf(outputString, TEXT("{\n"));
+	swprintf(outputString, 100, TEXT("{\n"));
 	OutputDebugString(outputString);
 
 	for (long i = 0; i < numVertexElements; i++){
@@ -237,7 +237,7 @@ HRESULT getSkinVerticesData(IXMLDOMDocument3* theDocument, IXMLDOMNode* skinElem
 		}
 	}
 
-	swprintf(outputString, TEXT("}\n"));
+	swprintf(outputString, 100, TEXT("}\n"));
 	OutputDebugString(outputString);
 
 	return hr;

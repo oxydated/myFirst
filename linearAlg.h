@@ -14,7 +14,7 @@
 #include "linAlg.h"
 
 #ifdef _WIN32
-#include <glew.h>
+#include <GL/glew.h>
 
 #else
 #include <OpenGLES/ES2/gl.h>

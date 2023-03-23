@@ -3,8 +3,8 @@
 
 //#include <gl\GL.h>
 //#include <gl\GLU.h>
-#include <glew.h>
-#include <wglew.h>
+#include <GL\glew.h>
+#include <GL\wglew.h>
 #include <Windows.h>
 
 void initGLContext(HDC hDc);

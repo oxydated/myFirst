@@ -5,8 +5,8 @@
 #include <map>
 #include <functional>
 #include "XMLDocument.h"
-#include "dualQuaternionMath.h"
-#include "dualQuaternionFunctions.h"
+#include <dualQuaternionMath.h>
+#include <dualQuaternionFunctions.h>
 #include "skeletalModifier.h"
 
 /*
