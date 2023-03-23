@@ -1,7 +1,7 @@
 #include <memory>
 
 #ifdef _WIN32
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #endif
 
 #include "renderer.h"
@@ -143,87 +143,87 @@ namespace oxyde {
 				if (theSkinToRender) {
 					oxyde::geometry::meshPtr theMesh = theSkinToRender->getMesh();
 
-					glGenVertexArrays(1, &vao);
-					glBindVertexArray(vao);
+					//glGenVertexArrays(1, &vao);
+					//glBindVertexArray(vao);
 
 					theMeshRenderer = std::make_shared<meshRenderer>(theMesh);
 
 						size_t sizeboneNumVert;
 						const int* boneNumVertAtt = theSkinToRender->getBoneNumVertAttrib(sizeboneNumVert);
-						glGenBuffers(1, &vertexBoneNumBuffer);
-						glBindBuffer(GL_ARRAY_BUFFER, vertexBoneNumBuffer);
-						glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeboneNumVert, (GLvoid*)boneNumVertAtt, GL_STATIC_DRAW);
-						glVertexAttribIPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, 0, (GLvoid*)0);
-						GLenum myMistake = glGetError();
+						//glGenBuffers(1, &vertexBoneNumBuffer);
+						//glBindBuffer(GL_ARRAY_BUFFER, vertexBoneNumBuffer);
+						//glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeboneNumVert, (GLvoid*)boneNumVertAtt, GL_STATIC_DRAW);
+						//glVertexAttribIPointer(VERTEX_BONE_NUM_ATT, 1, GL_INT, 0, (GLvoid*)0);
+						//GLenum myMistake = glGetError();
 
 						size_t sizeBoneOffsetVert;
 						const int* boneOffsetVertAtt = theSkinToRender->getBoneOffsetVertAttrib(sizeBoneOffsetVert);
-						glGenBuffers(1, &vertexBoneOffsetBuffer);
-						glBindBuffer(GL_ARRAY_BUFFER, vertexBoneOffsetBuffer);
-						glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeBoneOffsetVert, (GLvoid*)boneOffsetVertAtt, GL_STATIC_DRAW);
-						glVertexAttribIPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, 0, (GLvoid*)0);
-						myMistake = glGetError();
+						//glGenBuffers(1, &vertexBoneOffsetBuffer);
+						//glBindBuffer(GL_ARRAY_BUFFER, vertexBoneOffsetBuffer);
+						//glBufferData(GL_ARRAY_BUFFER, sizeof(GLint)*sizeBoneOffsetVert, (GLvoid*)boneOffsetVertAtt, GL_STATIC_DRAW);
+						//glVertexAttribIPointer(VERTEX_BONE_OFFSET_ATT, 1, GL_INT, 0, (GLvoid*)0);
+						//myMistake = glGetError();
 
 						size_t sizeBoneIndexesForSkin;
 						const int* boneIndexesForSkin = theSkinToRender->getBoneIndexesForSkinVertices(sizeBoneIndexesForSkin);
-						glGenBuffers(1, &storeBoneIndexesBuffer);
-						glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeBoneIndexesBuffer);
-						glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint)*sizeBoneIndexesForSkin, (GLvoid*)boneIndexesForSkin, GL_STATIC_DRAW);
-						glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, storeBoneIndexesBuffer);
-						myMistake = glGetError();
+						//glGenBuffers(1, &storeBoneIndexesBuffer);
+						//glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeBoneIndexesBuffer);
+						//glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLint)*sizeBoneIndexesForSkin, (GLvoid*)boneIndexesForSkin, GL_STATIC_DRAW);
+						//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, storeBoneIndexesBuffer);
+						//myMistake = glGetError();
 
 						size_t sizeBoneWeightForSkin;
 						const float* boneWeightForSkin = theSkinToRender->getBoneWeightForSkinVertices(sizeBoneWeightForSkin);
-						glGenBuffers(1, &storeBoneWeightBuffer);
-						glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeBoneWeightBuffer);
-						glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat)*sizeBoneWeightForSkin, (GLvoid*)boneWeightForSkin, GL_STATIC_DRAW);
-						glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, storeBoneWeightBuffer);
-						myMistake = glGetError();
+						//glGenBuffers(1, &storeBoneWeightBuffer);
+						//glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeBoneWeightBuffer);
+						//glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat)*sizeBoneWeightForSkin, (GLvoid*)boneWeightForSkin, GL_STATIC_DRAW);
+						//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, storeBoneWeightBuffer);
+						//myMistake = glGetError();
 
 						size_t sizeFromSkinposeToCurrent;
 						const float* fromSkinPoseToCurrent = theSkinToRender->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
-						glGenBuffers(1, &storeFromSkinPoseBuffer);
-						glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeFromSkinPoseBuffer);
-						glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent, GL_DYNAMIC_DRAW);
-						glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, storeFromSkinPoseBuffer);
-						myMistake = glGetError();
+						//glGenBuffers(1, &storeFromSkinPoseBuffer);
+						//glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeFromSkinPoseBuffer);
+						//glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent, GL_DYNAMIC_DRAW);
+						//glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, storeFromSkinPoseBuffer);
+						//myMistake = glGetError();
 
 
 						//////////////////////////////////////////////////////////////////// 
-						glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-						myMistake = glGetError();
+						//glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+						//myMistake = glGetError();
 
-						glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
-						glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
+						//glEnableVertexAttribArray(VERTEX_BONE_NUM_ATT);
+						//glEnableVertexAttribArray(VERTEX_BONE_OFFSET_ATT);
 					//}
 				}
 			}
 
 			void skinRenderer::drawSkin()
 			{
-					glBindVertexArray(vao);
+					//glBindVertexArray(vao);
 
 					size_t sizeFromSkinposeToCurrent;
 					const float* fromSkinPoseToCurrent = theSkinToRender->getFromSkinPoseToCurrentTransf(sizeFromSkinposeToCurrent);
-					glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeFromSkinPoseBuffer);
-					glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent);
-					GLenum myMistake = glGetError();
+					//glBindBuffer(GL_SHADER_STORAGE_BUFFER, storeFromSkinPoseBuffer);
+					//glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(GLfloat) * sizeFromSkinposeToCurrent, (GLvoid*)fromSkinPoseToCurrent);
+					//GLenum myMistake = glGetError();
 
-					glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-					myMistake = glGetError();
+					//glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+					//myMistake = glGetError();
 
 					theMeshRenderer->drawMesh();
 			}
 
 			skinRenderer::~skinRenderer()
 			{
-				glDeleteBuffers(1, &vertexBoneNumBuffer);				
-				glDeleteBuffers(1, &vertexBoneOffsetBuffer);				
-				glDeleteBuffers(1, &storeBoneIndexesBuffer);				
-				glDeleteBuffers(1, &storeBoneWeightBuffer);
-				glDeleteBuffers(1, &storeFromSkinPoseBuffer);
+				//glDeleteBuffers(1, &vertexBoneNumBuffer);				
+				//glDeleteBuffers(1, &vertexBoneOffsetBuffer);				
+				//glDeleteBuffers(1, &storeBoneIndexesBuffer);				
+				//glDeleteBuffers(1, &storeBoneWeightBuffer);
+				//glDeleteBuffers(1, &storeFromSkinPoseBuffer);
 				theMeshRenderer.reset();
-				glDeleteVertexArrays(1, &vao);
+				//glDeleteVertexArrays(1, &vao);
 			}
 
 			void skinRenderer::addSkiToRender(const oxyde::geometry::skindataPtr &theSkin)
@@ -248,129 +248,129 @@ namespace oxyde {
 				theTextureMap(std::make_shared<textureRenderer>(theMesh)), theMeshToRender(theMesh)
 			{
 
-				GLenum myMistake = glGetError();
+				//GLenum myMistake = glGetError();
 
 				size_t sizeFaces;
 				const unsigned int* faces = theMeshToRender->getFacesData(sizeFaces);
-				glGenBuffers(1, &elementIndexBuffer);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementIndexBuffer);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*sizeFaces, faces, GL_STATIC_DRAW);
+				//glGenBuffers(1, &elementIndexBuffer);
+				//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementIndexBuffer);
+				//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*sizeFaces, faces, GL_STATIC_DRAW);
 
-				myMistake = glGetError();
+				//myMistake = glGetError();
 
 				size_t sizeVertices;
 				const float* vertices = theMeshToRender->getVerticesData(sizeVertices);
-				glGenBuffers(1, &vertexPositionBuffer);
-				glBindBuffer(GL_ARRAY_BUFFER, vertexPositionBuffer);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeVertices, (GLvoid*)vertices, GL_STATIC_DRAW);
-				glVertexAttribPointer(VERTEX_POSITION_ATT, VERTEX_POSITION_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-				myMistake = glGetError();
+				//glGenBuffers(1, &vertexPositionBuffer);
+				//glBindBuffer(GL_ARRAY_BUFFER, vertexPositionBuffer);
+				//glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeVertices, (GLvoid*)vertices, GL_STATIC_DRAW);
+				//glVertexAttribPointer(VERTEX_POSITION_ATT, VERTEX_POSITION_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+				//myMistake = glGetError();
 
 				size_t sizeTexcoord;
 				const float* texcoord = theMeshToRender->getTexCoordData(sizeTexcoord);
-				glGenBuffers(1, &vertexTexcoordBuffer);
-				glBindBuffer(GL_ARRAY_BUFFER, vertexTexcoordBuffer);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeTexcoord, (GLvoid*)texcoord, GL_STATIC_DRAW);
-				glVertexAttribPointer(VERTEX_TEXCOORD_ATT, VERTEX_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-				myMistake = glGetError();
+				//glGenBuffers(1, &vertexTexcoordBuffer);
+				//glBindBuffer(GL_ARRAY_BUFFER, vertexTexcoordBuffer);
+				//glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeTexcoord, (GLvoid*)texcoord, GL_STATIC_DRAW);
+				//glVertexAttribPointer(VERTEX_TEXCOORD_ATT, VERTEX_TEXCOORD_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+				//myMistake = glGetError();
 
 				size_t sizeNormals;
 				const float* normals = theMeshToRender->getNormalsData(sizeNormals);
-				glGenBuffers(1, &vertexNormalBuffer);
-				glBindBuffer(GL_ARRAY_BUFFER, vertexNormalBuffer);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeNormals, (GLvoid*)normals, GL_STATIC_DRAW);
-				glVertexAttribPointer(VERTEX_NORMAL_ATT, VERTEX_NORMAL_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-				myMistake = glGetError();
+				//glGenBuffers(1, &vertexNormalBuffer);
+				//glBindBuffer(GL_ARRAY_BUFFER, vertexNormalBuffer);
+				//glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*sizeNormals, (GLvoid*)normals, GL_STATIC_DRAW);
+				//glVertexAttribPointer(VERTEX_NORMAL_ATT, VERTEX_NORMAL_SIZE, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+				//myMistake = glGetError();
 
-				glEnableVertexAttribArray(VERTEX_POSITION_ATT);
-				glEnableVertexAttribArray(VERTEX_TEXCOORD_ATT);
-				glEnableVertexAttribArray(VERTEX_NORMAL_ATT);
+				//glEnableVertexAttribArray(VERTEX_POSITION_ATT);
+				//glEnableVertexAttribArray(VERTEX_TEXCOORD_ATT);
+				//glEnableVertexAttribArray(VERTEX_NORMAL_ATT);
 
 			}
 
 			void meshRenderer::drawMesh()
 			{
 				theTextureMap->makeTextureActive();
-				glDrawElements(GL_TRIANGLES, theMeshToRender->getNumFaces(), GL_UNSIGNED_INT, 0);
+				//glDrawElements(GL_TRIANGLES, theMeshToRender->getNumFaces(), GL_UNSIGNED_INT, 0);
 			}
 
 			meshRenderer::~meshRenderer()
 			{
-				glDeleteBuffers(1, &elementIndexBuffer);
-				glDeleteBuffers(1, &vertexPositionBuffer);
-				glDeleteBuffers(1, &vertexTexcoordBuffer);
-				glDeleteBuffers(1, &vertexNormalBuffer);
+				//glDeleteBuffers(1, &elementIndexBuffer);
+				//glDeleteBuffers(1, &vertexPositionBuffer);
+				//glDeleteBuffers(1, &vertexTexcoordBuffer);
+				//glDeleteBuffers(1, &vertexNormalBuffer);
 			}
 
-			GLuint textureRenderer::textureUnitUsed = 0;
+			//GLuint textureRenderer::textureUnitUsed = 0;
 
 			textureRenderer::textureRenderer(const oxyde::geometry::meshPtr & theMesh):mapFileName(theMesh->getMapFileName())
 			{
-				GLint program = -1;
-				glGetIntegerv(GL_CURRENT_PROGRAM, &program);
-				if (program) {
-					textureUnit = textureUnitUsed++;
+				//GLint program = -1;
+				//glGetIntegerv(GL_CURRENT_PROGRAM, &program);
+				//if (program) {
+				//	textureUnit = textureUnitUsed++;
 
-					glActiveTexture(textureUnit);
-					
-					//////////////////////
-					
-					unsigned int width = 512;
-					unsigned int height = 512;
-					int theGLerror = 0;
+				//	glActiveTexture(textureUnit);
+				//	
+				//	//////////////////////
+				//	
+				//	unsigned int width = 512;
+				//	unsigned int height = 512;
+				//	int theGLerror = 0;
 
-					std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(mapFileName, width, height);
+				//	std::vector<unsigned char> &&imageData = oxyde::utility::loadImageFromFile(mapFileName, width, height);
 
-					glGenTextures(1, &textureName);
+				//	glGenTextures(1, &textureName);
 
-					printf("textureName: %i\n", textureName);
+				//	printf("textureName: %i\n", textureName);
 
-					glBindTexture(GL_TEXTURE_2D, textureName);
+				//	glBindTexture(GL_TEXTURE_2D, textureName);
 
-					glActiveTexture(GL_TEXTURE0);
+				//	glActiveTexture(GL_TEXTURE0);
 
-					glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+				//	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+				//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+				//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-					glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)imageData.data());
+				//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)imageData.data());
 
-					if (glGetError() != GL_NO_ERROR) {
-						printf("error up to line %i\n", __LINE__);
-					}
-					else {
-						printf("ok in %i\n", __LINE__);
-					}
+				//	if (glGetError() != GL_NO_ERROR) {
+				//		printf("error up to line %i\n", __LINE__);
+				//	}
+				//	else {
+				//		printf("ok in %i\n", __LINE__);
+				//	}
 
-					glGenerateMipmap(GL_TEXTURE_2D);
+				//	glGenerateMipmap(GL_TEXTURE_2D);
 
-					//////////////////////
+				//	//////////////////////
 
-					GLint samplerLocation = glGetUniformLocation(program, "theSampler");
+				//	GLint samplerLocation = glGetUniformLocation(program, "theSampler");
 
-					glUniform1i(samplerLocation, textureUnit);
-				}
+				//	glUniform1i(samplerLocation, textureUnit);
+				//}
 			}
 
 			void textureRenderer::makeTextureActive()
 			{
-				glActiveTexture(textureUnit);
+				//glActiveTexture(textureUnit);
 			}
 
 			textureRenderer::~textureRenderer()
 			{
-				glDeleteTextures(1, &textureName);
+				//glDeleteTextures(1, &textureName);
 			}
 
 			void textureRenderer::reset()
 			{
-				textureUnitUsed = 0;
+				//textureUnitUsed = 0;
 			}
 
 }

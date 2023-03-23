@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _WIN32
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #endif
 
 #include "mesh.h"
@@ -21,10 +21,10 @@ namespace oxyde {
 
 			private:
 				std::wstring mapFileName;
-				GLuint textureUnit;
+				//GLuint textureUnit;
 				unsigned int textureName;
 
-				static GLuint textureUnitUsed;
+				//static GLuint textureUnitUsed;
 			};
 
 			using textureRendererPtr = std::shared_ptr<textureRenderer>;
@@ -39,10 +39,10 @@ namespace oxyde {
 				oxyde::geometry::meshPtr theMeshToRender;
 				textureRendererPtr theTextureMap;
 
-				GLuint elementIndexBuffer;
-				GLuint vertexPositionBuffer;
-				GLuint vertexTexcoordBuffer;
-				GLuint vertexNormalBuffer;
+				//GLuint elementIndexBuffer;
+				//GLuint vertexPositionBuffer;
+				//GLuint vertexTexcoordBuffer;
+				//GLuint vertexNormalBuffer;
 			};
 
 			using meshRendererPtr = std::shared_ptr<meshRenderer>;
@@ -64,14 +64,14 @@ namespace oxyde {
 				oxyde::geometry::skindataPtr theSkinToRender;
 				meshRendererPtr theMeshRenderer;
 
-				GLuint vao;
+				//GLuint vao;
 
-				GLuint vertexBoneNumBuffer;
-				GLuint vertexBoneOffsetBuffer;
-				
-				GLuint storeBoneIndexesBuffer;
-				GLuint storeBoneWeightBuffer;
-				GLuint storeFromSkinPoseBuffer;
+				//GLuint vertexBoneNumBuffer;
+				//GLuint vertexBoneOffsetBuffer;
+				//
+				//GLuint storeBoneIndexesBuffer;
+				//GLuint storeBoneWeightBuffer;
+				//GLuint storeFromSkinPoseBuffer;
 
 				static std::vector<skinRendererPtr> skinsToRender;
 			};

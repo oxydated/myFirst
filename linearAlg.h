@@ -14,7 +14,7 @@
 #include "linAlg.h"
 
 #ifdef _WIN32
-#include <GL/glew.h>
+//#include <GL/glew.h>
 
 #else
 #include <OpenGLES/ES2/gl.h>
@@ -28,9 +28,9 @@ void rotationMatrix( float cx, float cy, float teta, int program );
 
 void setPerspectiveMatrix( float *pers, int program );
 
-GLint getPersLocation();
-
-GLint getProgram();
+//GLint getPersLocation();
+//
+//GLint getProgram();
 
 void setInvertedPerspectiveMatrix(float *invPers);
 

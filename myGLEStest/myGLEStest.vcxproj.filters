@@ -39,9 +39,6 @@
     <ClCompile Include="..\initScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\initGL.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\vertexArrays.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -61,12 +58,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\imageLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shaders.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\linearAlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\transformations.cpp">
@@ -100,12 +91,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\xmlSkinLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lights.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shaderLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\lookAtCamera.cpp">
@@ -144,15 +129,15 @@
     <ClCompile Include="..\animationFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\lights.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\interactivity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\initGL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\initScene.h">
@@ -215,12 +200,6 @@
     <ClInclude Include="..\imageLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\shaders.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\linearAlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\transformations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -260,9 +239,6 @@
     <ClInclude Include="..\xmlSkinLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\lights.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\lookAtCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -279,6 +255,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\dualQuatTrack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\lights.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -441,7 +441,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions);_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Users\oxyda\OneDrive\Documentos\GitHub\dualQuatLib;$(GLEW_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Users\oxyda\OneDrive\Documentos\GitHub\dualQuatLib</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <Optimization>Disabled</Optimization>
@@ -453,7 +453,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalDependencies>msxml6.lib;Shlwapi.lib;Opengl32.lib;$(GLEW_PATH)\lib\Release\$(Platform)\glew32.lib;E:\Users\oxyda\OneDrive\Documentos\GitHub\dualQuatLib\Debug\dualQuatLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>msxml6.lib;Shlwapi.lib;E:\Users\oxyda\OneDrive\Documentos\GitHub\dualQuatLib\Debug\dualQuatLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -513,7 +513,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions);_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Users\oxyda\OneDrive\Documentos\GitHub\dualQuatLib;$(GLEW_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Users\oxyda\OneDrive\Documentos\GitHub\dualQuatLib</AdditionalIncludeDirectories>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <Optimization>Disabled</Optimization>
     </ClCompile>
@@ -527,7 +527,7 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <AdditionalLibraryDirectories>E:\Users\oxyda\OneDrive\Documentos\GitHub\myFirst\myGLEStest\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>msxml6.lib;Shlwapi.lib;Opengl32.lib;$(GLEW_PATH)\lib\Release\$(Platform)\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>msxml6.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
@@ -573,13 +573,11 @@
     <ClCompile Include="..\dualQuatKeyframe.cpp" />
     <ClCompile Include="..\dualQuatTrack.cpp" />
     <ClCompile Include="..\imageLoader.cpp" />
-    <ClCompile Include="..\initGL.cpp" />
     <ClCompile Include="..\initScene.cpp" />
     <ClCompile Include="..\interactivity.cpp" />
     <ClCompile Include="..\keyframe.cpp" />
     <ClCompile Include="..\keyframeBone.cpp" />
     <ClCompile Include="..\lights.cpp" />
-    <ClCompile Include="..\linearAlg.cpp" />
     <ClCompile Include="..\lookAtBone.cpp" />
     <ClCompile Include="..\lookAtCamera.cpp" />
     <ClCompile Include="..\main.cpp" />
@@ -591,8 +589,6 @@
     <ClCompile Include="..\renderer.cpp" />
     <ClCompile Include="..\scene.cpp" />
     <ClCompile Include="..\setTexture.cpp" />
-    <ClCompile Include="..\shaderLoader.cpp" />
-    <ClCompile Include="..\shaders.cpp" />
     <ClCompile Include="..\skindata.cpp" />
     <ClCompile Include="..\skinFunctions.cpp" />
     <ClCompile Include="..\stdafx.cpp" />
@@ -618,13 +614,11 @@
     <ClInclude Include="..\dualQuatKeyframe.h" />
     <ClInclude Include="..\dualQuatTrack.h" />
     <ClInclude Include="..\imageLoader.h" />
-    <ClInclude Include="..\initGL.h" />
     <ClInclude Include="..\initScene.h" />
     <ClInclude Include="..\interactivity.h" />
     <ClInclude Include="..\keyframe.h" />
     <ClInclude Include="..\keyframeBone.h" />
     <ClInclude Include="..\lights.h" />
-    <ClInclude Include="..\linearAlg.h" />
     <ClInclude Include="..\lookAtBone.h" />
     <ClInclude Include="..\lookAtCamera.h" />
     <ClInclude Include="..\macroUtilities.h" />
@@ -637,7 +631,6 @@
     <ClInclude Include="..\Resource.h" />
     <ClInclude Include="..\scene.h" />
     <ClInclude Include="..\setTexture.h" />
-    <ClInclude Include="..\shaders.h" />
     <ClInclude Include="..\skeletalModifier.h" />
     <ClInclude Include="..\skindata.h" />
     <ClInclude Include="..\skinFunctions.h" />

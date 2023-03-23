@@ -10,7 +10,7 @@
 #include <tchar.h>
 
 #include "resource.h"
-#include "initGL.h"
+//#include "initGL.h"
 #include "initScene.h"
 #include "myGLEStest.h"
 #include "vertexArrays.h"
@@ -108,7 +108,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		{				
 			drawVertexArray();
-			SwapBuffers(wglGetCurrentDC());
+			//SwapBuffers(wglGetCurrentDC());
 		}
 	}
 
@@ -264,7 +264,7 @@ LRESULT CALLBACK WndProc(_In_ HWND hWnd, _In_ UINT message, _In_ WPARAM wParam, 
 	case WM_CREATE:
 		hdc = GetDC(hWnd);
 		GetClientRect(hWnd, &theWindowRect);
-		initGLContext(hdc);
+		//initGLContext(hdc);
 		initGLES(theWindowRect.left, theWindowRect.top, theWindowRect.right - theWindowRect.left, theWindowRect.bottom - theWindowRect.top);
 		break;
 	default:

@@ -11,7 +11,7 @@
 
 #ifdef _WIN32
 #include "stdafx.h"
-#include <GL\glew.h>
+//#include <GL\glew.h>
 
 #else
 #include <OpenGLES/ES2/gl.h>

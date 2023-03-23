@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef _WIN32
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #endif
 
 #include "bone.h"
@@ -77,7 +77,7 @@ namespace oxyde {
 
 			protected:
 				camera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h, 
-					GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation, GLuint in_lightLocation, 
+					//GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation, GLuint in_lightLocation, 
 					int in_cameraNode, int in_targetNode, bool in_thereIsCamera);
 				camera() = delete;
 				camera(const camera&) = delete;
@@ -109,11 +109,11 @@ namespace oxyde {
 				int targetBone;
 				bool thereIsCamera;
 
-				GLint projLocation; 
-				GLint worldLocation; 
-				GLint invWorldLocation; 
-				GLint viewLocation; 
-				GLuint lightLocation;
+				//GLint projLocation; 
+				//GLint worldLocation; 
+				//GLint invWorldLocation; 
+				//GLint viewLocation; 
+				//GLuint lightLocation;
 
 				oxyde::scene::lookAtbonePtr theCameraLookAtBone;
 

@@ -1,5 +1,5 @@
 #include "camera.h"
-#include "linearAlg.h"
+//#include "linearAlg.h"
 #include "ticker.h"
 #include "bone.h"
 #include "scene.h"
@@ -14,23 +14,6 @@ namespace oxyde {
 
 			void camera::buildPerspectiveMatrix()
 			{
-				//perpectiveMatrix[0] = (2 * n) / (l - r);
-				//perpectiveMatrix[4] = 0;
-				//perpectiveMatrix[8] = (l + r) / (l - r);
-				//perpectiveMatrix[12] = 0;
-				//perpectiveMatrix[1] = 0;
-				//perpectiveMatrix[5] = (-2 * n) / (b - t);
-				//perpectiveMatrix[9] = (b + t) / (b - t);
-				//perpectiveMatrix[13] = 0;
-				//perpectiveMatrix[2] = 0;
-				//perpectiveMatrix[6] = 0;
-				//perpectiveMatrix[10] = f / (f - n);
-				//perpectiveMatrix[14] = -((f*n) / (f - n));
-				//perpectiveMatrix[3] = 0;
-				//perpectiveMatrix[7] = 0;
-				//perpectiveMatrix[11] = 1;
-				//perpectiveMatrix[15] = 0;
-
 				perpectiveMatrix[0] = (2 * n) / (l - r);
 				perpectiveMatrix[4] = 0;
 				perpectiveMatrix[8] = (l + r) / (l - r);
@@ -48,47 +31,22 @@ namespace oxyde {
 				perpectiveMatrix[11] = 1;
 				perpectiveMatrix[15] = 0;
 
-				glUniformMatrix4fv(projLocation, 1, GL_FALSE, perpectiveMatrix.data());
+				//glUniformMatrix4fv(projLocation, 1, GL_FALSE, perpectiveMatrix.data());
 			}
 
 			void camera::buildViewportMatrix() {
-
-				//viewPortMatrix[0] = 1.0;			viewPortMatrix[4] = 0.0;            viewPortMatrix[8] = 0.0;        viewPortMatrix[12] = 0;
-				//viewPortMatrix[1] = 0.0;            viewPortMatrix[5] = w / h;			viewPortMatrix[9] = 0.0;        viewPortMatrix[13] = 0;
-				//viewPortMatrix[2] = 0.0;            viewPortMatrix[6] = 0.0;            viewPortMatrix[10] = 1.0;		viewPortMatrix[14] = 0.0;
-				//viewPortMatrix[3] = 0.0;            viewPortMatrix[7] = 0.0;            viewPortMatrix[11] = 0.0;		viewPortMatrix[15] = 1.0;
 
 				viewPortMatrix[0] = h / w;			viewPortMatrix[4] = 0.0;            viewPortMatrix[8] = 0.0;        viewPortMatrix[12] = 0;
 				viewPortMatrix[1] = 0.0;            viewPortMatrix[5] = 1.0;			viewPortMatrix[9] = 0.0;        viewPortMatrix[13] = 0;
 				viewPortMatrix[2] = 0.0;            viewPortMatrix[6] = 0.0;            viewPortMatrix[10] = 1.0;		viewPortMatrix[14] = 0.0;
 				viewPortMatrix[3] = 0.0;            viewPortMatrix[7] = 0.0;            viewPortMatrix[11] = 0.0;		viewPortMatrix[15] = 1.0;
 
-				//viewPortMatrix[0] = w / 2.;
-				//viewPortMatrix[4] = 0;
-				//viewPortMatrix[8] = 0;
-				//viewPortMatrix[12] = w / 2.;
-				//viewPortMatrix[1] = 0;
-				//viewPortMatrix[5] = h / 2.;
-				//viewPortMatrix[9] = 0;
-				//viewPortMatrix[13] = h / 2.;
-				//viewPortMatrix[2] = 0;
-				//viewPortMatrix[6] = 0;
-				//viewPortMatrix[10] = 1;
-				//viewPortMatrix[14] = 0;
-				//viewPortMatrix[3] = 0;
-				//viewPortMatrix[7] = 0;
-				//viewPortMatrix[11] = 0;
-				//viewPortMatrix[15] = 1;
-
-				glViewport(0, 0, w, h);
-				glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewPortMatrix.data());
+				//glViewport(0, 0, w, h);
+				//glUniformMatrix4fv(viewLocation, 1, GL_FALSE, viewPortMatrix.data());
 			}
 
 			void camera::fromWindowToCameraSpaceCoord( float xw, float yw, float &x, float &y )
 			{
-				//x = l + ((-l + r)*xw) / w;
-				//y = t + ((b - t)*yw) / h;
-
 				x = l + ((-l + r)*xw) / w;
 				y = b + ((-b + t)*yw) / h;
 			}
@@ -205,7 +163,7 @@ namespace oxyde {
 				camMatrix[11] = 0;
 				camMatrix[15] = 1;
 
-				glUniformMatrix4fv(worldLocation, 1, GL_FALSE, camMatrix.data());
+				//glUniformMatrix4fv(worldLocation, 1, GL_FALSE, camMatrix.data());
 
 				std::array<float, 4>beforeTransf;
 				std::array<float, 4>afterTransf;
@@ -214,7 +172,7 @@ namespace oxyde {
 				beforeTransf[1] = targY;
 				beforeTransf[2] = targZ;
 				beforeTransf[3] = 1.;
-				oxyde::linAlg::multiplyMatrixByVector(camMatrix.data(), beforeTransf.data(), afterTransf.data());
+				//oxyde::linAlg::multiplyMatrixByVector(camMatrix.data(), beforeTransf.data(), afterTransf.data());
 				float camSpaceTx = afterTransf[0] / afterTransf[3];
 				float camSpaceTy = afterTransf[1] / afterTransf[3];
 				float camSpaceTz = afterTransf[2] / afterTransf[3];
@@ -255,7 +213,7 @@ namespace oxyde {
 				camMatrixInv[11] = 0;
 				camMatrixInv[15] = 1;
 
-				glUniformMatrix4fv(invWorldLocation, 1, GL_FALSE, camMatrixInv.data());
+				//glUniformMatrix4fv(invWorldLocation, 1, GL_FALSE, camMatrixInv.data());
 
 				updateCameraLight();
 			}
@@ -283,7 +241,7 @@ namespace oxyde {
 				beforeTransf[1] = camSpaceCurY;
 				beforeTransf[2] = camSpaceCurZ;
 				beforeTransf[3] = 1.;
-				oxyde::linAlg::multiplyMatrixByVector(camMatrixInv.data(), beforeTransf.data(), afterTransf.data());
+				//oxyde::linAlg::multiplyMatrixByVector(camMatrixInv.data(), beforeTransf.data(), afterTransf.data());
 				dex = afterTransf[0] / afterTransf[3];
 				dey = afterTransf[1] / afterTransf[3];
 				dez = afterTransf[2] / afterTransf[3];
@@ -292,7 +250,7 @@ namespace oxyde {
 				beforeTransf[1] = camSpaceFormerY;
 				beforeTransf[2] = camSpaceFormerZ;
 				beforeTransf[3] = 1.;
-				oxyde::linAlg::multiplyMatrixByVector(camMatrixInv.data(), beforeTransf.data(), afterTransf.data());
+				//oxyde::linAlg::multiplyMatrixByVector(camMatrixInv.data(), beforeTransf.data(), afterTransf.data());
 				ox = afterTransf[0] / afterTransf[3];
 				oy = afterTransf[1] / afterTransf[3];
 				oz = afterTransf[2] / afterTransf[3];
@@ -385,11 +343,7 @@ namespace oxyde {
 				float lightY = lighMult*(camY - targY) + targY;
 				float lightZ = lighMult*(camZ - targZ) + targZ;
 
-				//float lightX = camX;
-				//float lightY = camY;
-				//float lightZ = camZ;
-
-				glUniform3f(lightLocation, lightX, lightY, lightZ);
+				//glUniform3f(lightLocation, lightX, lightY, lightZ);
 			}
 
 			void camera::mouseWheel(short inc)
@@ -607,21 +561,21 @@ namespace oxyde {
 			void camera::createCamera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h,
 				int in_cameraNode, int in_targetNode, bool in_thereIsCamera)
 			{
-				GLint projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation;
-				GLint program = -1;
-				glGetIntegerv(GL_CURRENT_PROGRAM, &program);
-				if (program) {
-					projLocation = glGetUniformLocation(program, "Proj");
-					worldLocation = glGetUniformLocation(program, "World");
-					invWorldLocation = glGetUniformLocation(program, "invWorld");
-					viewLocation = glGetUniformLocation(program, "View");
-					lightLocation = glGetUniformLocation(program, "vLightPos");
+				//GLint projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation;
+				//GLint program = -1;
+				//glGetIntegerv(GL_CURRENT_PROGRAM, &program);
+				/*if (program)*/ {
+					//projLocation = glGetUniformLocation(program, "Proj");
+					//worldLocation = glGetUniformLocation(program, "World");
+					//invWorldLocation = glGetUniformLocation(program, "invWorld");
+					//viewLocation = glGetUniformLocation(program, "View");
+					//lightLocation = glGetUniformLocation(program, "vLightPos");
 
 					if (theInstance != nullptr) {
 						delete theInstance;
 					}
 
-					theInstance = new camera(in_f, in_n, in_l, in_r, in_t, in_b, in_w, in_h, projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation, in_cameraNode, in_targetNode, in_thereIsCamera);
+					theInstance = new camera(in_f, in_n, in_l, in_r, in_t, in_b, in_w, in_h, /*projLocation, worldLocation, invWorldLocation, viewLocation, lightLocation,*/ in_cameraNode, in_targetNode, in_thereIsCamera);
 				}
 			}
 
@@ -638,10 +592,10 @@ namespace oxyde {
 			}
 
 			camera::camera(float in_f, float in_n, float in_l, float in_r, float in_t, float in_b, float in_w, float in_h,
-				GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation, GLuint in_lightLocation,
+				//GLint in_projLocation, GLint in_worldLocation, GLint in_invWorldLocation, GLint in_viewLocation, GLuint in_lightLocation,
 				int in_cameraNode, int in_targetNode, bool in_thereIsCamera) :
 				f(in_f), n(in_n), l( in_l), r( in_r), t(in_t), b(in_b), w(in_w), h(in_h),
-				projLocation(in_projLocation), worldLocation(in_worldLocation), invWorldLocation(in_invWorldLocation), viewLocation(in_viewLocation), lightLocation(in_lightLocation),
+				//projLocation(in_projLocation), worldLocation(in_worldLocation), invWorldLocation(in_invWorldLocation), viewLocation(in_viewLocation), lightLocation(in_lightLocation),
 				cameraBone(in_cameraNode), targetBone(in_targetNode), thereIsCamera(in_thereIsCamera)
 			{
 				currentState = dragState::IDLE;

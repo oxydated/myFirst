@@ -36,18 +36,18 @@
 #include "ticker.h"
 #include "camera.h"
 
-static GLuint vao = 1;
-static GLuint element_index_buffer = 1;
-static GLuint vertex_position_buffer = 1;
-static GLuint vertex_texcoord_buffer = 1;
-static GLuint vertex_normal_buffer = 1;
-
-static GLuint vertex_bone_num_buffer = 1;
-static GLuint vertex_bone_offset_buffer = 1;
-
-static GLuint store_boneIndexes_buffer = 1;
-static GLuint store_boneWeight_buffer = 1;
-static GLuint store_fromSkinPose_buffer = 1;
+//static GLuint vao = 1;
+//static GLuint element_index_buffer = 1;
+//static GLuint vertex_position_buffer = 1;
+//static GLuint vertex_texcoord_buffer = 1;
+//static GLuint vertex_normal_buffer = 1;
+//
+//static GLuint vertex_bone_num_buffer = 1;
+//static GLuint vertex_bone_offset_buffer = 1;
+//
+//static GLuint store_boneIndexes_buffer = 1;
+//static GLuint store_boneWeight_buffer = 1;
+//static GLuint store_fromSkinPose_buffer = 1;
 
 
 static float Up[] = { 0.00000000, 0.000000000, 1.000000000 };
@@ -93,7 +93,7 @@ static float *vWeights;
 
 static float orientation = -1.0;
 
-static GLint theProgram = 0;
+//static GLint theProgram = 0;
 
 static skeleton theSkeleton;
 static sceneTracks theSceneTracks;
@@ -149,9 +149,9 @@ void bindVertexBuffer() {
 
 }
 
-void setProgram(GLint program) {
-	theProgram = program;
-}
+//void setProgram(GLint program) {
+//	theProgram = program;
+//}
 
 void reorient() {
 	orientation = -orientation;
@@ -162,7 +162,7 @@ void drawVertexArray() {
 	static bool executeOnce = true;
 
 	TCHAR outputString[200];
-	glBindTexture(GL_TEXTURE_2D, 1);
+	//glBindTexture(GL_TEXTURE_2D, 1);
 	static float teta = 0.0;
 	teta += 0.5*orientation;
 
@@ -209,7 +209,7 @@ void drawVertexArray() {
 	float lightVector[] = { Camera[0], -Camera[1], Camera[2] };
 
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 
 	std::array<float, 3> center = { 0.,0.,0. };
@@ -270,7 +270,7 @@ void drawVertexArray() {
 	float lightVectorBeforeTransform[] = { RCp[0], RCp[1], RCp[2], 1.0 };
 
 	float transposePerspective[16];
-	oxyde::linAlg::transposeMatrix(getInvertedPersPectiveMatrix(), transposePerspective);
+	//oxyde::linAlg::transposeMatrix(getInvertedPersPectiveMatrix(), transposePerspective);
 
 	// For camera update
 
@@ -423,11 +423,11 @@ void drawVertexArray() {
 
 	//////////////////////////////////////////////////////////////////////////
 
-	GLint location = glGetUniformLocation(theProgram, "World");
-	printf("location of World: %i\n", location);
+	//GLint location = glGetUniformLocation(theProgram, "World");
+	//printf("location of World: %i\n", location);
 
-	GLint invlocation = glGetUniformLocation(theProgram, "invWorld");
-	printf("location of invWorld: %i\n", invlocation);
+	//GLint invlocation = glGetUniformLocation(theProgram, "invWorld");
+	//printf("location of invWorld: %i\n", invlocation);
 
 	oxyde::GL::renderer::skinRenderer::drawAllSkins();
 }

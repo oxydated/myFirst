@@ -3,8 +3,8 @@
 
 //#include <gl\GL.h>
 //#include <gl\GLU.h>
-#include <GL/glew.h>
-#include <GL/wglew.h>
+//#include <GL/glew.h>
+//#include <GL/wglew.h>
 #include <Windows.h>
 
 #define PRINTIT(a) OutputDebugString(L##a )

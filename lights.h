@@ -12,7 +12,7 @@
 #include <iostream>
 
 #ifdef _WIN32
-#include <GL/glew.h>
+//#include <GL/glew.h>
 
 #else
 #include <OpenGLES/ES2/gl.h>
@@ -24,7 +24,7 @@
 
 
 
-void setLightPosition( GLuint program, float x, float y, float z );
+void setLightPosition( /*GLuint program,*/ float x, float y, float z );
 
 
 

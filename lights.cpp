@@ -14,9 +14,9 @@
 #include "lights.h"
 
 
-void setLightPosition( GLuint program, float x, float y, float z ){
+void setLightPosition( /*GLuint program,*/ float x, float y, float z) {
 
-    GLuint lightPosLocation = glGetUniformLocation( program, (const GLchar*)"vLightPos");
-    printf("lightPosLocation: %i\n", lightPosLocation);
-    glUniform3f(lightPosLocation, x, y, z);
+    //GLuint lightPosLocation = glGetUniformLocation( program, (const GLchar*)"vLightPos");
+    //printf("lightPosLocation: %i\n", lightPosLocation);
+    //glUniform3f(lightPosLocation, x, y, z);
 }

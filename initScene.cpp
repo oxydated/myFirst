@@ -12,34 +12,34 @@
 
 #include "initScene.h"
 #include "vertexArrays.h"
-#include "shaders.h"
+//#include "shaders.h"
 #include "transformations.h"
 #include "projections.h"
-#include "linearAlg.h"
+//#include "linearAlg.h"
 #include "setTexture.h"
 
 #define SPIT_ERROR     if(glGetError()!= GL_NO_ERROR) printf("error up to line %i\n", __LINE__ ); else printf("ok in %i\n", __LINE__ );
 
 void initGLES(int x, int y, int width, int height){
 
-    glClearDepthf(1.0);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
+ //   glClearDepthf(1.0);
+ //   glDepthFunc(GL_LESS);
+ //   glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_CULL_FACE);
 
-	glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
-	glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
-	glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-	glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+	//glHint(GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_NICEST);
+	//glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
+	//glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+	//glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
-    glViewport(0, 0, width, height);
+ //   glViewport(0, 0, width, height);
 
-	GLsizei	viewportValues[4];
-	GLsizei	viewportMax[2];
+	//GLsizei	viewportValues[4];
+	//GLsizei	viewportMax[2];
 
-	glGetIntegerv(GL_VIEWPORT, viewportValues);
-	glGetIntegerv(GL_MAX_VIEWPORT_DIMS, viewportMax);
-    glClearColor(0.25, 0.0, 0.5, 1.0);
+	//glGetIntegerv(GL_VIEWPORT, viewportValues);
+	//glGetIntegerv(GL_MAX_VIEWPORT_DIMS, viewportMax);
+ //   glClearColor(0.25, 0.0, 0.5, 1.0);
     float mat[16];
 	oxyde::linAlg::identity(mat);
     
@@ -71,7 +71,7 @@ void initGLES(int x, int y, int width, int height){
     float view[16];
 
 	float NEARFAR[] = { 1.0, -1.0 };
-	glGetFloatv(GL_DEPTH_RANGE, NEARFAR);
+	//glGetFloatv(GL_DEPTH_RANGE, NEARFAR);
     viewportMatrix(x, y, width, height, NEARFAR[0], NEARFAR[1], mat, view);
     printf("\nview Matrix:\n");
 	oxyde::linAlg::printMatrix(view);
@@ -93,14 +93,12 @@ void initGLES(int x, int y, int width, int height){
 	oxyde::linAlg::homogenize( retPoinmv );
 	oxyde::linAlg::printVector( retPoinmv );
     
-    GLint program = loadAndCompileShader();
-    setProgram( program );
-	SPIT_ERROR
-	//setTexture(program);
-	SPIT_ERROR
-	//setInvertedPerspectiveMatrix(invPers);
-	//setPerspectiveMatrix(pers, program);
-    //setViewportMatrix( view, program );
+ //   GLint program = loadAndCompileShader();
+ //   setProgram( program );
+	//SPIT_ERROR
+
+	//SPIT_ERROR
+
     createVertexBuffer();
     drawVertexArray();
     

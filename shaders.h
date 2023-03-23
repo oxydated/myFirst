@@ -13,7 +13,7 @@
 #include <cstdio>
 
 #ifdef _WIN32
-#include <GL/glew.h>
+//#include <GL/glew.h>
 
 #else
 #include <OpenGLES/ES2/gl.h>
@@ -23,7 +23,7 @@
 
 void loadShaders(char* &vertexShader, int &vsSize, char* &fragmentShader, int &fsSize);
 
-GLint loadAndCompileShader();
+//GLint loadAndCompileShader();
 
 void linkShaders();
 

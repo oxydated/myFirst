@@ -12,7 +12,7 @@
 //#include <iostream>
 
 #ifdef _WIN32
-#include <GL/glew.h>
+//#include <GL/glew.h>
 
 #else
 #include <OpenGLES/ES2/gl.h>
@@ -54,6 +54,6 @@ EXTERN_C void drawVertexArray();
 
 EXTERN_C void reorient();
 
-void setProgram( GLint program );
+//void setProgram( GLint program );
 
 #endif
