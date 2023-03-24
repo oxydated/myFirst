@@ -13,252 +13,303 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\animation">
+      <UniqueIdentifier>{81283af7-879e-4789-8611-98930c117337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\animation">
+      <UniqueIdentifier>{9b7b4150-3b8a-455d-9604-0faa69a0faff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\app">
+      <UniqueIdentifier>{708321ad-f58f-479c-8afb-0081d19b0953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\app">
+      <UniqueIdentifier>{4513262c-53db-44ed-984b-14df3b828254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\files">
+      <UniqueIdentifier>{d70b80c8-7a61-4742-9f37-e9dd8da757f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\files">
+      <UniqueIdentifier>{dd1d2368-3981-45ef-840b-46135a13559c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mesh">
+      <UniqueIdentifier>{f8726234-d53e-47f1-9ac5-6cb1fb44b45a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\mesh">
+      <UniqueIdentifier>{cab39da1-f324-4963-a32f-6fdd716d8faa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendering">
+      <UniqueIdentifier>{5e059f06-ea48-40f1-b0c8-48455e221dc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendering">
+      <UniqueIdentifier>{f9b38638-457e-4e94-a58e-c443f8ed239a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\scene">
+      <UniqueIdentifier>{5d79d682-4dd1-4484-9ad0-b44e026dc35f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{aae529d2-9a5e-4bf7-98f4-887b17d4664a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\xml">
+      <UniqueIdentifier>{661b6a95-a598-4efd-ac2c-10c3e984a58f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\xml">
+      <UniqueIdentifier>{e9971247-60d5-4695-a111-fe27ed9a7b57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\scene.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\Animation\lookAtCamera.cpp">
+      <Filter>Source Files\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\renderer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\Animation\keyframe.cpp">
+      <Filter>Source Files\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\observer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\Animation\dualQuatTrack.cpp">
+      <Filter>Source Files\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\mesh.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\Animation\dualQuatKeyframe.cpp">
+      <Filter>Source Files\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\lookAtBone.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\Animation\bezierFloatTrack.cpp">
+      <Filter>Source Files\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\keyframe.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\Animation\bezierFloatKeyFrame.cpp">
+      <Filter>Source Files\animation</Filter>
     </ClCompile>
-    <ClCompile Include="..\interactivity.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\Animation\animationFunctions.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Animation\transformations.cpp">
+      <Filter>Source Files\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Animation\track.cpp">
+      <Filter>Source Files\animation</Filter>
     </ClCompile>
     <ClCompile Include="..\initScene.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\app</Filter>
     </ClCompile>
-    <ClCompile Include="..\vertexArrays.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\track.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ticker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\subject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\skindata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\imageLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\transformations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\projections.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\setTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\createTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\modelLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xmlAnimationLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xmlModelLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xmlUtilityFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\textureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\skinFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xmlSkinLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\lookAtCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\bezierFloatTrack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\bone.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\bezierFloatKeyFrame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\XMLDocument.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\interactivity.cpp">
+      <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="..\main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\app</Filter>
     </ClCompile>
-    <ClCompile Include="..\PRSbone.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\stdafx.cpp">
+      <Filter>Source Files\app</Filter>
     </ClCompile>
-    <ClCompile Include="..\keyframeBone.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\files\imageLoader.cpp">
+      <Filter>Source Files\files</Filter>
     </ClCompile>
-    <ClCompile Include="..\dualQuatKeyframe.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\files\modelLoader.cpp">
+      <Filter>Source Files\files</Filter>
     </ClCompile>
-    <ClCompile Include="..\dualQuatTrack.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\files\shaderLoader.cpp">
+      <Filter>Source Files\files</Filter>
     </ClCompile>
-    <ClCompile Include="..\animationFunctions.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\files\textureLoader.cpp">
+      <Filter>Source Files\files</Filter>
     </ClCompile>
-    <ClCompile Include="..\lights.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\mesh\mesh.cpp">
+      <Filter>Source Files\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mesh\skindata.cpp">
+      <Filter>Source Files\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\mesh\skinFunctions.cpp">
+      <Filter>Source Files\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rendering\camera.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rendering\createTexture.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rendering\lights.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rendering\projections.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rendering\renderer.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rendering\setTexture.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rendering\vertexArrays.cpp">
+      <Filter>Source Files\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\bone.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\keyframeBone.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\observer.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\PRSbone.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\scene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\spinnerBone.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\subject.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\ticker.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xml\xmlAnimationLoader.cpp">
+      <Filter>Source Files\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xml\XMLDocument.cpp">
+      <Filter>Source Files\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xml\xmlModelLoader.cpp">
+      <Filter>Source Files\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xml\xmlSkinLoader.cpp">
+      <Filter>Source Files\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xml\xmlUtilityFunctions.cpp">
+      <Filter>Source Files\xml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\scene\lookAtBone.cpp">
+      <Filter>Source Files\scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\interactivity.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\Animation\animationFunctions.h">
+      <Filter>Header Files\animation</Filter>
     </ClInclude>
-    <ClInclude Include="..\stdafx.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\Animation\bezierFloatKeyFrame.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Animation\bezierFloatTrack.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Animation\dualQuatKeyframe.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Animation\dualQuatTrack.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Animation\keyframe.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Animation\lookAtCamera.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Animation\track.h">
+      <Filter>Header Files\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Animation\transformations.h">
+      <Filter>Header Files\animation</Filter>
     </ClInclude>
     <ClInclude Include="..\initScene.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\vertexArrays.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\XMLDocument.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ticker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\subject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\observer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\bone.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\skindata.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\skeletalModifier.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lookAtBone.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\bezierFloatTrack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\track.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\bezierFloatKeyFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\keyframe.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\imageLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\transformations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\projections.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\setTexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\createTexture.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\interactivity.h">
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="..\macroUtilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\modelLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xmlAnimationLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xmlModelLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xmlUtilityFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\textureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\skinFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\animationFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xmlSkinLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\lookAtCamera.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="..\Resource.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\PRSbone.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\stdafx.h">
+      <Filter>Header Files\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\keyframeBone.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\targetver.h">
+      <Filter>Header Files\app</Filter>
     </ClInclude>
-    <ClInclude Include="..\dualQuatKeyframe.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\files\imageLoader.h">
+      <Filter>Header Files\files</Filter>
     </ClInclude>
-    <ClInclude Include="..\dualQuatTrack.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\files\modelLoader.h">
+      <Filter>Header Files\files</Filter>
     </ClInclude>
-    <ClInclude Include="..\lights.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\files\textureLoader.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mesh\mesh.h">
+      <Filter>Header Files\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mesh\skeletalModifier.h">
+      <Filter>Header Files\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mesh\skindata.h">
+      <Filter>Header Files\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mesh\skinFunctions.h">
+      <Filter>Header Files\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rendering\camera.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rendering\createTexture.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rendering\lights.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rendering\projections.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rendering\renderer.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rendering\setTexture.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rendering\vertexArrays.h">
+      <Filter>Header Files\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\bone.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\keyframeBone.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\lookAtBone.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\observer.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\PRSbone.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\scene.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\spinnerBone.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\subject.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scene\ticker.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xml\xmlAnimationLoader.h">
+      <Filter>Header Files\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xml\XMLDocument.h">
+      <Filter>Header Files\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xml\xmlModelLoader.h">
+      <Filter>Header Files\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xml\xmlSkinLoader.h">
+      <Filter>Header Files\xml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xml\xmlUtilityFunctions.h">
+      <Filter>Header Files\xml</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

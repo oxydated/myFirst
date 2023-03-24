@@ -11,12 +11,12 @@
 #endif
 
 #include "initScene.h"
-#include "vertexArrays.h"
+#include "rendering/vertexArrays.h"
+#include "rendering/projections.h"
+#include "rendering/setTexture.h"
 //#include "shaders.h"
-#include "transformations.h"
-#include "projections.h"
+#include "animation/transformations.h"
 //#include "linearAlg.h"
-#include "setTexture.h"
 
 #define SPIT_ERROR     if(glGetError()!= GL_NO_ERROR) printf("error up to line %i\n", __LINE__ ); else printf("ok in %i\n", __LINE__ );
 

@@ -13,18 +13,18 @@
 //#include "initGL.h"
 #include "initScene.h"
 #include "myGLEStest.h"
-#include "vertexArrays.h"
+#include "rendering/vertexArrays.h"
 #include "interactivity.h"
 
 //new headers
 
-#include "XMLDocument.h"
-#include "scene.h"
-#include "ticker.h"
-#include "mesh.h"
-#include "skindata.h"
-#include "renderer.h"
-#include "camera.h"
+#include "xml/XMLDocument.h"
+#include "scene/scene.h"
+#include "scene/ticker.h"
+#include "mesh/mesh.h"
+#include "mesh/skindata.h"
+#include "rendering/renderer.h"
+#include "rendering/camera.h"
 
 
 
